@@ -1,0 +1,250 @@
+version: "3.7"
+services:
+
+  eureka-serviceregistry:
+    image: eureka-serviceregistry
+    container_name: eureka-serviceregistry
+    build: 
+      context: ./eureka
+      dockerfile: Dockerfile
+    tty: true
+    networks:
+      - static-network
+    ports:
+      - "8761:8761"
+
+  authentication-service:
+    image: authentication-service
+    container_name: authentication-service
+    build: 
+      context: ./Services/authentication-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8084:8084"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: auth_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+      
+  message-service:
+    image: message-service
+    container_name: message-service
+    build: 
+      context: ./Services/message-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8091:8091"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: msg_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+
+  ad-service:
+    image: ad-service
+    container_name: ad-service
+    build:
+      context: ./Services/ad-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8086:8086"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: ad_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+    volumes:
+      - img-ad:/img-ad
+
+  car-request-service:
+    image: car-request-service
+    container_name: car-request-service
+    build:
+      context: ./Services/car-request-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8090:8090"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: carreq_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+
+  price-list-and-discount-service:
+    image: price-list-and-discount-service
+    container_name: price-list-and-discount-service
+    build:
+      context: ./Services/price-list-and-discount-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8088:8088"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: pad_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+      
+  ad-search-service:
+    image: ad-search-service
+    container_name: ad-search-service
+    build: 
+      context: ./Services/ad-search-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8085:8085"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: ad_search_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+
+  codebook-service:
+    image: codebook-service
+    container_name: codebook-service
+    build: 
+      context: ./Services/codebook-service
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8087:8087"
+    environment:
+      REGISTRY_HOST: eureka-serviceregistry
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: codebook_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - eureka-serviceregistry
+      - mysql
+
+  front:
+    image: front
+    container_name: front
+    build: 
+      context: ./Services/front
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "80:80"
+    volumes:
+      - img-ad:/img-ad
+      
+  zuul:
+    image: zuul
+    container_name: zuul
+    build: 
+      context: ./zuul
+      dockerfile: Dockerfile
+    environment:
+      - REGISTRY_HOST=eureka-serviceregistry
+    tty: true
+    networks:
+      - static-network
+    ports:
+      - "8082:8082"
+    depends_on:
+      - eureka-serviceregistry
+      - authentication-service
+      - message-service
+      - codebook-service
+      - ad-search-service
+      - price-list-and-discount-service
+      - car-request-service
+      - ad-service
+
+  agent-app:
+    image: agent-app
+    container_name: agent-app
+    build: 
+      context: ./MonolitApp
+      dockerfile: Dockerfile
+    tty: true
+    restart: on-failure
+    networks:
+      - static-network
+    ports:
+      - "8083:8083"
+    environment:
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+      DATABASE_DOMAIN: mysql
+      DATABASE_SCHEMA: rent_a_car?createDatabaseIfNotExist=true&serverTimezone=UTC
+    depends_on: 
+      - mysql
+  
+  mysql:
+    image: mysql:8.0.19
+    container_name: mysql
+    restart: always
+    networks:
+      - static-network
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: rent_a_car
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  img-ad:
+  db-data:
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
