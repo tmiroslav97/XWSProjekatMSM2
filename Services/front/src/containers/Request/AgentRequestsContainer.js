@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import AgentRequestsComponent from '../../components/Request/AgentRequestsComponent';
+import AgentRequestsPendingComponent from '../../components/Request/AgentRequestsPendingComponent';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 
@@ -39,13 +40,17 @@ const AgentRequestsContainer = () => {
         fetchCanceledRequests();
     }, []);
 
+    const handleAccept = (id) =>{
+
+    };
+
     return (
         <Container>
             <Row>
                 <Col md={12} xs={12}>
                     {
                         isFetchPendingRequests ?
-                            <AgentRequestsComponent requests={pendingRequests} status="pending" /> : <SpinnerContainer />
+                            <AgentRequestsPendingComponent requests={pendingRequests} handleAccept={handleAccept} status="pending" /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www.app.services/carrequestservice/gen"
-    xmlns:tns="http://www.app.services/carrequestservice/gen">
+           targetNamespace="http://www.app.services/carrequestservice/model"
+           xmlns:tns="http://www.app.services/carrequestservice/model">
     <xs:element name="getPublisherRequestsRequest">
         <xs:complexType>
             <xs:sequence>

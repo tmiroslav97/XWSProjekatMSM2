@@ -37,6 +37,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link AcceptRequest }
+     *
+     */
+    public AcceptRequest createAcceptRequest() {
+        return new AcceptRequest();
+    }
+
+    /**
      * Create an instance of {@link GetPublisherRequestsRequest }
      * 
      */
@@ -108,6 +116,13 @@ public class ObjectFactory {
         return new GetAdReportsResponse();
     }
 
+    /**
+     * Create an instance of {@link SubmitResponse }
+     *
+     */
+    public SubmitResponse createSubmitResponse() {
+        return new SubmitResponse();
+    }
     /**
      * Create an instance of {@link Ad }
      * 
