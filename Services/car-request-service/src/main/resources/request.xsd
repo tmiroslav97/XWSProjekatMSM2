@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www.app.services/carrequestservice/model"
-    xmlns:tns="http://www.app.services/carrequestservice/model">
+    targetNamespace="http://www.app.services/carrequestservice/gen"
+    xmlns:tns="http://www.app.services/carrequestservice/gen">
     <xs:element name="getPublisherRequestsRequest">
         <xs:complexType>
             <xs:sequence>
@@ -14,6 +14,14 @@
             <xs:sequence>
                 <xs:element name="publisherUser" type="xs:string"/>
                 <xs:element name="status" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="acceptRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUser" type="xs:string"/>
+                <xs:element name="id" type="xs:long"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -49,6 +57,13 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="unbounded" minOccurs="0" name="reports" type="tns:Report"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="submitResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" minOccurs="1" name="msg" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

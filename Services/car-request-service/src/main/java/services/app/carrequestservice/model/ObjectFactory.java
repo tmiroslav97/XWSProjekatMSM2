@@ -31,14 +31,21 @@ public class ObjectFactory {
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: services.app.carrequestservice.model
-     * 
+     *
      */
     public ObjectFactory() {
     }
 
     /**
+     * Create an instance of {@link AcceptRequest }
+     *
+     */
+    public AcceptRequest createAcceptRequest() {
+        return new AcceptRequest();
+    }
+    /**
      * Create an instance of {@link GetPublisherRequestsRequest }
-     * 
+     *
      */
     public GetPublisherRequestsRequest createGetPublisherRequestsRequest() {
         return new GetPublisherRequestsRequest();
@@ -46,7 +53,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link GetPublisherRequestsByStatusRequest }
-     * 
+     *
      */
     public GetPublisherRequestsByStatusRequest createGetPublisherRequestsByStatusRequest() {
         return new GetPublisherRequestsByStatusRequest();
@@ -54,7 +61,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link GetPublisherReportsRequest }
-     * 
+     *
      */
     public GetPublisherReportsRequest createGetPublisherReportsRequest() {
         return new GetPublisherReportsRequest();
@@ -62,7 +69,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link GetAdReportsRequest }
-     * 
+     *
      */
     public GetAdReportsRequest createGetAdReportsRequest() {
         return new GetAdReportsRequest();
@@ -70,7 +77,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link GetPublisherRequestsResponse }
-     * 
+     *
      */
     public GetPublisherRequestsResponse createGetPublisherRequestsResponse() {
         return new GetPublisherRequestsResponse();
@@ -78,7 +85,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Request }
-     * 
+     *
      */
     public Request createRequest() {
         return new Request();
@@ -86,7 +93,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link GetPublisherReportsResponse }
-     * 
+     *
      */
     public GetPublisherReportsResponse createGetPublisherReportsResponse() {
         return new GetPublisherReportsResponse();
@@ -94,15 +101,23 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Report }
-     * 
+     *
      */
     public Report createReport() {
         return new Report();
     }
 
     /**
+     * Create an instance of {@link SubmitResponse }
+     *
+     */
+    public SubmitResponse createSubmitResponse() {
+        return new SubmitResponse();
+    }
+
+    /**
      * Create an instance of {@link GetAdReportsResponse }
-     * 
+     *
      */
     public GetAdReportsResponse createGetAdReportsResponse() {
         return new GetAdReportsResponse();
@@ -110,7 +125,7 @@ public class ObjectFactory {
 
     /**
      * Create an instance of {@link Ad }
-     * 
+     *
      */
     public Ad createAd() {
         return new Ad();
