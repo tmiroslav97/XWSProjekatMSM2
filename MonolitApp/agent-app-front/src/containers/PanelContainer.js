@@ -16,7 +16,7 @@ import MyAdsContainer from './Ad/MyAdsContainer';
 import AgentRequestsContainer from './Request/AgentRequestsContainer';
 import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
-
+import StatisticsContainer from '../containers/AgentFirm/StatisticsContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -107,6 +107,13 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
+                           {hasRole(['ROLE_AGENT']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="statistics" onClick={() => { history.push("/panel/statistics"); }}>
+                                    Statistika
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
                     </Nav>
                 </Col>
                 <Col sm={10} md={10} xs={12}>
@@ -120,6 +127,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/create-ad`} component={CreateAdContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/my-ads`} component={MyAdsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/statistics`} component={StatisticsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                 </Col>
             </Row>
         </Container >
