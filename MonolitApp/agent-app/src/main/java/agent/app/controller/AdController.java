@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -139,4 +141,16 @@ public class AdController {
 
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
     }
+
+//    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findBestAverageGradeAd() {
+        System.out.println("Best average grade");
+//        System.out.println(principal);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Principal principal = (Principal) auth.getPrincipal();
+        System.out.println(principal);
+        return new ResponseEntity<>(adService.findBestAverageGrade("svetlana@gmail.com"), HttpStatus.OK);
+    }
+
 }

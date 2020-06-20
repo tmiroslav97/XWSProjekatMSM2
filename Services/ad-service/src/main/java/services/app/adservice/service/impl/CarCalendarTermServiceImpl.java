@@ -74,6 +74,7 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
     @Override
     public Integer addCarCalendarTerm(CarCalendarTermDTO carCalendarTermDTO) {
         CarCalendarTerm carCalendarTerm =  CarCalendarTermConverter.toCarCalendarTermFromRequest(carCalendarTermDTO);
+
         if(carCalendarTerm != null){
             Ad ad = adService.findById(carCalendarTermDTO.getAdId());
             if(ad != null){

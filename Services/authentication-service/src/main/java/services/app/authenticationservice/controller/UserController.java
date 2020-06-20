@@ -1,14 +1,15 @@
 package services.app.authenticationservice.controller;
 
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import services.app.authenticationservice.converter.PublisherUserConverter;
-import services.app.authenticationservice.dto.PublisherUserDTO;
+import services.app.authenticationservice.dto.VerificationResponse;
+import services.app.authenticationservice.service.intf.EndUserService;
 import services.app.authenticationservice.service.intf.UserService;
 
 import java.security.Principal;
@@ -33,9 +34,10 @@ public class UserController {
         return userService.findByEmail(email).getId();
     }
 
-    @RequestMapping(value = "/find-publish-user-by-id/{id}", method = RequestMethod.GET)
-    public PublisherUserDTO findPublishUserById(@PathVariable Long id) {
-        System.out.println("METODA FIND PUBLISHER NAME AND LAST NAME");
-        return PublisherUserConverter.fromPublisherUserToPublisherUserDTO(userService.findById(id));
-    }
+//    @RequestMapping(value = "/find-publish-user-by-id/{id}", method = RequestMethod.GET)
+//    public PublisherUserDTO findPublishUserById(@PathVariable Long id) {
+//        System.out.println("METODA FIND PUBLISHER NAME AND LAST NAME");
+//        return PublisherUserConverter.fromPublisherUserToPublisherUserDTO(userService.findById(id));
+//    }
+
 }

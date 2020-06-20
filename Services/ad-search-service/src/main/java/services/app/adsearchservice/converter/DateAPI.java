@@ -37,11 +37,38 @@ public class DateAPI {
         String dd = dio[2];
 
         String vrijeme = res[1];
+
         dio = vrijeme.split(":");
         String hh = dio[0]; // 004
         String mm = dio[1];
 
-        String newDate = vrijeme + " " + dd + "-" + MM + "-" + yyyy;
+        String newDate = hh +":"+ mm + " " + dd + "-" + MM + "-" + yyyy;
+        System.out.println(newDate);
+        DateTime dateTime = DateTime.parse(newDate, formatter);
+
+        return dateTime;
+    }
+
+    public static DateTime dateStringToYear(String date) {
+        System.out.println("----------------------");
+        System.out.println(date.toString());
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
+        String dateString = date.replace("T", " ");
+        String[] res = dateString.split(" ");
+        String datum = res[0];
+        System.out.println("DATUMMM : " + datum);
+        String[] dio = datum.split("-");
+        String yyyy = dio[0];
+        String MM = dio[1];
+        String dd = dio[2];
+
+
+//        String[] dio = date.split("-");
+//        String yyyy = dio[0];
+//        String MM = dio[1];
+//        String dd = dio[2];
+
+        String newDate = dd + "-" + MM + "-" + yyyy;
         System.out.println(newDate);
         DateTime dateTime = DateTime.parse(newDate, formatter);
 

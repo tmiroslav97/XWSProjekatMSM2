@@ -85,4 +85,7 @@ public class Ad {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<DiscountList> discountLists = new HashSet<>();
 
+    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY )
+    private Set<Image> images = new HashSet<>();
+
 }

@@ -1,12 +1,12 @@
 package services.app.adsearchservice.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.app.adsearchservice.converter.DateAPI;
+import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.service.intf.AdService;
 
 
@@ -46,4 +46,15 @@ public class AdController {
 
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "/synchronize", method = RequestMethod.POST)
+    public Integer synchronizeDatabase(@RequestBody AdSynchronizeDTO adSynchronizeDTO) {
+        System.out.println("SINHRONIZACIJA");
+        System.out.println(adSynchronizeDTO);
+        Integer rez = adService.syncData(adSynchronizeDTO);
+        System.out.println("REZULTAT: " + rez);
+        return 1;
+    }
+
 }

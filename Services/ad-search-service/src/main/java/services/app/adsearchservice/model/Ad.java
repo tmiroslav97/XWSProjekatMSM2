@@ -68,8 +68,8 @@ public class Ad {
     @Column(name = DbColumnConstants.RENTCNT, nullable = false)
     private Long rentCnt = 0L;
 
-    @Column(name = DbColumnConstants.PRICE, nullable = false)
-    private Float price;
+    @Column(name = DbColumnConstants.PRICEPERDAY, nullable = false)
+    private Float pricePerDay;
 
     @Column(name = DbColumnConstants.PUBLISHERUSER, nullable = false)
     private Long publisherUser;
@@ -79,6 +79,9 @@ public class Ad {
             joinColumns = @JoinColumn(name = "ad_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "car_id", referencedColumnName = "id"))
     private Car car;
+
+    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
+    private Set<CarCalendarTerm> carCalendarTerms = new HashSet<>();
 
 
 }

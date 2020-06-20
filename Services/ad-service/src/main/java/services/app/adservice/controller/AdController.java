@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import services.app.adservice.converter.AdConverter;
 import services.app.adservice.converter.DateAPI;
 import services.app.adservice.dto.ad.AdCreateDTO;
+import services.app.adservice.dto.ad.AdRatingDTO;
 import services.app.adservice.model.CustomPrincipal;
 import services.app.adservice.service.intf.AdService;
 
@@ -30,10 +31,12 @@ public class AdController {
         this.adService = adService;
     }
 
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(adService.getAdDetailView(id), HttpStatus.OK);
+        System.out.println("Service ad !!!!!");
+        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id)), HttpStatus.OK);
     }
 
 
@@ -74,5 +77,10 @@ public class AdController {
         return new ResponseEntity<>(adService.findAll(nextPage, size, principal.getUserId()), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value ="/rating",method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO){
+        return new ResponseEntity<>(adService.addRatingToAd(adRatingDTO), HttpStatus.OK);
+    }
 
 }

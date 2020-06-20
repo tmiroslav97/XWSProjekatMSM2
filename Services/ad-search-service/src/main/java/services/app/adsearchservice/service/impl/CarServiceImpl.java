@@ -26,5 +26,31 @@ public class CarServiceImpl implements CarService {
         return carRepository.findAll();
     }
 
+    @Override
+    public Car save(Car car) {
+        if(carRepository.existsById(car.getId())){
+            throw new ExistsException(String.format("Automobil vec postoji."));
+        }
+        return carRepository.save(car);
+    }
+
+    @Override
+    public void delete(Car car) {
+         carRepository.delete(car);
+    }
+
+    @Override
+    public Car edit(Car car) {
+        this.finById(car.getId());
+        return this.save(car);
+    }
+
+    @Override
+    public Integer deleteById(Long id) {
+        Car car = this.finById(id);
+        this.delete(car);
+        return 1;
+    }
+
 
 }
