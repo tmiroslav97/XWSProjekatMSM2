@@ -1,8 +1,8 @@
 package agent.app.ws.client;
 
-import agent.app.gen.GetPublisherRequestsByStatusRequest;
-import agent.app.gen.GetPublisherRequestsResponse;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
+import services.app.carrequestservice.model.GetPublisherRequestsByStatusRequest;
+import services.app.carrequestservice.model.GetPublisherRequestsResponse;
 
 public class RequestClient extends WebServiceGatewaySupport {
 

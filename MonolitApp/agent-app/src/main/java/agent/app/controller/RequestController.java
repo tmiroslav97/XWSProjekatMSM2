@@ -40,6 +40,6 @@ public class RequestController {
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status, Principal principal) {
         String email = principal.getName();
-        return new ResponseEntity<>(requestClient.getPublisherRequestsResponse(email, status), HttpStatus.OK);
+        return new ResponseEntity<>(requestClient.getPublisherRequestsResponse(email, status).getRequests(), HttpStatus.OK);
     }
 }
