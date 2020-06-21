@@ -19,7 +19,9 @@ import {
     RATING_AD,
     ADD_COMMENT,
     FETCH_COMMENTS,
-    APPROVED_COMMENT
+    APPROVED_COMMENT,
+    FETCH_ALL_COMMENTS_FROM_USER,
+    FETCH_ALL_COMMENTS
 } from './constants';
 
 import {
@@ -202,6 +204,34 @@ export function* fetchComments() {
     const { payload } = yield take(FETCH_COMMENTS);
     yield put(putComments({ 'isFetch': false }));
     const data = yield call(AdServices.fetchAllUnapprovedCommentForAd, payload);
+    console.log(data);
+    yield put(putComments({
+        'data': data,
+        // 'totalPageCnt': data.totalPageCnt,
+        // 'nextPage': payload.nextPage,
+        // 'size': payload.size,
+        'isFetch': true
+    }));
+}
+
+export function* fetchAllCommentsFromUser() {
+    const { payload } = yield take(FETCH_ALL_COMMENTS_FROM_USER);
+    yield put(putComments({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllCommentForAdAndUser, payload);
+    console.log(data);
+    yield put(putComments({
+        'data': data,
+        // 'totalPageCnt': data.totalPageCnt,
+        // 'nextPage': payload.nextPage,
+        // 'size': payload.size,
+        'isFetch': true
+    }));
+}
+
+export function* fetchAllComments() {
+    const { payload } = yield take(FETCH_ALL_COMMENTS);
+    yield put(putComments({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllCommentForAd, payload);
     console.log(data);
     yield put(putComments({
         'data': data,

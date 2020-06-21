@@ -18,7 +18,9 @@ import{
     ADD_COMMENT,
     PUT_COMMENTS,
     FETCH_COMMENTS,
-    APPROVED_COMMENT
+    APPROVED_COMMENT,
+    FETCH_ALL_COMMENTS,
+    FETCH_ALL_COMMENTS_FROM_USER
 } from './constants';
 
 export const putSearchData = payload => ({
@@ -112,6 +114,16 @@ export const putComments = payload => ({
 
 export const fetchComments = payload => ({
     type: FETCH_COMMENTS,
+    payload
+});
+
+export const fetchAllComments = payload => ({
+    type: FETCH_ALL_COMMENTS,
+    payload
+});
+
+export const fetchAllCommentsFromUser = payload => ({
+    type: FETCH_ALL_COMMENTS_FROM_USER,
     payload
 });
 
