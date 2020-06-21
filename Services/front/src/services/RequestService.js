@@ -45,6 +45,20 @@ class RequestService extends HttpBaseClient {
         return response.data;
     };
 
+    acceptRequest = async payload => {
+        const response = await this.getApiClient().post(
+            FINALPOINTS.REQUEST_BASE,
+            payload,
+            {
+                headers: {
+                    'action': 'accept',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                }
+            }
+        );
+        return response.data;
+    };
+
 };
 
 export default new RequestService();

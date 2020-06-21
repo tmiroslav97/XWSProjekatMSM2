@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import AgentRequestsComponent from '../../components/Request/AgentRequestsComponent';
+import AgentRequestsPendingComponent from '../../components/Request/AgentRequestsPendingComponent';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
+import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
+import { useDispatch } from 'react-redux';
 
 const AgentRequestsContainer = () => {
+    const dispatch = useDispatch
     const [pendingRequests, setPendingRequests] = useState([]);
     const [isFetchPendingRequests, setIsFetchPendingRequests] = useState(false);
     const [paidRequests, setPaidRequests] = useState([]);
@@ -33,11 +37,23 @@ const AgentRequestsContainer = () => {
         setIsFetchCanceledRequests(true);
     }
 
+    const handleAccept = async (id) => {
+        setIsFetchCanceledRequests(false);
+        const result = await RequestService.acceptRequest({ "id": id });
+        if (result = "Uspjesno prihvacen zahjtev") {
+            dispatch(putSuccessMsg(result));
+        } else {
+            dispatch(putErrorMsg(result));
+        }
+        fetchPendingRequests();
+    }
+
     useEffect(() => {
         fetchPendingRequests();
         fetchPaidRequests();
         fetchCanceledRequests();
     }, []);
+
 
     return (
         <Container>
@@ -45,7 +61,7 @@ const AgentRequestsContainer = () => {
                 <Col md={12} xs={12}>
                     {
                         isFetchPendingRequests ?
-                            <AgentRequestsComponent requests={pendingRequests} status="pending" /> : <SpinnerContainer />
+                            <AgentRequestsPendingComponent requests={pendingRequests} handleAccept={handleAccept} status="pending" /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>

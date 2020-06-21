@@ -11,7 +11,7 @@ public class RequestClientConfig {
     @Bean
     public Jaxb2Marshaller marshaller() {
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath("agent.app.gen");
+        marshaller.setContextPath("services.app.carrequestservice.model");
         return marshaller;
     }
     @Bean
