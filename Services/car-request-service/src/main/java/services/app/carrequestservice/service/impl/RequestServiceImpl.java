@@ -2,15 +2,17 @@ package services.app.carrequestservice.service.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import services.app.carrequestservice.client.AdServiceClient;
 import services.app.carrequestservice.client.AuthenticationClient;
 import services.app.carrequestservice.converter.DateAPI;
+import services.app.carrequestservice.converter.RequestConverter;
+import services.app.carrequestservice.dto.carreq.AcceptReqestCalendarTermsDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.exception.NotFoundException;
-import services.app.carrequestservice.model.AcceptRequest;
-import services.app.carrequestservice.model.Ad;
-import services.app.carrequestservice.model.Request;
-import services.app.carrequestservice.model.RequestStatusEnum;
+import services.app.carrequestservice.model.*;
 import services.app.carrequestservice.repository.RequestRepository;
 import services.app.carrequestservice.service.intf.AdService;
 import services.app.carrequestservice.service.intf.RequestService;
@@ -32,6 +34,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private AdServiceClient adServiceClient;
 
     @Override
     public Request findById(Long id) {
@@ -72,8 +77,24 @@ public class RequestServiceImpl implements RequestService {
     public String acceptRequest(AcceptRequest acceptRequest) {
         Long publisherUser = authenticationClient.findPublishUserByEmailWS(acceptRequest.getPublisherUser());
         Request request = this.findById(acceptRequest.getId());
-        
-        return "uspjesno";
+        if (acceptRequest.getAction().equals("reject")) {
+            request.setStatus(RequestStatusEnum.CANCELED);
+            this.save(request);
+            return "Uspjesno odbijen zahtjev";
+        }
+        AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO = RequestConverter.toCreateAcceptRequestCalendarTermsDTO(request);
+        Boolean flag = adServiceClient.acceptCarCalendar(acceptReqestCalendarTermsDTO);
+        if (flag) {
+            if (acceptRequest.getAction().equals("accept")) {
+                request.setStatus(RequestStatusEnum.PAID);
+                this.save(request);
+                return "Uspjesno prihvacen zahtjev";
+            } else {
+                return "Nepoznata akcija";
+            }
+        } else {
+            return "Nije moguce prihvatiti zahtjev";
+        }
     }
 
     @Override
