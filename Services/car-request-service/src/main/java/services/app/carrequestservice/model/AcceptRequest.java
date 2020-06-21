@@ -16,9 +16,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
@@ -31,13 +31,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "publisherUser",
-    "id"
+        "publisherUser",
+        "id",
+        "action"
 })
 @XmlRootElement(name = "acceptRequest")
 public class AcceptRequest {
@@ -45,17 +44,18 @@ public class AcceptRequest {
     @XmlElement(required = true)
     protected String publisherUser;
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long id;
 
+    @XmlElement(required = true)
+    protected String action;
+
     /**
      * Gets the value of the publisherUser property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPublisherUser() {
         return publisherUser;
@@ -63,23 +63,27 @@ public class AcceptRequest {
 
     /**
      * Sets the value of the publisherUser property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUser(String value) {
         this.publisherUser = value;
     }
 
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String value) {
+        this.action = value;
+    }
+
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getId() {
         return id;
@@ -87,11 +91,9 @@ public class AcceptRequest {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setId(Long value) {
         this.id = value;

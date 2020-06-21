@@ -4,8 +4,11 @@ import AgentRequestsComponent from '../../components/Request/AgentRequestsCompon
 import AgentRequestsPendingComponent from '../../components/Request/AgentRequestsPendingComponent';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
+import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
+import { useDispatch } from 'react-redux';
 
 const AgentRequestsContainer = () => {
+    const dispatch = useDispatch
     const [pendingRequests, setPendingRequests] = useState([]);
     const [isFetchPendingRequests, setIsFetchPendingRequests] = useState(false);
     const [paidRequests, setPaidRequests] = useState([]);
@@ -34,15 +37,23 @@ const AgentRequestsContainer = () => {
         setIsFetchCanceledRequests(true);
     }
 
+    const handleAccept = async (id) => {
+        setIsFetchCanceledRequests(false);
+        const result = await RequestService.acceptRequest({ "id": id });
+        if (result = "Uspjesno prihvacen zahjtev") {
+            dispatch(putSuccessMsg(result));
+        } else {
+            dispatch(putErrorMsg(result));
+        }
+        fetchPendingRequests();
+    }
+
     useEffect(() => {
         fetchPendingRequests();
         fetchPaidRequests();
         fetchCanceledRequests();
     }, []);
 
-    const handleAccept = (id) =>{
-
-    };
 
     return (
         <Container>

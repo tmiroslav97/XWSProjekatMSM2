@@ -22,6 +22,7 @@
             <xs:sequence>
                 <xs:element name="publisherUser" type="xs:string"/>
                 <xs:element name="id" type="xs:long"/>
+                <xs:element name="action" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-           targetNamespace="http://www.app.services/carrequestservice/model"
-           xmlns:tns="http://www.app.services/carrequestservice/model">
+    targetNamespace="http://www.app.services/carrequestservice/model"
+    xmlns:tns="http://www.app.services/carrequestservice/model">
     <xs:element name="getPublisherRequestsRequest">
         <xs:complexType>
             <xs:sequence>
@@ -22,6 +22,7 @@
             <xs:sequence>
                 <xs:element name="publisherUser" type="xs:string"/>
                 <xs:element name="id" type="xs:long"/>
+                <xs:element name="action" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

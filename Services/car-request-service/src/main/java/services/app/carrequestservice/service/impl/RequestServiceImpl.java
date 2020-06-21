@@ -7,6 +7,7 @@ import services.app.carrequestservice.client.AuthenticationClient;
 import services.app.carrequestservice.converter.DateAPI;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.exception.NotFoundException;
+import services.app.carrequestservice.model.AcceptRequest;
 import services.app.carrequestservice.model.Ad;
 import services.app.carrequestservice.model.Request;
 import services.app.carrequestservice.model.RequestStatusEnum;
@@ -65,6 +66,14 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public List<Request> findAllByPublisherUserEmailAndStatus(String email, String status) {
         return this.findAllByPublisherUserIdAndByStatus(authenticationClient.findPublishUserByEmailWS(email), status);
+    }
+
+    @Override
+    public String acceptRequest(AcceptRequest acceptRequest) {
+        Long publisherUser = authenticationClient.findPublishUserByEmailWS(acceptRequest.getPublisherUser());
+        Request request = this.findById(acceptRequest.getId());
+        
+        return "uspjesno";
     }
 
     @Override
