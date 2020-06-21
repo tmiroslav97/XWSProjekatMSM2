@@ -11,16 +11,20 @@ import { adSelector } from '../../store/ad/selectors';
 const StatisticsComponent = (props) => {
 
 
-
+console.log(props.ad)
     return (
        
         <Container>
-        <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
+        <Tabs>
         <Tab eventKey="grade" title="Najbolja prosjecna ocjena">
-           {props.ad}
+          <div>
+              <p>{props.ad.name}</p>
+              <p>{props.ad.mileage}</p>
+              <p>{props.ad.name}</p>
+          </div>
         </Tab>
         <Tab eventKey="mielage" title="Najvise kilometara">
-                dsdsadasdas
+        {/* {props.ad.mileage} */}
         </Tab>
         <Tab eventKey="comment" title="Najvise komentara" >
         </Tab>

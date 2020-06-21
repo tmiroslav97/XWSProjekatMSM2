@@ -6,6 +6,8 @@ import StatisticsComponent from '../../components/AgentFirm/StatisticsComponent'
 import { adSelector } from '../../store/ad/selectors'; 
 import { tokenSelector } from '../../store/user/selectors'; 
 import jwt_decode from 'jwt-decode';
+import { Container, Row, Col } from 'react-bootstrap';
+import SpinnerContainer from '../Common/SpinnerContainer';
 
 
 const StatisticsContainer = () => {
@@ -23,10 +25,20 @@ const StatisticsContainer = () => {
 
     console.log(ad.data)
     return(
-        <StatisticsComponent ad={ad.data}>
 
-        </StatisticsComponent>
-       
+      
+        <Container>
+    
+        <Row>
+            <Col >
+
+                {
+                    isFetchAd ?  <StatisticsComponent ad={ad.data}>  </StatisticsComponent> : <SpinnerContainer />
+                }
+            </Col>
+        </Row>
+
+    </Container>
   
     );
 }

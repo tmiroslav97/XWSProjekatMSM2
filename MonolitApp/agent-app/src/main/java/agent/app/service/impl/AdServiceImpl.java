@@ -276,4 +276,38 @@ public class AdServiceImpl implements AdService {
         }
         return null;
     }
+
+    @Override
+    public AdPageDTO findMaxMileage(String email) {
+
+        float max = 0;
+        System.out.println("Average method za kilometrazu");
+        for(Ad ad:adRepository.findAll()){
+
+
+            if(ad.getCar().getMileage()>max){
+                System.out.println("Max km: " + ad.getCar().getMileage());
+                max=ad.getCar().getMileage();
+            }
+
+
+        }
+
+        Ad maxAd = findAdWithMileage(max);
+        System.out.println("Id tog oglasa: " + maxAd.getId());
+        AdPageDTO adPage = AdConverter.toCreateAdPageDTOFromAd(maxAd);
+        return adPage;
+    }
+
+    @Override
+    public Ad findAdWithMileage(Float max_mileage) {
+        System.out.println("Metodaaa ... ");
+        for(Ad ad:adRepository.findAll()){
+            if(ad.getCar().getMileage()==max_mileage){
+                return ad;
+            }
+        }
+        return null;
+    }
+
 }

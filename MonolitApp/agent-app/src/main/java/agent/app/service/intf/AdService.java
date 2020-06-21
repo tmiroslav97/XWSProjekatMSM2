@@ -39,5 +39,9 @@ public interface AdService {
 
     Ad findAdWithGrade(Double max_grade);
 
-    AdPageDTO findBestAverageGrade(String max);
+    AdPageDTO findBestAverageGrade(String email);
+
+    Ad findAdWithMileage(Float max_mileage);
+
+    AdPageDTO findMaxMileage(String email);
 }
