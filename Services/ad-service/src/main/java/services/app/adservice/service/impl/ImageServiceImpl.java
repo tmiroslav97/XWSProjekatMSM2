@@ -1,5 +1,6 @@
 package services.app.adservice.service.impl;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import services.app.adservice.service.intf.ImageService;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -26,7 +28,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image findById(Long id) {
-        return imageRepository.findById(id).orElseThrow(()-> new NotFoundException("Slika ne postoji"));
+        return imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Slika ne postoji"));
     }
 
     @Override
@@ -41,8 +43,8 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Image save(Image image) {
-        if(image.getId() != null){
-            if(imageRepository.existsById(image.getId())){
+        if (image.getId() != null) {
+            if (imageRepository.existsById(image.getId())) {
                 throw new ExistsException(String.format("Slika vec postoji."));
             }
         }
@@ -77,16 +79,29 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public Integer getImageSize() {
-        if(this.findAll() == null){
+        if (this.findAll() == null) {
             return 0;
         }
         Integer i = this.findAll().size();
         return i;
     }
 
+    @Override
+    public String findImageByNameBase64(String name) {
+        byte[] fileContent = null;
+        String encodedString = "";
+        try {
+            fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + name));
+            encodedString = Base64.getEncoder().encodeToString(fileContent);
+        } catch (Exception e) {
+            encodedString = "Nije uspjelo";
+        }
+        return encodedString;
+    }
+
 
     @Override
-    public ImageDTO findImageLocationByName(String name, Long ad_id)   {
+    public ImageDTO findImageLocationByName(String name, Long ad_id) {
         System.out.println("SERVICE METODA ZA SRC LOAD SLIKE");
         Image image = imageRepository.findByName(name);
 
@@ -95,7 +110,7 @@ public class ImageServiceImpl implements ImageService {
 
         for (File file : listOfFiles) {
             String namePhoto = stripExtension(file.getName());
-            if(file.isFile() && namePhoto.equals(image.getName())){
+            if (file.isFile() && namePhoto.equals(image.getName())) {
                 System.out.println(namePhoto);
                 ImageDTO.builder()
                         .src(file.getAbsolutePath())
@@ -122,45 +137,45 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String uploadImage(MultipartFile photo) {
-        try{
+        try {
 
             System.out.println("DIREKTORIJUM " + photoDir.toString());
 
-            File file = new File("C:\\XMLPhotos\\adService");
-            if(!file.exists()){
-                if(!file.mkdirs()){
+            File file = new File(photoDir);
+            if (!file.exists()) {
+                if (!file.mkdirs()) {
                     System.out.println("Direktorijum nije kreiran");
                     return null;
                 }
             }
-            System.out.println("SLIKAAAAAAA "+photo.getOriginalFilename());
+            System.out.println("SLIKAAAAAAA " + photo.getOriginalFilename());
             String origName = photo.getOriginalFilename();
             String[] ext = origName.split("\\.");
             System.out.println(ext[0] + "  " + ext[1]);
 
             String name = this.getImageName();
             System.out.println(file.getAbsolutePath());
-            String uploadDirectory = file.getAbsolutePath() + "\\" + name +"." +ext[1];
+            String uploadDirectory = file.getAbsolutePath() + "\\" + name + "." + ext[1];
             File convertFile = new File(uploadDirectory);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(photo.getBytes());
             fout.close();
 
-            Integer rez = this.addImage(name + "." +ext[1]);
-            if(rez != 1){
+            Integer rez = this.addImage(name + "." + ext[1]);
+            if (rez != 1) {
                 System.out.println("desila se greska prilikom dodavanja slike");
                 return null;
             }
             System.out.println("dodata slika");
             return name;
-        }catch(Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
 
 
-    static String stripExtension (String str) {
+    static String stripExtension(String str) {
 
         if (str == null) return null;
         int pos = str.lastIndexOf(".");

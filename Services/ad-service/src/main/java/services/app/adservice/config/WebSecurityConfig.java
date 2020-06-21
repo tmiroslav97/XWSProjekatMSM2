@@ -65,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.GET, "/ad/**");
         web.ignoring().antMatchers(HttpMethod.GET, "/comment/{id}");
+        web.ignoring().antMatchers(HttpMethod.GET, "/image/{name}");
         web.ignoring().antMatchers(HttpMethod.POST, "/ad/accept");
-
     }
 }

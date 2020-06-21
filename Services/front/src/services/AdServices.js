@@ -68,6 +68,14 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    getImageBase64 = async payload => {
+        const response = await this.getApiClient().get(
+            FINALPOINTS.IMAGE_BASE +"/"+ payload,
+        );
+
+        return response.data;
+    };
+
     fetchAdsPaginated = async payload => {
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_SEARCH_BASE + '/ad', {

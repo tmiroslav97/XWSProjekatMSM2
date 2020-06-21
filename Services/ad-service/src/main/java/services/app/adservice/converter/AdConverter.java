@@ -1,26 +1,32 @@
 package services.app.adservice.converter;
 
+import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdDetailViewDTO;
 import services.app.adservice.dto.ad.AdPageDTO;
 import services.app.adservice.dto.ad.AdSynchronizeDTO;
-import services.app.adservice.dto.car.CarSynchronizeDTO;
 import services.app.adservice.model.Ad;
 import services.app.adservice.model.enumeration.DistanceLimitEnum;
 
+import java.io.File;
+import java.util.Base64;
 import java.util.HashSet;
 
-public class AdConverter extends AbstractConverter{
+public class AdConverter extends AbstractConverter {
 
-    public static Ad toCreateAdFromRequest(AdCreateDTO adCreateDTO){
+    @Value("${directory.prop}")
+    private String photoDir;
+
+    public static Ad toCreateAdFromRequest(AdCreateDTO adCreateDTO) {
         DistanceLimitEnum distanceLimitEnum = null;
-        if(adCreateDTO.getDistanceLimitFlag().equals("false")){
+        if (adCreateDTO.getDistanceLimitFlag().equals("false")) {
             System.out.println("izabrano je unlimited");
             distanceLimitEnum = DistanceLimitEnum.UNLIMITED;
-        }else if(adCreateDTO.getDistanceLimitFlag().equals("true")){
+        } else if (adCreateDTO.getDistanceLimitFlag().equals("true")) {
             System.out.println("izabrano je limited");
             distanceLimitEnum = DistanceLimitEnum.LIMITED;
-        }else{
+        } else {
             System.out.println("Nije nista");
         }
         return Ad.builder()
@@ -42,12 +48,19 @@ public class AdConverter extends AbstractConverter{
                 .build();
     }
 
-    public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad){
+    public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad) {
+        String encodedString = "";
+        try {
+            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + ad.getCoverPhoto()));
+            encodedString = Base64.getEncoder().encodeToString(fileContent);
+        } catch (Exception e) {
+            encodedString = "Nije uspjelo";
+        }
         return AdPageDTO.builder()
                 .id(ad.getId())
                 .name(ad.getName())
                 .location(ad.getLocation())
-                .coverPhoto(ad.getCoverPhoto())
+                .coverPhoto(encodedString)
 //                .price(ad.getPriceList().getPricePerDay())
                 .carManufacturer(ad.getCar().getCarManufacturer())
                 .carModel(ad.getCar().getCarModel())
@@ -57,12 +70,19 @@ public class AdConverter extends AbstractConverter{
                 .build();
     }
 
-    public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad){
+    public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad) {
+        String encodedString = "";
+        try {
+            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + ad.getCoverPhoto()));
+            encodedString = Base64.getEncoder().encodeToString(fileContent);
+        } catch (Exception e) {
+            encodedString = "Nije uspjelo";
+        }
         return AdDetailViewDTO.builder()
                 .id(ad.getId())
                 .name(ad.getName())
                 .location(ad.getLocation())
-                .coverPhoto(ad.getCoverPhoto())
+                .coverPhoto(encodedString)
                 .publishedDate(ad.getPublishedDate().toString())
                 .ratingNum(ad.getRatingNum())
                 .ratingCnt(ad.getRatingCnt())
@@ -82,13 +102,13 @@ public class AdConverter extends AbstractConverter{
 //                .pricePerKm(ad.getPriceList().getPricePerKm())
 //                .pricePerKmCDW(ad.getPriceList().getPricePerKmCDW())
 //                .pricePerDay(ad.getPriceList().getPricePerDay())
-               .publisherUserId(ad.getPublisherUser())
+                .publisherUserId(ad.getPublisherUser())
 //                .publisherUserFirstName(ad.getPublisherUser().getFirstName())
 //                .publisherUserLastName(ad.getPublisherUser().getLastName())
                 .build();
     }
 
-    public static AdSynchronizeDTO toAdSynchronizeDTOFromAd(Ad ad){
+    public static AdSynchronizeDTO toAdSynchronizeDTOFromAd(Ad ad) {
 
         return AdSynchronizeDTO.builder()
                 .id(ad.getId())

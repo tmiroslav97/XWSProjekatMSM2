@@ -73,6 +73,7 @@ services:
       REGISTRY_HOST: eureka-serviceregistry
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
+      PHOTO_DIR: img-ad
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_db?createDatabaseIfNotExist=true&serverTimezone=UTC
     depends_on: 
@@ -181,8 +182,6 @@ services:
       - static-network
     ports:
       - "8093:8093"
-    volumes:
-      - img-ad:/img-ad
       
   zuul:
     image: zuul

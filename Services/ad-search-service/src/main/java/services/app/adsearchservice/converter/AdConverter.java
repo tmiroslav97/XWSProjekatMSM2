@@ -2,20 +2,31 @@ package services.app.adsearchservice.converter;
 
 
 
+import org.apache.commons.io.FileUtils;
 import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.model.Ad;
 import services.app.adsearchservice.model.enumeration.DistanceLimitEnum;
 
+import java.io.File;
+import java.util.Base64;
+
 public class AdConverter {
 
 
     public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad){
+        String encodedString = "";
+        try {
+            byte[]  fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + ad.getCoverPhoto()));
+            encodedString = Base64.getEncoder().encodeToString(fileContent);
+        } catch (Exception e) {
+            encodedString = "Nije uspjelo";
+        }
         return AdPageDTO.builder()
                 .id(ad.getId())
                 .name(ad.getName())
                 .location(ad.getLocation())
-                .coverPhoto(ad.getCoverPhoto())
+                .coverPhoto(encodedString)
                 .price(ad.getPricePerDay())
                 .carManufacturer(ad.getCar().getCarManufacturer())
                 .carModel(ad.getCar().getCarModel())
