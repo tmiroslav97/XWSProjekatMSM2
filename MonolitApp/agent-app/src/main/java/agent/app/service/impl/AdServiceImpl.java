@@ -247,11 +247,16 @@ public class AdServiceImpl implements AdService {
         double max = 0.0;
         System.out.println("Average method");
         for(Ad ad:adRepository.findAll()){
-            averageGrade = ad.getRatingNum()/ad.getRatingCnt();
-            if(averageGrade>max){
-                System.out.println("Average: " + averageGrade);
-                max=averageGrade;
+            if(ad.getRatingCnt()==0){
+                continue;
+            }else{
+                averageGrade = ad.getRatingNum()/ad.getRatingCnt();
+                if(averageGrade>max){
+                    System.out.println("Average: " + averageGrade);
+                    max=averageGrade;
+                }
             }
+
         }
         System.out.println("repository .... ");
         Ad maxAd = findAdWithGrade(max);

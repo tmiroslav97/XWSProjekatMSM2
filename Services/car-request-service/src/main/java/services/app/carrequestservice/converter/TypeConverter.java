@@ -47,7 +47,7 @@ public class TypeConverter {
     }
 
     public static DateTime parseDate(String date) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("hh:mm dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.YYYY HH:mm:ss");
         return dtf.parseDateTime(date);
     }
 

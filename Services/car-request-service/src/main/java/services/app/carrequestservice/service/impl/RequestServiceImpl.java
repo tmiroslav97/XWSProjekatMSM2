@@ -2,8 +2,6 @@ package services.app.carrequestservice.service.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import services.app.carrequestservice.client.AdServiceClient;
 import services.app.carrequestservice.client.AuthenticationClient;
@@ -12,7 +10,10 @@ import services.app.carrequestservice.converter.RequestConverter;
 import services.app.carrequestservice.dto.carreq.AcceptReqestCalendarTermsDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.exception.NotFoundException;
-import services.app.carrequestservice.model.*;
+import services.app.carrequestservice.model.AcceptRequest;
+import services.app.carrequestservice.model.Ad;
+import services.app.carrequestservice.model.Request;
+import services.app.carrequestservice.model.RequestStatusEnum;
 import services.app.carrequestservice.repository.RequestRepository;
 import services.app.carrequestservice.service.intf.AdService;
 import services.app.carrequestservice.service.intf.RequestService;
@@ -74,6 +75,16 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public void deleteAllWithSameAdId(List<Ad> ads) {
+        List<Request> requests = requestRepository.findRequestByAds(ads);
+        for (Request req : requests) {
+            req.setStatus(RequestStatusEnum.CANCELED);
+            this.save(req);
+        }
+
+    }
+
+    @Override
     public String acceptRequest(AcceptRequest acceptRequest) {
         Long publisherUser = authenticationClient.findPublishUserByEmailWS(acceptRequest.getPublisherUser());
         Request request = this.findById(acceptRequest.getId());
@@ -88,6 +99,7 @@ public class RequestServiceImpl implements RequestService {
             if (acceptRequest.getAction().equals("accept")) {
                 request.setStatus(RequestStatusEnum.PAID);
                 this.save(request);
+                //this.deleteAllWithSameAdId(request.getAds());
                 return "Uspjesno prihvacen zahtjev";
             } else {
                 return "Nepoznata akcija";

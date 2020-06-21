@@ -3,6 +3,7 @@ package services.app.carrequestservice.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import services.app.carrequestservice.model.Ad;
 import services.app.carrequestservice.model.Request;
 import services.app.carrequestservice.model.RequestStatusEnum;
 
@@ -19,4 +20,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query("SELECT req FROM Request req where req.publisherUser=(?1) and req.status=(?2) order by req.submitDate desc")
     List<Request> findAllByPublisherUserAndByStatus(Long id, RequestStatusEnum status);
+
+    @Query("SELECT req FROM Request req where req.ads in (?1)")
+    List<Request> findRequestByAds(List<Ad> ads);
 }
