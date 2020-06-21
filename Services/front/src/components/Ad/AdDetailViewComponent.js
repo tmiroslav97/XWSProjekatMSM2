@@ -25,7 +25,7 @@ const AdDetailViewComponent = (props) => {
                 <Card.Title as="h4">{props.ad.name}</Card.Title>
                 <Row>
                     <Col md={5}>
-                        <Card.Img src="/img-ad/fiat.jpg" />
+                        <Card.Img src={"/img-ad/"+ props.ad.coverPhoto} />
 
                         {/* <Carousel>
                                     <Carousel.Item>

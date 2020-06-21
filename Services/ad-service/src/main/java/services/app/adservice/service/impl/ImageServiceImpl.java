@@ -135,19 +135,19 @@ public class ImageServiceImpl implements ImageService {
             }
             System.out.println("SLIKAAAAAAA "+photo.getOriginalFilename());
             String origName = photo.getOriginalFilename();
-            String[] ext = origName.split(".");
+            String[] ext = origName.split("\\.");
             System.out.println(ext[0] + "  " + ext[1]);
 
             String name = this.getImageName();
             System.out.println(file.getAbsolutePath());
-            String uploadDirectory = file.getAbsolutePath() + "\\" + name;
+            String uploadDirectory = file.getAbsolutePath() + "\\" + name +"." +ext[1];
             File convertFile = new File(uploadDirectory);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);
             fout.write(photo.getBytes());
             fout.close();
 
-            Integer rez = this.addImage(name);
+            Integer rez = this.addImage(name + "." +ext[1]);
             if(rez != 1){
                 System.out.println("desila se greska prilikom dodavanja slike");
                 return null;
