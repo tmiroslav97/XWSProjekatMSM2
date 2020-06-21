@@ -25,7 +25,7 @@ const AdComponent = (props) => {
                     <Card.Subtitle className="mb-2 text-muted">{variant.carManufacturer} {variant.carModel}  </Card.Subtitle>
                     <Row>
                         <Col md={4}>
-                            <Card.Img src={"/img-ad/" + variant.coverPhoto} />
+                            <Card.Img src={`data:image/jpeg;base64,${variant.coverPhoto}`} />
                         </Col>
                         <Col >
                             <br />

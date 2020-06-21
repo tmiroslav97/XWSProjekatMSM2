@@ -6,7 +6,7 @@ import { adsSelector } from '../../store/ad/selectors';
 import PaginationContainer from '../Pagination/PaginationContainer';
 import PaginationSize from '../../components/Pagination/PaginationSize';
 import OrdinarySearchContainer from '../../containers/Search/OrdinarySearchContainer'
-import { fetchAds } from '../../store/ad/actions';
+import { fetchAds, putAds } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import { loadImage } from '../../store/ad/saga';
 
@@ -28,19 +28,27 @@ const AdListContainer = () => {
                 size
             })
         );
-    
+        return () => {
+            dispatch(putAds({
+                'data': [],
+                'totalPageCnt': 0,
+                'nextPage': nextPage,
+                'size': size,
+                'isFetch': false
+            }));
+        };
     }, [nextPage, size]);
 
 
-    const handleCoverPh =  (event) => {
+    const handleCoverPh = (event) => {
         console.log("ISPISIIIIIII")
         console.log(event);
         setNamePhoto(event)
         console.log(namePhoto)
     }
 
-    return(
-       
+    return (
+
         <Container>
             <Row>
                 <Col>
@@ -49,7 +57,7 @@ const AdListContainer = () => {
             </Row>
             <Row>
                 <Col md={{ span: 12, offset: 3 }} xs={12}>
-    
+
                     <PaginationSize size={size} setSize={setSize} />
                 </Col>
             </Row>
@@ -57,7 +65,7 @@ const AdListContainer = () => {
                 <Col >
 
                     {
-                        isFetchAds ?  <AdComponent ads={ads.data} token={token} handleCoverPh={handleCoverPh}/> : <SpinnerContainer />
+                        isFetchAds ? <AdComponent ads={ads.data} token={token} handleCoverPh={handleCoverPh} /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>
@@ -66,7 +74,7 @@ const AdListContainer = () => {
             </Row>
         </Container>
 
-       
+
     );
 }
 
