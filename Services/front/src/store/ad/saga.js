@@ -15,7 +15,9 @@ import {
     PUT_IMAGE_SRC,
     PUT_CALENDAR,
     FETCH_CALENDAR,
-    ADD_TERM
+    ADD_TERM,
+    RATING_AD,
+    ADD_COMMENT
 } from './constants';
 
 import {
@@ -169,4 +171,24 @@ export function* addTerm(){
         'isFetch': true
     }));    
     console.log(temp);
+}
+
+export function* ratingAd(){
+    const { payload } = yield take(RATING_AD);
+    
+    console.log("sagaaa")
+    console.log(payload);
+    const data = yield call(AdServices.ratingAd, payload); 
+    console.log(data);
+    
+}
+
+export function* addComment(){
+    const { payload } = yield take(ADD_COMMENT);
+    
+    console.log("sagaaa")
+    console.log(payload);
+    const data = yield call(AdServices.addCommentForAd, payload); 
+    console.log(data);
+    
 }

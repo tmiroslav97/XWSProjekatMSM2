@@ -4,7 +4,8 @@ const FINALPOINTS = {
     AD_SEARCH_BASE: '/ad-search',
     AD_BASE: '/ad/ad',
     IMAGE_BASE: '/ad/image',
-    CALENDAR_BASE: 'ad/calendar'
+    CALENDAR_BASE: 'ad/calendar',
+    COMMENT_BASE: 'ad/comment'
 
 };
 
@@ -152,6 +153,40 @@ class AdServices extends HttpBaseClient {
         console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.CALENDAR_BASE,
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+
+        );
+
+        return response.data;
+    };
+
+    ratingAd = async payload => {
+        console.log("********* DODAVANJE OCENE ***********")
+        console.log(payload);
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/rating",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+
+        );
+
+        return response.data;
+    };
+
+    addCommentForAd = async payload => {
+        console.log("********* DODAVANJE KOMENTARA ***********")
+        console.log(payload);
+        const response = await this.getApiClient().post(
+            FINALPOINTS.COMMENT_BASE,
             payload,
             {
                 headers: {

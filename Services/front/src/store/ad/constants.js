@@ -13,3 +13,5 @@ export const PUT_CALENDAR = 'put_calendar';
 export const FETCH_CALENDAR = 'fetch_calendar';
 export const ADD_TERM = 'add_term';
 export const PUT_SEARCH_DATA ='put_search_data';
+export const RATING_AD = 'rating_ad';
+export const ADD_COMMENT = 'add_comment';
