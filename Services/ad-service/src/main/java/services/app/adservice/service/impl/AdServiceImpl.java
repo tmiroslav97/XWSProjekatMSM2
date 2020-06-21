@@ -223,12 +223,8 @@ public class AdServiceImpl implements AdService {
 
         ad = this.save(ad);
         //dodeljene slike
-<<<<<<< HEAD
         List<Image> images = new ArrayList<>();
         if(adCreateDTO.getImagesDTO() != null){
-=======
-        if (adCreateDTO.getImagesDTO() != null) {
->>>>>>> master
             List<String> slike = adCreateDTO.getImagesDTO();
             for (String slika : slike) {
                 Image image = imageService.findByName(slika);

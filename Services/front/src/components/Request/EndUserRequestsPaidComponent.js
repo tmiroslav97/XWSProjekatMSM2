@@ -5,7 +5,7 @@ import FormModalContainer from '../../containers/Common/FormModalContainer';
 import CommentComponent from '../Comment/CommentComponent';
 import ReactStars from "react-rating-stars-component";
 
-const EndUserRequestsPaidComponent = (props) => {
+const EndUserRequestsPaidComponent = (props) => { 
 
     return (
         <div>
