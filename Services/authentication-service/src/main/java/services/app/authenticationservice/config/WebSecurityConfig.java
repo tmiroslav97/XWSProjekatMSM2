@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/find-publish-user/ws").permitAll()
+                .antMatchers("/user/find-publish-user/ws/{email}").permitAll()
                 .antMatchers( "user/find-publish-user-by-id/{id}").permitAll()
                 .antMatchers(HttpMethod.GET).permitAll()
                 .antMatchers(HttpMethod.POST).permitAll()
@@ -73,8 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.POST, "/login");
         web.ignoring().antMatchers(HttpMethod.POST, "/sign-up");
-        web.ignoring().antMatchers(HttpMethod.POST, "/verify");
-        web.ignoring().antMatchers(HttpMethod.POST, "/user/find-publish-user/ws");
+        web.ignoring().antMatchers(HttpMethod.GET, "/verify");
+        web.ignoring().antMatchers(HttpMethod.POST, "/user/find-publish-user/ws/{email}");
         web.ignoring().antMatchers(HttpMethod.GET, "/end-user");
         web.ignoring().antMatchers(HttpMethod.PUT, "/end-user/**");
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",

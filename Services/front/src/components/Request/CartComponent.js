@@ -17,6 +17,7 @@ const CartComponent = (props) => {
                             <tr>
                                 <th>Bundle</th>
                                 <th>Naziv oglasa</th>
+                                <th>Akcija</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,7 +52,11 @@ const CartComponent = (props) => {
                                                     }
                                                 </ListGroup>
                                             </td>
-
+                                            <td>
+                                                <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item); }}>
+                                                    Ukloni
+                                                </Button>
+                                            </td>
                                         </tr>
 
                                     );

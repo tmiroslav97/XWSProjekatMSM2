@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AcceptReqestCalendarTermsDTO {
     Boolean bundle;
-    DateTime startDate;
-    DateTime endDate;
+    String startDate;
+    String endDate;
     List<Long> ads;
 }

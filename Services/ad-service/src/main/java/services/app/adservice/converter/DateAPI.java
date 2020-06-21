@@ -28,7 +28,7 @@ public class DateAPI {
         String mm = dio[1];
         String ostatak = dio[2];
 
-        String newDate = hh+ ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
+        String newDate = hh + ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
         System.out.println(newDate);
 
         DateTime dateTime1 = DateTime.parse(newDate, formatter);
@@ -86,4 +86,30 @@ public class DateAPI {
         return dateTime;
     }
 
+
+    //za datume sa fronta koji stizu u formatu: 19:29:00.000Z 15-07-2020
+    public static DateTime dateStringToDateTimeZ(String date) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
+//        DateFormat formatter = new SimpleDateFormat("hh:mm dd-MM-yyyy");
+        String dateString = date.replace("T", " ");
+//        System.out.println(dateString);
+        String[] res = dateString.split(" ");
+        String datum = res[0];
+//        System.out.println("DATUMMM : " + datum);
+        String[] dio = datum.split("-");
+        String yyyy = dio[0];
+        String MM = dio[1];
+        String dd = dio[2];
+
+        String vrijeme = res[1];
+        dio = vrijeme.split(":");
+        String hh = dio[0]; // 004
+        String mm = dio[1];
+
+        String newDate = hh + ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
+        System.out.println(newDate);
+        DateTime dateTime = DateTime.parse(newDate, formatter);
+
+        return dateTime;
+    }
 }
