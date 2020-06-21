@@ -183,6 +183,7 @@ export function* ratingAd(){
     console.log(payload);
     const data = yield call(AdServices.ratingAd, payload); 
     console.log(data);
+    yield put(putSuccessMsg(data));
     
 }
 
@@ -193,6 +194,7 @@ export function* addComment(){
     console.log(payload);
     const data = yield call(AdServices.addCommentForAd, payload); 
     console.log(data);
+    yield put(putSuccessMsg(data));
     
 }
 
@@ -214,6 +216,7 @@ export function* approvedComment() {
     const { payload } = yield take(APPROVED_COMMENT);
     const data = yield call(AdServices.approvedCommentForAd, payload);
     console.log(data);
+    yield put(putSuccessMsg(data));
     yield put(putComments({ 'isFetch': false }));
     const data2 = yield call(AdServices.fetchAllUnapprovedCommentForAd, payload);
     console.log(data2);
