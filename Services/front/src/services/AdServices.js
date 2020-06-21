@@ -207,6 +207,22 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    fetchAllCommentForAd = async payload => {
+        console.log("FETCH COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/"+ payload.id
+        );
+        return response.data;
+    };
+
+    fetchAllCommentForAdAndUser = async payload => {
+        console.log("FETCH COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/from-user/" + payload.id
+        );
+        return response.data;
+    };
+
     approvedCommentForAd = async payload => {
         console.log("APPROVED COMMENTS") 
         const response = await this.getApiClient().get(

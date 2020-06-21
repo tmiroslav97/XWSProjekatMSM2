@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Button, Card, Carousel } from 'react-bootstrap'
+import { Container, Row, Col, Button, Card, Carousel, Table } from 'react-bootstrap'
 import ListGroup from 'react-bootstrap/ListGroup'
 
 const AdDetailViewComponent = (props) => {
@@ -12,7 +12,7 @@ const AdDetailViewComponent = (props) => {
         androidFlag = "Da"
     }
 
-    
+
 
     return (
 
@@ -69,9 +69,49 @@ const AdDetailViewComponent = (props) => {
                 <Row>
                     <Col>
                         {
-                            props.hasRole(['ROLE_USER']) ? <Button variant="outline-success" onClick={() => { props.addToCart(props.ad); }} >Dodaj u korpu</Button> : null
+                            props.flagComments == false ?
+                                <div>
+                                    {
+                                        props.hasRole(['ROLE_USER']) ?
+                                        <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
+                                        : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
+                                    }
+                                </div>
+                                :
+                                <Button  
+                                variant="outline-success" 
+                                onClick={() => { props.hideComments(); }}
+                                >Sakrij komentare</Button>
+                        }
+
+                    </Col>
+                    <Col>
+                        {
+                            props.hasRole(['ROLE_USER']) ?
+                                <Button variant="outline-success" onClick={() => { props.addToCart(props.ad); }} >Dodaj u korpu</Button>
+                                : null
                         }
                     </Col>
+                </Row>
+                <Row>
+                    {props.flagComments ?
+                        <Col>
+                            <Table striped bordered hover >
+                                <thead>
+                                    <tr>
+                                        <th>Datum kreiranja</th>
+                                        <th>Ime i prezime</th>
+                                        <th>Sadrzaj</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {props.getCommentsView()}
+                                </tbody>
+                            </Table>
+
+                        </Col>
+                        : null}
                 </Row>
             </Card.Body>
         </Card>

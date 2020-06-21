@@ -53,6 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/comment/{id}").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated();
 
@@ -63,7 +64,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.GET, "/ad/**");
-
+        web.ignoring().antMatchers(HttpMethod.GET, "/comment/{id}");
         web.ignoring().antMatchers(HttpMethod.POST, "/ad/accept");
 
     }
