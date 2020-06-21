@@ -16,7 +16,8 @@ import {
     PUT_CALENDAR,
     FETCH_CALENDAR,
     ADD_TERM,
-    FETCH_BEST_GRADE
+    FETCH_BEST_GRADE,
+    FETCH_MAX_MILEAGE
 } from './constants';
 
 import {
@@ -177,6 +178,17 @@ export function* fetBestGradeAd() {
     console.log(payload);
     yield put(putAd({ 'isFetch': false }));
     const data = yield call(AdServices.fetchBestGradeAd, payload);
+    yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetchMaxMileageAd() {
+    const { payload } = yield take(FETCH_MAX_MILEAGE);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchMaxMileageAd, payload);
     yield put(putAd({
         'data': data,
         'isFetch': true
