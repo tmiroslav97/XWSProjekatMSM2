@@ -15,7 +15,8 @@ import {
     PUT_IMAGE_SRC,
     PUT_CALENDAR,
     FETCH_CALENDAR,
-    ADD_TERM
+    ADD_TERM,
+    FETCH_BEST_GRADE
 } from './constants';
 
 import {
@@ -155,4 +156,15 @@ export function* addTerm(){
     //     'isFetch': true
     // }));    
     // console.log(temp); 
+}
+
+export function* fetBestGradeAd() {
+    const { payload } = yield take(FETCH_BEST_GRADE);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchBestGradeAd, payload);
+    yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
 }
