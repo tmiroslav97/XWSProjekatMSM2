@@ -3,7 +3,12 @@ package services.app.adservice.converter;
 
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.CarCalendarTermDTO;
+import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.model.CarCalendarTerm;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class CarCalendarTermConverter {
 
@@ -23,4 +28,18 @@ public class CarCalendarTermConverter {
                 .build();
     }
 
+    public static List<CarCalendarTermSynchronizeDTO> toListCarCalendarTermSyncDTOFromListCarCalendarTerm(Set<CarCalendarTerm> carCalendarTermSet){
+        List<CarCalendarTermSynchronizeDTO> carCalendarTermSynchronizeDTOS = new ArrayList<>();
+        for(CarCalendarTerm cct : carCalendarTermSet){
+            CarCalendarTermSynchronizeDTO cctDTO = CarCalendarTermSynchronizeDTO.builder()
+                    .id(cct.getId())
+                    .startDate(cct.getStartDate().toString())
+                    .endDate(cct.getEndDate().toString())
+                    .adId(cct.getAd().getId())
+                    .build();
+            carCalendarTermSynchronizeDTOS.add(cctDTO);
+        }
+
+        return carCalendarTermSynchronizeDTOS;
+    }
 }

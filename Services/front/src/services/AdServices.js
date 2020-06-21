@@ -4,7 +4,8 @@ const FINALPOINTS = {
     AD_SEARCH_BASE: '/ad-search',
     AD_BASE: '/ad/ad',
     IMAGE_BASE: '/ad/image',
-    CALENDAR_BASE: 'ad/calendar'
+    CALENDAR_BASE: 'ad/calendar',
+    COMMENT_BASE: 'ad/comment'
 
 };
 
@@ -163,6 +164,57 @@ class AdServices extends HttpBaseClient {
 
         return response.data;
     };
+
+    ratingAd = async payload => {
+        console.log("********* DODAVANJE OCENE ***********")
+        console.log(payload);
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/rating",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+
+        );
+
+        return response.data;
+    };
+
+    addCommentForAd = async payload => {
+        console.log("********* DODAVANJE KOMENTARA ***********")
+        console.log(payload);
+        const response = await this.getApiClient().post(
+            FINALPOINTS.COMMENT_BASE,
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+
+        );
+
+        return response.data;
+    };
+
+    fetchAllUnapprovedCommentForAd = async payload => {
+        console.log("FETCH COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/all-unapproved"
+        );
+        return response.data;
+    };
+
+    approvedCommentForAd = async payload => {
+        console.log("APPROVED COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/approved/" + payload.id
+        );
+        return response.data;
+    };
+
 }
 
 

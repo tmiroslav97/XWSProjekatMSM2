@@ -114,6 +114,7 @@ public class EndUserServiceImpl implements EndUserService {
         if (endUser == null) {
             return 4; //non limit it's not end user, it is agent
         }
+        System.out.println("limit num: " + endUser.getAdLimitNum());
         return endUser.getAdLimitNum();
     }
 
@@ -121,7 +122,10 @@ public class EndUserServiceImpl implements EndUserService {
     public Integer reduceAdLimitNum(String email) {
         EndUser endUser = this.findByEmail(email);
         Integer br = getAdLimitNum(email);
+        System.out.println("limit num pre: " + br);
         endUser.setAdLimitNum(br - 1);
+        endUserRepository.save(endUser);
+        System.out.println("limit num posle: " + endUser.getAdLimitNum());
         return br - 1;
     }
 }
