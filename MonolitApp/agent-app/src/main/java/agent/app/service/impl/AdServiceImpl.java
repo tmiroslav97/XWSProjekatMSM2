@@ -6,6 +6,7 @@ import agent.app.converter.CarCalendarTermConverter;
 import agent.app.dto.ad.AdCreateDTO;
 import agent.app.dto.ad.AdPageContentDTO;
 import agent.app.dto.ad.AdPageDTO;
+import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
@@ -242,7 +243,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdPageDTO findBestAverageGrade(String email) {
+    public AdStatisticsDTO findBestAverageGrade(String email) {
         double averageGrade = 0.0;
         double max = 0.0;
         System.out.println("Average method");
@@ -261,16 +262,17 @@ public class AdServiceImpl implements AdService {
         System.out.println("repository .... ");
         Ad maxAd = findAdWithGrade(max);
         System.out.println("Id tog oglasa: " + maxAd.getId());
-        AdPageDTO adPage = AdConverter.toCreateAdPageDTOFromAd(maxAd);
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(maxAd);
         return adPage;
     }
 
 
     @Override
     public Ad findAdWithGrade(Double max_grade) {
-        System.out.println("Metodaaa ... ");
+        System.out.println("Metodaaa averg... ");
         for(Ad ad:adRepository.findAll()){
             if((ad.getRatingNum()/ad.getRatingCnt())==max_grade){
+                System.out.println(max_grade);
                 return ad;
             }
         }
@@ -278,8 +280,8 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdPageDTO findMaxMileage(String email) {
-
+    public AdStatisticsDTO findMaxMileage(String email) {
+        Ad adT = null;
         float max = 0;
         System.out.println("Average method za kilometrazu");
         for(Ad ad:adRepository.findAll()){
@@ -288,14 +290,15 @@ public class AdServiceImpl implements AdService {
             if(ad.getCar().getMileage()>max){
                 System.out.println("Max km: " + ad.getCar().getMileage());
                 max=ad.getCar().getMileage();
+                adT = ad;
             }
 
 
         }
 
-        Ad maxAd = findAdWithMileage(max);
-        System.out.println("Id tog oglasa: " + maxAd.getId());
-        AdPageDTO adPage = AdConverter.toCreateAdPageDTOFromAd(maxAd);
+//        Ad maxAd = findAdWithMileage(max);
+//        System.out.println("Id tog oglasa: " + maxAd.getId());
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
         return adPage;
     }
 
@@ -304,6 +307,7 @@ public class AdServiceImpl implements AdService {
         System.out.println("Metodaaa ... ");
         for(Ad ad:adRepository.findAll()){
             if(ad.getCar().getMileage()==max_mileage){
+                System.out.println(ad.getCar().getMileage());
                 return ad;
             }
         }
