@@ -3,6 +3,7 @@ package agent.app.converter;
 import agent.app.dto.ad.AdCreateDTO;
 import agent.app.dto.ad.AdDetailViewDTO;
 import agent.app.dto.ad.AdPageDTO;
+import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.model.Ad;
 import agent.app.model.enumeration.DistanceLimitEnum;
 
@@ -72,6 +73,20 @@ public class AdConverter {
                 .publisherUserId(ad.getPublisherUser().getId())
                 .publisherUserFirstName(ad.getPublisherUser().getFirstName())
                 .publisherUserLastName(ad.getPublisherUser().getLastName())
+                .build();
+    }
+
+
+    public static AdStatisticsDTO toCreateAdStatisticsDTOFromAd(Ad ad){
+        return AdStatisticsDTO.builder()
+                .id(ad.getId())
+                .name(ad.getName())
+                .location(ad.getLocation())
+                .carManufacturer(ad.getCar().getCarManufacturer())
+                .carModel(ad.getCar().getCarModel())
+                .mileage(ad.getCar().getMileage())
+                .averageGrade((float) (ad.getRatingNum()/ad.getRatingCnt()))
+                //comment
                 .build();
     }
 }
