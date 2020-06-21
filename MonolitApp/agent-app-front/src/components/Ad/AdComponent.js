@@ -13,12 +13,12 @@ const AdComponent = (props) => {
     return (
 
         props.ads.map((variant, idx) => (
-            <>
-                <br />
+           
               
                 <Card
                     key={idx}
                     border="secondary"
+                    className="mt-5"
                 >
                     <Card.Body>
                         <Card.Title>{variant.name}</Card.Title>
@@ -86,8 +86,7 @@ const AdComponent = (props) => {
                         </Row>
                     </Card.Body>
                 </Card>
-                <br />
-            </>
+        
         ))
 
     );

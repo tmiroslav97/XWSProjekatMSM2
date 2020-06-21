@@ -4,6 +4,7 @@ package agent.app.service.intf;
 import agent.app.dto.ad.AdCreateDTO;
 import agent.app.dto.ad.AdPageContentDTO;
 import agent.app.dto.ad.AdPageDTO;
+import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.model.Ad;
 import org.joda.time.DateTime;
 
@@ -39,5 +40,9 @@ public interface AdService {
 
     Ad findAdWithGrade(Double max_grade);
 
-    AdPageDTO findBestAverageGrade(String max);
+    AdStatisticsDTO findBestAverageGrade(String email);
+
+    Ad findAdWithMileage(Float max_mileage);
+
+    AdStatisticsDTO findMaxMileage(String email);
 }

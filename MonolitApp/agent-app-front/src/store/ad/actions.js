@@ -13,7 +13,8 @@ import{
     PUT_CALENDAR,
     FETCH_CALENDAR,
     ADD_TERM,
-    FETCH_BEST_GRADE
+    FETCH_BEST_GRADE,
+    FETCH_MAX_MILEAGE
 } from './constants';
 
 export const createdAd = payload => ({
@@ -87,5 +88,10 @@ export const addTerm = payload => ({
 
 export const fetchBestGrade = payload => ({
     type: FETCH_BEST_GRADE,
+    payload
+});
+
+export const fetchMaxMileage = payload => ({
+    type: FETCH_MAX_MILEAGE,
     payload
 });

@@ -154,4 +154,12 @@ public class AdController {
 
     }
 
+//        @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/max-mileage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findMaxMileageAd(@RequestParam(value = "email") String email) {
+        System.out.println("Max mileage contoller");
+        System.out.println(email);
+        return new ResponseEntity<>(adService.findMaxMileage(email), HttpStatus.OK);
+
+    }
 }
