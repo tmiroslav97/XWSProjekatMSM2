@@ -5,7 +5,7 @@ import PaginationContainer from '../Pagination/PaginationContainer';
 import CommentsComponent from '../../components/Comment/CommentsComponent';
 import EndUsersComponent from '../../components/Users/EndUsersComponent';
 import { commentsSelector } from '../../store/ad/selectors';
-import { fetchComments } from '../../store/ad/actions';
+import { fetchComments, approvedComment } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 
 const CommentsContainer = () => {
@@ -17,14 +17,38 @@ const CommentsContainer = () => {
         dispatch(fetchComments());   
     }, []);
 
-    // const handleBlock = (id) => {
-    //     dispatch(
-    //         blockOrUnblock({
-    //             "id": id,
-    //             "status": false
-    //         })
-    //     );
-    // };
+    const handleApproved = (id) => {
+        console.log("id komentara "+id)
+        dispatch(
+            approvedComment({
+                "id": id
+            })
+        );
+        
+    };
+    const getComments = () =>{
+        let list =[];
+        if(comments.isFetch){
+            comments.data.map((comment) => {
+                let ss = comment.creationDate.substring(0, 10);
+                let ss2 = comment.creationDate.substring(11, 16);
+                ss = ss2 + " " + ss;
+                list.push(
+                    <tr key={comment.id}>
+                        <td>{ss}</td>
+                        <td>{comment.publisherUserFirstName + ' ' + comment.publisherUserLastName}</td>
+                        <td>{comment.content}</td>
+                        <td>
+                            <Button variant="outline-success" 
+                            onClick={() => { handleApproved(comment.id); }}
+                            >Odobri</Button>
+                        </td>
+                    </tr>
+                );
+            })
+        }
+        return list;
+    }
 
    
 
@@ -44,7 +68,7 @@ const CommentsContainer = () => {
                 <Col md={12} xs={12}>
                     {
                         comments.isFetch ? 
-                        <CommentsComponent /> 
+                        <CommentsComponent getComments={getComments} /> 
                         : <SpinnerContainer />
                     }
                 </Col>

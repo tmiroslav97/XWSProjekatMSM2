@@ -116,7 +116,7 @@ public class CommentServiceImpl implements CommentService {
         for(Comment comment: commentSet){
             if(comment.getApproved()){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getId());
+                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
                 commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
                 commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
                 list.add(commentDTO);
@@ -140,13 +140,13 @@ public class CommentServiceImpl implements CommentService {
         for(Comment comment: commentSet){
             if(comment.getApproved()){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getId());
+                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
                 commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
                 commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
                 list.add(commentDTO);
             }else if(comment.getPublisherUser().equals(publisherUser)){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getId());
+                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
                 commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
                 commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
                 list.add(commentDTO);
@@ -162,7 +162,7 @@ public class CommentServiceImpl implements CommentService {
         for(Comment comment: comments){
             if(!comment.getApproved()){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getId());
+                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
                 commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
                 commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
                 list.add(commentDTO);

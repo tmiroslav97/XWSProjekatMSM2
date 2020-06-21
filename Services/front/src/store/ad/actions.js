@@ -17,7 +17,8 @@ import{
     RATING_AD,
     ADD_COMMENT,
     PUT_COMMENTS,
-    FETCH_COMMENTS
+    FETCH_COMMENTS,
+    APPROVED_COMMENT
 } from './constants';
 
 export const putSearchData = payload => ({
@@ -111,5 +112,10 @@ export const putComments = payload => ({
 
 export const fetchComments = payload => ({
     type: FETCH_COMMENTS,
+    payload
+});
+
+export const approvedComment = payload => ({
+    type: APPROVED_COMMENT,
     payload
 });

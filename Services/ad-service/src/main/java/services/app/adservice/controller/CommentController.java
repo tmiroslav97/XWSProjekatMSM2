@@ -42,14 +42,23 @@ public class CommentController {
     @RequestMapping( method = RequestMethod.POST)
     public ResponseEntity<?> addCommentForAd(@RequestBody CommentCreateDTO commentCreateDTO) {
         System.out.println("Comment !!!!!");
-        return new ResponseEntity<>(commentService.createComment(commentCreateDTO), HttpStatus.OK);
+        Integer rez = commentService.createComment(commentCreateDTO);
+        if(rez == 1){
+            return new ResponseEntity<>("Dodali ste komentar.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping(value = "/approved/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> approvedComment(@PathVariable("id") Long id) {
         System.out.println("Comment !!!!!");
-        return new ResponseEntity<>(commentService.setApprove(true, id), HttpStatus.OK);
+        Integer rez = commentService.setApprove(true, id);
+        if(rez == 1){
+            return new ResponseEntity<>("Odobrili ste komentar.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
+
     }
 
 

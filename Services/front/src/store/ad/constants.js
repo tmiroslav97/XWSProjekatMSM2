@@ -17,3 +17,4 @@ export const RATING_AD = 'rating_ad';
 export const ADD_COMMENT = 'add_comment';
 export const FETCH_COMMENTS = 'fetch_comments';
 export const PUT_COMMENTS = 'put_comments';
+export const APPROVED_COMMENT = 'approved_comment';

@@ -78,7 +78,12 @@ public class AdController {
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value ="/rating",method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO){
-        return new ResponseEntity<>(adService.addRatingToAd(adRatingDTO), HttpStatus.OK);
+
+        Integer rez = adService.addRatingToAd(adRatingDTO);
+        if(rez == 1){
+            return new ResponseEntity<>("Ocenili ste oglas.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
 
