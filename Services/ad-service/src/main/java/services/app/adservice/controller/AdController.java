@@ -1,6 +1,5 @@
 package services.app.adservice.controller;
 
-import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,14 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import services.app.adservice.converter.AdConverter;
-import services.app.adservice.converter.DateAPI;
+import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
+import services.app.adservice.dto.ad.AdRatingDTO;
 import services.app.adservice.model.CustomPrincipal;
 import services.app.adservice.service.intf.AdService;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.Principal;
+
 
 
 @RestController
@@ -30,10 +28,12 @@ public class AdController {
         this.adService = adService;
     }
 
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(adService.getAdDetailView(id), HttpStatus.OK);
+        System.out.println("Service ad !!!!!");
+        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id)), HttpStatus.OK);
     }
 
 
@@ -74,5 +74,22 @@ public class AdController {
         return new ResponseEntity<>(adService.findAll(nextPage, size, principal.getUserId()), HttpStatus.OK);
     }
 
+
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value ="/rating",method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO){
+
+        Integer rez = adService.addRatingToAd(adRatingDTO);
+        if(rez == 1){
+            return new ResponseEntity<>("Ocenili ste oglas.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
+    }
+
+
+    @RequestMapping(value="/accept",method = RequestMethod.POST)
+    public Boolean acceptCarCalendar(@RequestBody AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO) {
+        return adService.acceptCarCalendar(acceptReqestCalendarTermsDTO);
+    }
 
 }

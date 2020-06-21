@@ -142,7 +142,6 @@ public class AdController {
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
     }
 
-
 //    @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findBestAverageGradeAd(@RequestParam(value = "email") String email) {
@@ -152,6 +151,7 @@ public class AdController {
 //        Principal principal = (Principal) auth.getPrincipal();
         System.out.println(email);
         return new ResponseEntity<>(adService.findBestAverageGrade(email), HttpStatus.OK);
+
     }
 
 }

@@ -58,7 +58,7 @@ import services.app.carrequestservice.common.db.DbTableConstants;
 public class Ad {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter5 .class)
     @XmlSchemaType(name = "long")

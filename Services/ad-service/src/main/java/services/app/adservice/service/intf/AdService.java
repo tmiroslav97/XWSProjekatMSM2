@@ -1,5 +1,7 @@
 package services.app.adservice.service.intf;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdDetailViewDTO;
 import services.app.adservice.dto.ad.AdPageContentDTO;
@@ -23,10 +25,17 @@ public interface AdService {
     AdPageContentDTO findAll(Integer page, Integer size);
     Integer createAd(AdCreateDTO adCreateDTO);
     List<StatisticCarDTO> getCarsWithBestRating(Long publisherId);
+    Boolean acceptCarCalendar(AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO);
     void syncData();
     void setRating(AdRatingDTO ad);
     void logicalDeleteOrRevertAds(List<Ad> ads, Boolean status);
     void logicalDeleteOrRevert(Ad ad, Boolean status);
+    String generateToken();
+    Integer isExistToken(String token);
+    Integer addRatingToAd(AdRatingDTO adRatingDTO);
+
     AdDetailViewDTO getAdDetailView(Long ad_id);
+
+
 
 }

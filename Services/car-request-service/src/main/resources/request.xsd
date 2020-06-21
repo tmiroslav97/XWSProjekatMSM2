@@ -17,6 +17,15 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+    <xs:element name="acceptRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUser" type="xs:string"/>
+                <xs:element name="id" type="xs:long"/>
+                <xs:element name="action" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="getPublisherReportsRequest">
         <xs:complexType>
             <xs:sequence>
@@ -49,6 +58,13 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element maxOccurs="unbounded" minOccurs="0" name="reports" type="tns:Report"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="submitResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="1" minOccurs="1" name="msg" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

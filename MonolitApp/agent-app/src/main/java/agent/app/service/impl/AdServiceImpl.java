@@ -241,7 +241,6 @@ public class AdServiceImpl implements AdService {
         return ads;
     }
 
-
     @Override
     public AdPageDTO findBestAverageGrade(String email) {
         double averageGrade = 0.0;

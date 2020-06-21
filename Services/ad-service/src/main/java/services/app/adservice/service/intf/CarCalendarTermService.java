@@ -1,5 +1,6 @@
 package services.app.adservice.service.intf;
 
+import org.joda.time.DateTime;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.CarCalendarTermDTO;
 import services.app.adservice.model.CarCalendarTerm;
@@ -17,4 +18,5 @@ public interface CarCalendarTermService {
     Integer addCarCalendarTerm(CarCalendarTermDTO carCalendarTermDTO);
     CarCalendarTerm editCarCalendarTerm(CarCalendarTerm carCalendarTerm);
     List<CarCalendarTermCreateDTO> findByAdId(Long id);
+    CarCalendarTerm findByAdAndDate(Long adId, DateTime startDate, DateTime endDate);
 }

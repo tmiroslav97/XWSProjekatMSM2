@@ -30,6 +30,11 @@ public class DateAPI {
         return dtf.parseDateTime(date);
     }
 
+    public static String StringDateFromDateTime(DateTime dateTime){
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.YYYY HH:mm:ss");
+        return dtf.print(dateTime);
+    }
+
     //za datume sa fronta koji stizu u formatu: 2020-06-03T03:03
     public static DateTime dateStringToDateTime(String date) {
         DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");

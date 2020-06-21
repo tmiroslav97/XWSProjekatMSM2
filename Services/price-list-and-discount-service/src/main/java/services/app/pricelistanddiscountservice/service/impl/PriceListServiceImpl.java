@@ -65,6 +65,9 @@ public class PriceListServiceImpl implements PriceListService {
             }
         }
         List<PriceListCreateDTO> ret = priceListsFromPublishUser.stream().map(PriceListConverter::toCreatePriceListCreateDTOFromPriceList).collect(Collectors.toList());
+//        if(ret == null){
+//            return null;
+//        }
         return ret;
     }
 

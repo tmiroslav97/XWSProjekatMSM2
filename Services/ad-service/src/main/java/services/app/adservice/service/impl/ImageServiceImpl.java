@@ -133,6 +133,11 @@ public class ImageServiceImpl implements ImageService {
                     return null;
                 }
             }
+            System.out.println("SLIKAAAAAAA "+photo.getOriginalFilename());
+            String origName = photo.getOriginalFilename();
+            String[] ext = origName.split(".");
+            System.out.println(ext[0] + "  " + ext[1]);
+
             String name = this.getImageName();
             System.out.println(file.getAbsolutePath());
             String uploadDirectory = file.getAbsolutePath() + "\\" + name;

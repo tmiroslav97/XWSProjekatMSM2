@@ -4,9 +4,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import services.app.carrequestservice.model.GetPublisherRequestsByStatusRequest;
-import services.app.carrequestservice.model.GetPublisherRequestsRequest;
-import services.app.carrequestservice.model.GetPublisherRequestsResponse;
+import services.app.carrequestservice.model.*;
 import services.app.carrequestservice.service.intf.RequestService;
 
 @Endpoint
@@ -32,6 +30,14 @@ public class RequestEndpoint {
     public GetPublisherRequestsResponse getAllRequestsByPublisherEmailAndStatus(@RequestPayload GetPublisherRequestsByStatusRequest request) {
         GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
         response.getRequests().addAll(requestService.findAllByPublisherUserEmailAndStatus(request.getPublisherUser(), request.getStatus()));
+        return response;
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "acceptRequest")
+    @ResponsePayload
+    public SubmitResponse acceptRequest(@RequestPayload AcceptRequest request) {
+        SubmitResponse response = new SubmitResponse();
+        response.setMsg(requestService.acceptRequest(request));
         return response;
     }
 }

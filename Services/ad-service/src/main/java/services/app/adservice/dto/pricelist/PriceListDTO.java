@@ -8,7 +8,6 @@ import lombok.*;
 @Setter
 @Getter
 public class PriceListDTO {
-    private Long priceListId;
     private String creationDate;
     private Float pricePerKm;
     private Float pricePerKmCDW;
