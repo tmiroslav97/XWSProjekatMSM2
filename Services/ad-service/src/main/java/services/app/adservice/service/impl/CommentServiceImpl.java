@@ -154,4 +154,22 @@ public class CommentServiceImpl implements CommentService {
         }
         return list;
     }
+
+    @Override
+    public List<CommentDTO> findAllUnapprovedCommentFromAd() {
+        List<CommentDTO> list = new ArrayList<>();
+        List<Comment> comments = this.findAll();
+        for(Comment comment: comments){
+            if(!comment.getApproved()){
+                CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
+                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getId());
+                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
+                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
+                list.add(commentDTO);
+            }
+        }
+
+
+        return list;
+    }
 }

@@ -6,3 +6,4 @@ export const adSelector = state => state[reducer].ad;
 export const imageSrcSelector = state => state[reducer].imagesSrc;
 export const calendarSelector = state => state[reducer].calendar;
 export const searchDataSelector = state => state[reducer].searchData;
+export const commentsSelector = state => state[reducer].comments;

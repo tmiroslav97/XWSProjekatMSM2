@@ -2,7 +2,7 @@ import React from 'react';
 import { history } from '../../index';
 import { Row, Col, OverlayTrigger, Tooltip, ListGroup, Table, Button } from 'react-bootstrap'
 import FormModalContainer from '../../containers/Common/FormModalContainer';
-import CommentComponent from '../CommentAndRating/CommentComponent';
+import CommentComponent from '../Comment/CommentComponent';
 import ReactStars from "react-rating-stars-component";
 
 const EndUserRequestsPaidComponent = (props) => {

@@ -22,5 +22,6 @@ public interface CommentService {
 
     List<CommentDTO> findAllApprovedCommentFromAd(Long id);
     List<CommentDTO> findAllApprovedCommentAndUserCommentFromAd(Long id);
+    List<CommentDTO> findAllUnapprovedCommentFromAd();
 
 }
