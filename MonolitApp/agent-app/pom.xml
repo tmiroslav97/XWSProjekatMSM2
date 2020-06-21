@@ -111,10 +111,10 @@
 				</executions>
 				<configuration>
 					<sources>
-						<source>${project.basedir}/src/main/resources/agent.xsd</source>
+						<source>${project.basedir}/src/main/resources/request.xsd</source>
 					</sources>
 					<xjbSources>
-						<xjbSource>${project.basedir}/src/main/resources/agent.xjb</xjbSource>
+						<xjbSource>${project.basedir}/src/main/resources/request.xjb</xjbSource>
 					</xjbSources>
 					<outputDirectory>${project.basedir}/src/main/java</outputDirectory>
 					<clearOutputDir>false</clearOutputDir>

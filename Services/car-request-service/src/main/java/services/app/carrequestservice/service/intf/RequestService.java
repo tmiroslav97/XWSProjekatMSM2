@@ -1,6 +1,7 @@
 package services.app.carrequestservice.service.intf;
 
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
+import services.app.carrequestservice.model.AcceptRequest;
 import services.app.carrequestservice.model.Request;
 
 import java.util.HashMap;
@@ -21,6 +22,8 @@ public interface RequestService {
     List<Request> findAllByPublisherUserEmail(String email);
 
     List<Request> findAllByPublisherUserEmailAndStatus(String email, String status);
+
+    String acceptRequest(AcceptRequest acceptRequest);
 
     List<Request> findAllByPublisherUserIdAndByStatus(Long id, String status);
 

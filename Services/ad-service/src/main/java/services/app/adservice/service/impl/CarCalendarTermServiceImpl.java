@@ -1,5 +1,6 @@
 package services.app.adservice.service.impl;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import services.app.adservice.converter.CarCalendarTermConverter;
@@ -115,6 +116,11 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
         }
 
         return list;
+    }
+
+    @Override
+    public CarCalendarTerm findByAdAndDate(Long adId, DateTime startDate, DateTime endDate) {
+        return carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
     }
 
 }

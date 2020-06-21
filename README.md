@@ -1,3 +1,7 @@
+### Napomena
+Zbog greske u git repozitoriju kreiran je novi, sve sto je radjeno prije 21.6.2020. je vidljivo na prethodnom odnosno na
+[repozitorijumu](https://github.com/tmiroslav97/XWSProjekatMSM)
+
 # Rent-A-Car - XWS projekat
 Fakultetski projekat iz XML i WS.
 
