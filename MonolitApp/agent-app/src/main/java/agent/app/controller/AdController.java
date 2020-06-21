@@ -143,14 +143,15 @@ public class AdController {
     }
 
 //    @PreAuthorize("hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findBestAverageGradeAd() {
+    @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findBestAverageGradeAd(@RequestParam(value = "email") String email) {
         System.out.println("Best average grade");
 //        System.out.println(principal);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Principal principal = (Principal) auth.getPrincipal();
-        System.out.println(principal);
-        return new ResponseEntity<>(adService.findBestAverageGrade("svetlana@gmail.com"), HttpStatus.OK);
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        Principal principal = (Principal) auth.getPrincipal();
+        System.out.println(email);
+        return new ResponseEntity<>(adService.findBestAverageGrade(email), HttpStatus.OK);
+
     }
 
 }

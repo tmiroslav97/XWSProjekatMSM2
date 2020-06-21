@@ -73,7 +73,7 @@ const AdComponent = (props) => {
                                         {variant.mileage}
                                     </Card.Text>
                                 </Row>
-                                <Card.Link href={'/agent-firm/ad-detail-view/' + variant.id} >Vise detalja ></Card.Link>
+                                <Card.Link href={'/agent-firm/ad-detail-view/' + variant.id} >Vise detalja </Card.Link>
 
                             </Col>
                               
