@@ -2,6 +2,7 @@ package services.app.carrequestservice.service.intf;
 
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.AcceptRequest;
+import services.app.carrequestservice.model.Ad;
 import services.app.carrequestservice.model.Request;
 
 import java.util.HashMap;
@@ -22,6 +23,9 @@ public interface RequestService {
     List<Request> findAllByPublisherUserEmail(String email);
 
     List<Request> findAllByPublisherUserEmailAndStatus(String email, String status);
+
+
+    void deleteAllWithSameAdId(List<Ad> ads);
 
     String acceptRequest(AcceptRequest acceptRequest);
 

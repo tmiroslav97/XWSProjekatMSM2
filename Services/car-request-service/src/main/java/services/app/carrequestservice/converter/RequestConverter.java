@@ -12,8 +12,8 @@ public class RequestConverter extends AbstractConverter {
         List<Long> ads = new ArrayList<>(request.getAds().stream().map(ad -> ad.getId()).collect(Collectors.toList()));
         return AcceptReqestCalendarTermsDTO.builder()
                 .bundle(request.getBundle())
-                .startDate(request.getStartDate())
-                .endDate(request.getEndDate())
+                .startDate(request.getStartDate().toString())
+                .endDate(request.getEndDate().toString())
                 .ads(ads)
                 .build();
     }
