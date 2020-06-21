@@ -12,7 +12,8 @@ import{
     PUT_IMAGE_SRC,
     PUT_CALENDAR,
     FETCH_CALENDAR,
-    ADD_TERM
+    ADD_TERM,
+    FETCH_BEST_GRADE
 } from './constants';
 
 export const createdAd = payload => ({
@@ -81,5 +82,10 @@ export const fetchCalendar = payload => ({
 
 export const addTerm = payload => ({
     type: ADD_TERM,
+    payload
+});
+
+export const fetchBestGrade = payload => ({
+    type: FETCH_BEST_GRADE,
     payload
 });

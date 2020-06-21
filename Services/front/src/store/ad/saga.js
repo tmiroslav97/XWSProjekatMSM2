@@ -15,7 +15,11 @@ import {
     PUT_IMAGE_SRC,
     PUT_CALENDAR,
     FETCH_CALENDAR,
-    ADD_TERM
+    ADD_TERM,
+    RATING_AD,
+    ADD_COMMENT,
+    FETCH_COMMENTS,
+    APPROVED_COMMENT
 } from './constants';
 
 import {
@@ -23,7 +27,8 @@ import {
     putImageName,
     putAd,
     putImageSrc,
-    putCalendar
+    putCalendar,
+    putComments
 } from './actions';
 
 import {
@@ -169,4 +174,57 @@ export function* addTerm(){
         'isFetch': true
     }));    
     console.log(temp);
+}
+
+export function* ratingAd(){
+    const { payload } = yield take(RATING_AD);
+    
+    console.log("sagaaa")
+    console.log(payload);
+    const data = yield call(AdServices.ratingAd, payload); 
+    console.log(data);
+    yield put(putSuccessMsg(data));
+    
+}
+
+export function* addComment(){
+    const { payload } = yield take(ADD_COMMENT);
+    
+    console.log("sagaaa")
+    console.log(payload);
+    const data = yield call(AdServices.addCommentForAd, payload); 
+    console.log(data);
+    yield put(putSuccessMsg(data));
+    
+}
+
+export function* fetchComments() {
+    const { payload } = yield take(FETCH_COMMENTS);
+    yield put(putComments({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllUnapprovedCommentForAd, payload);
+    console.log(data);
+    yield put(putComments({
+        'data': data,
+        // 'totalPageCnt': data.totalPageCnt,
+        // 'nextPage': payload.nextPage,
+        // 'size': payload.size,
+        'isFetch': true
+    }));
+}
+
+export function* approvedComment() {
+    const { payload } = yield take(APPROVED_COMMENT);
+    const data = yield call(AdServices.approvedCommentForAd, payload);
+    console.log(data);
+    yield put(putSuccessMsg(data));
+    yield put(putComments({ 'isFetch': false }));
+    const data2 = yield call(AdServices.fetchAllUnapprovedCommentForAd, payload);
+    console.log(data2);
+    yield put(putComments({
+        'data': data2,
+        // 'totalPageCnt': data.totalPageCnt,
+        // 'nextPage': payload.nextPage,
+        // 'size': payload.size,
+        'isFetch': true
+    }));
 }

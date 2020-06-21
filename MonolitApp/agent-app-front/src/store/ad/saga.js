@@ -15,7 +15,8 @@ import {
     PUT_IMAGE_SRC,
     PUT_CALENDAR,
     FETCH_CALENDAR,
-    ADD_TERM
+    ADD_TERM,
+    FETCH_BEST_GRADE
 } from './constants';
 
 import {
@@ -128,31 +129,56 @@ export function* loadImage(){
     // }));
     
 }
-
 //PROVERITI
 export function* fetchCalendar() {
-    // const { payload } = yield take(FETCH_CALENDAR);
-    // console.log("SAGA "+ payload.id)
-    // yield put(putCalendar({ 'isFetch': false }));
-    // const data = yield call(AdServices.fetchCalendar, payload.id);
-    // yield put(putCalendar({
-    //     'data': data,
-    //     'isFetch': true
-    // }));
+    const { payload } = yield take(FETCH_CALENDAR);
+    console.log("SAGA "+ payload.id)
+    // const temp = yield select(calendarSelector);
+    const temp = [];
+    console.log(temp);
+    yield put(putCalendar({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchCalendar, payload.id);
+    data.map((term)=>{
+        console.log(term);
+        temp.push({
+            'startDate': term.startDate,
+            'endDate': term.endDate
+        });
+    })
+    yield put(putCalendar({
+        'data': temp,
+        'isFetch': true
+    }));
 }
 
 export function* addTerm(){
-    // const { payload } = yield take(ADD_TERM);
-    // const temp = yield select(calendarSelector);
-    // yield put(putCalendar({ 'isFetch': false }));
-    // console.log("sagaaa")
-    // console.log(payload);
-    // const data = yield call(AdServices.addTerm, payload); 
-    // console.log(data);
-    // yield temp.push(data);
-    // yield put(putCalendar({
-    //     'data': temp,
-    //     'isFetch': true
-    // }));    
-    // console.log(temp); 
+    const { payload } = yield take(ADD_TERM);
+    const temp = yield select(calendarSelector);
+    yield put(putCalendar({ 'isFetch': false }));
+    console.log("sagaaa")
+    console.log(payload);
+    const data = yield call(AdServices.addTerm, payload); 
+    console.log(data.adId);
+    console.log(data.startDate);
+    console.log(data.endDate);
+    yield temp.data.push({
+        'startDate': data.startDate,
+        'endDate': data.endDate
+    });
+    yield put(putCalendar({
+        'data': temp.data,
+        'isFetch': true
+    }));    
+    console.log(temp);
+}
+
+export function* fetBestGradeAd() {
+    const { payload } = yield take(FETCH_BEST_GRADE);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchBestGradeAd, payload);
+    yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
 }

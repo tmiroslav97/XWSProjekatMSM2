@@ -139,6 +139,8 @@ const AvailabilityContainer = (props) => {
 
                 // setValidated(false);
             }
+        }else{
+            alert("Niste uneli sva polja.");
         }
     }
 

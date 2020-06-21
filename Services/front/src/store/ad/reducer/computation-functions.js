@@ -36,3 +36,10 @@ export function putSearchData(state, payload) {
         searchData: payload
     };
 }
+
+export function putComments(state, payload) {
+    return {
+        ...state,
+        comments: payload
+    };
+}

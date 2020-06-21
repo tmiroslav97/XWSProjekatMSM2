@@ -162,6 +162,21 @@ class AdServices extends HttpBaseClient {
 
         return response.data;
     };
+
+    
+    fetchBestGradeAd = async payload => {
+        console.log("Best grade ad service")
+        console.log(payload)
+        const response = await this.getApiClient().get(
+            FINALPOINTS.AD_BASE + "/best-average-grade" , {
+                    params: {
+                        email: payload
+                    }
+                }      
+        );
+        console.log(response);
+        return response.data;
+    };
 }
 
     

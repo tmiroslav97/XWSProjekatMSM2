@@ -12,6 +12,7 @@ export const CREATED_AD_PHOTOS ='createdAdPhotos';
 export const PUT_CALENDAR = 'put_calendar';
 export const FETCH_CALENDAR = 'fetch_calendar';
 export const ADD_TERM = 'add_term';
+export const FETCH_BEST_GRADE = 'fetch_best_grade'
 
 
 
