@@ -20,7 +20,7 @@ const AdComponent = (props) => {
                     <Card.Subtitle className="mb-2 text-muted">{ad.carManufacturer} {ad.carModel}  </Card.Subtitle>
                     <Row>
                         <Col md={4}>
-                            <Card.Img src="/img-ad/fiat.jpg" />
+                            <Card.Img src={"/img-ad/" + ad.coverPhoto} />
                         </Col>
                         <Col >
                             <br />

@@ -32,4 +32,4 @@ Price list and discount service | / |  8088 |  [Detaljno](Services/price-list-an
 Car request service | / | 8090 |  [Detaljno](Services/car-request-service/README.md)
 Message service | / |  8091 |  [Detaljno](Services/message-service/README.md)
 Email service | Servis ce biti podignut u cloud- u. |  / |  [Detaljno](Services/email-service/README.md)
-Front service | Frontend za glavni backend aplikacije. |  80 |  [Detaljno](Services/front/README.md)
+Front service | Frontend za glavni backend aplikacije. |  8093 |  [Detaljno](Services/front/README.md)

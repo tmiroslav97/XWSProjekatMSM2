@@ -112,13 +112,13 @@ INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, cdw, c
 VALUES (4, false, 'BMW', '320d', 'Limuzina', true, 3, 'Benzin', 'Manuelni', 250, null, '2019-02-20');
 
 INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (1, 'slika1', false, 20, 'LIMITED', true, 'Beograd', 'Oglas za autic fiat', '20.04.2020.', 1, 8, 1, 1, 3);
+VALUES (1, 'slika1.jpg', false, 20, 'LIMITED', true, 'Beograd', 'Oglas za autic fiat', '20.04.2020.', 1, 8, 1, 1, 3);
 INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (2, 'slika6', false, 25, 'LIMITED', true, 'Zrenjanin', 'Oglas za automobil mercedes', '20.04.2020.', 3, 30, 3, 1, 2);
+VALUES (2, 'slika6.jpg', false, 25, 'LIMITED', true, 'Zrenjanin', 'Oglas za automobil mercedes', '20.04.2020.', 3, 30, 3, 1, 2);
 INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (3, 'slika9', false, 200, 'LIMITED', true, 'Beograd', 'Oglas za audi', '20.05.2020.', 3, 15, 3, 1, 4);
+VALUES (3, 'slika9.jpg', false, 200, 'LIMITED', true, 'Beograd', 'Oglas za audi', '20.05.2020.', 3, 15, 3, 1, 4);
 INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (4, 'slika16', false, 100, 'LIMITED', true, 'Novi Sad', 'Oglas za automobil BMW', '29.03.2020.', 2, 17, 2, 1, 4);
+VALUES (4, 'slika16.jpg', false, 100, 'LIMITED', true, 'Novi Sad', 'Oglas za automobil BMW', '29.03.2020.', 2, 17, 2, 1, 4);
 
 INSERT INTO ad_car(ad_id, car_id) VALUES (1,1);
 INSERT INTO ad_car(ad_id, car_id) VALUES (2,2);
@@ -184,35 +184,36 @@ VALUES ('2020.07.02.', '2020.07.29', 3);
 INSERT INTO car_calendar_term(start_date, end_date, ad_id)
 VALUES ('2020.06.08.', '2020.08.08.', 4);
 
+
 INSERT INTO image(id, name, ad_id)
-VALUES (1, 'slika1', 1);
+VALUES (1, 'slika1.jpg', 1);
 INSERT INTO image(id, name, ad_id)
-VALUES (2, 'slika2', 1);
+VALUES (2, 'slika2.jpg', 1);
 INSERT INTO image(id, name, ad_id)
-VALUES (3, 'slika3', 1);
+VALUES (3, 'slika3.jpg', 1);
 INSERT INTO image(id, name, ad_id)
-VALUES (4, 'slika4', 1);
+VALUES (4, 'slika4.jpg', 1);
 INSERT INTO image(id, name, ad_id)
-VALUES (5, 'slika5', 2);
+VALUES (5, 'slika5.jpg', 2);
 INSERT INTO image(id, name, ad_id)
-VALUES (6, 'slika6', 2);
+VALUES (6, 'slika6.jpg', 2);
 INSERT INTO image(id, name, ad_id)
-VALUES (7, 'slika7', 2);
+VALUES (7, 'slika7.jpg', 2);
 INSERT INTO image(id, name, ad_id)
-VALUES (8, 'slika8', 2);
+VALUES (8, 'slika8.jpg', 2);
 INSERT INTO image(id, name, ad_id)
-VALUES (9, 'slika9', 3);
+VALUES (9, 'slika9.jpg', 3);
 INSERT INTO image(id, name, ad_id)
-VALUES (10, 'slika10', 3);
+VALUES (10, 'slika10.jpg', 3);
 INSERT INTO image(id, name, ad_id)
-VALUES (11, 'slika11', 3);
+VALUES (11, 'slika11.jpg', 3);
 INSERT INTO image(id, name, ad_id)
-VALUES (12, 'slika12', 3);
+VALUES (12, 'slika12.jpg', 3);
 INSERT INTO image(id, name, ad_id)
-VALUES (13, 'slika13', 4);
+VALUES (13, 'slika13.jpg', 4);
 INSERT INTO image(id, name, ad_id)
-VALUES (14, 'slika14', 4);
+VALUES (14, 'slika14.jpg', 4);
 INSERT INTO image(id, name, ad_id)
-VALUES (15, 'slika15', 4);
+VALUES (15, 'slika15.jpg', 4);
 INSERT INTO image(id, name, ad_id)
-VALUES (16, 'slika16', 4);
+VALUES (16, 'slika16.jpg', 4);
