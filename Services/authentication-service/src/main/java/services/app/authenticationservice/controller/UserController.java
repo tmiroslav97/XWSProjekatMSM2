@@ -28,8 +28,8 @@ public class UserController {
         return userService.findByEmail(principal.getName()).getId();
     }
 
-    @RequestMapping(value = "/find-publish-user/ws", method = RequestMethod.POST)
-    public Long findPublishUserByEmailWS(String email) {
+    @RequestMapping(value = "/find-publish-user/ws/{email}", method = RequestMethod.GET)
+    public Long findPublishUserByEmailWS(@PathVariable String email) {
         return userService.findByEmail(email).getId();
     }
 
