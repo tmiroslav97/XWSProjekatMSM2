@@ -11,6 +11,7 @@ import SpinnerContainer from '../Common/SpinnerContainer';
 import { loadImage } from '../../store/ad/saga';
 import jwt_decode from 'jwt-decode';
 import { putSuccessMsg, putWarnMsg } from '../../store/common/actions';
+import { putAds } from '../../store/ad/actions';
 
 
 const AdListContainer = () => {
@@ -30,7 +31,15 @@ const AdListContainer = () => {
                 size
             })
         );
-
+        return () => {
+            dispatch(putAds({
+                'data': [],
+                'totalPageCnt': 0,
+                'nextPage': nextPage,
+                'size': size,
+                'isFetch': false
+            }));
+        };
     }, [nextPage, size]);
 
     const hasRole = (accessRole) => {

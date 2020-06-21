@@ -13,27 +13,14 @@ import services.app.adservice.client.AuthenticationClient;
 import services.app.adservice.client.PricelistAndDiscountClient;
 import services.app.adservice.converter.AdConverter;
 import services.app.adservice.converter.CarCalendarTermConverter;
-
+import services.app.adservice.converter.DateAPI;
 import services.app.adservice.converter.ImageConverter;
-import services.app.adservice.dto.ad.*;
-import services.app.adservice.dto.car.StatisticCarDTO;
-import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
-import services.app.adservice.dto.image.ImagesSynchronizeDTO;
-
-import services.app.adservice.dto.ad.*;
-
-import services.app.adservice.dto.car.StatisticCarDTO;
-import services.app.adservice.dto.ad.AdCreateDTO;
-import services.app.adservice.dto.ad.AdPageContentDTO;
-import services.app.adservice.dto.ad.AdPageDTO;
-import services.app.adservice.dto.ad.AdRatingDTO;
-import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
+import services.app.adservice.dto.image.ImagesSynchronizeDTO;
 import services.app.adservice.dto.user.PublisherUserDTO;
-
 import services.app.adservice.exception.ExistsException;
 import services.app.adservice.exception.NotFoundException;
 import services.app.adservice.model.*;
@@ -211,7 +198,7 @@ public class AdServiceImpl implements AdService {
         ad.setCar(car);
         //token ako ima android uredjaj
         System.out.println("-------------------------------------------");
-        if(adCreateDTO.getCarCreateDTO().getAndroidFlag() == true){
+        if (adCreateDTO.getCarCreateDTO().getAndroidFlag() == true) {
             String token = this.generateToken();
             System.out.println("token: " + token);
             ad.getCar().setToken(token);
@@ -224,7 +211,7 @@ public class AdServiceImpl implements AdService {
         ad = this.save(ad);
         //dodeljene slike
         List<Image> images = new ArrayList<>();
-        if(adCreateDTO.getImagesDTO() != null){
+        if (adCreateDTO.getImagesDTO() != null) {
             List<String> slike = adCreateDTO.getImagesDTO();
             for (String slika : slike) {
                 Image image = imageService.findByName(slika);
@@ -249,14 +236,14 @@ public class AdServiceImpl implements AdService {
         AdSynchronizeDTO adSynchronizeDTO = AdConverter.toAdSynchronizeDTOFromAd(ad);
         adSynchronizeDTO.setPricePerDay(adCreateDTO.getPriceListCreateDTO().getPricePerDay());
         List<ImagesSynchronizeDTO> imagesSynchronizeDTOS = new ArrayList<>();
-        for(Image im : images){
-            System.out.println("slika "+ im.getName());
+        for (Image im : images) {
+            System.out.println("slika " + im.getName());
             ImagesSynchronizeDTO imDTO = ImageConverter.toImagesSynchronizeDTOFromImage(im);
             imagesSynchronizeDTOS.add(imDTO);
         }
         adSynchronizeDTO.setImagesSynchronizeDTOS(imagesSynchronizeDTOS);
         adSearchClient.synchronizeDatabase(adSynchronizeDTO, principal.getUserId(), principal.getEmail(),
-                                            principal.getRoles(), principal.getToken());
+                principal.getRoles(), principal.getToken());
 
         System.out.println("***************************************************************");
 
@@ -274,17 +261,25 @@ public class AdServiceImpl implements AdService {
         if (acceptReqestCalendarTermsDTO.getBundle()) {
             int sumAds = acceptReqestCalendarTermsDTO.getAds().size();
             int cnt = 0;
-            for(Long adId : acceptReqestCalendarTermsDTO.getAds()){
+            for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
                 Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, acceptReqestCalendarTermsDTO.getStartDate(), acceptReqestCalendarTermsDTO.getEndDate());
-                System.out.println(carCalendarTerm);
+                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getEndDate()));
+                if (carCalendarTerm != null) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
             return true;
         } else {
-            for(Long adId : acceptReqestCalendarTermsDTO.getAds()){
+            for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
                 Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, acceptReqestCalendarTermsDTO.getStartDate(), acceptReqestCalendarTermsDTO.getEndDate());
-                System.out.println(carCalendarTerm);
+                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getEndDate()));
+                if (carCalendarTerm != null) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
             return true;
         }
@@ -319,18 +314,18 @@ public class AdServiceImpl implements AdService {
         StringBuilder builder = new StringBuilder();
         int count = 20;
         while (count-- != 0) {
-            int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+            int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
             builder.append(ALPHA_NUMERIC_STRING.charAt(character));
         }
         System.out.println("IZGENERISAN TOKEN: " + builder.toString());
 
 
-        while(this.isExistToken(builder.toString()) != 1){
+        while (this.isExistToken(builder.toString()) != 1) {
             System.out.println("USLO U WHILE");
             builder = new StringBuilder();
             while (count-- != 0) {
                 System.out.println("USLO U DRUGI WHILE");
-                int character = (int)(Math.random()*ALPHA_NUMERIC_STRING.length());
+                int character = (int) (Math.random() * ALPHA_NUMERIC_STRING.length());
                 builder.append(ALPHA_NUMERIC_STRING.charAt(character));
             }
         }
@@ -341,11 +336,11 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer isExistToken(String token) {
         List<Ad> ads = this.findAll();
-        if(ads != null){
-            for(Ad ad : ads){
-                if(ad.getCar().getAndroidFlag()){
-                    System.out.println("token: " + ad.getCar().getToken() );
-                    if(ad.getCar().getToken().equals(token)){
+        if (ads != null) {
+            for (Ad ad : ads) {
+                if (ad.getCar().getAndroidFlag()) {
+                    System.out.println("token: " + ad.getCar().getToken());
+                    if (ad.getCar().getToken().equals(token)) {
                         return 2;
                     }
                 }
@@ -363,6 +358,7 @@ public class AdServiceImpl implements AdService {
         return 1;
 
     }
+
     @Override
     public AdDetailViewDTO getAdDetailView(Long ad_id) {
 

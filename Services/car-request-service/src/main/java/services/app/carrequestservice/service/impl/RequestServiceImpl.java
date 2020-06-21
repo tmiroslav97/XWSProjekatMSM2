@@ -99,7 +99,7 @@ public class RequestServiceImpl implements RequestService {
             if (acceptRequest.getAction().equals("accept")) {
                 request.setStatus(RequestStatusEnum.PAID);
                 this.save(request);
-                this.deleteAllWithSameAdId(request.getAds());
+                //this.deleteAllWithSameAdId(request.getAds());
                 return "Uspjesno prihvacen zahtjev";
             } else {
                 return "Nepoznata akcija";
