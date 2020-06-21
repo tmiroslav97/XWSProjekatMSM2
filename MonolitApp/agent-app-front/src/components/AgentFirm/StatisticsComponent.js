@@ -17,7 +17,7 @@ const StatisticsComponent = (props) => {
         <Container>
         <Tabs defaultActiveKey="profile" id="uncontrolled-tab-example">
         <Tab eventKey="grade" title="Najbolja prosjecna ocjena">
-            
+           {props.ad}
         </Tab>
         <Tab eventKey="mielage" title="Najvise kilometara">
                 dsdsadasdas

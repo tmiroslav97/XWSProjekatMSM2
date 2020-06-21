@@ -23,7 +23,7 @@ const StatisticsContainer = () => {
 
     console.log(ad.data)
     return(
-        <StatisticsComponent>
+        <StatisticsComponent ad={ad.data}>
 
         </StatisticsComponent>
        
