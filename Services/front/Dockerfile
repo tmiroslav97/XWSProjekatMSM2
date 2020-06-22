@@ -11,4 +11,4 @@ FROM mhart/alpine-node
 RUN yarn global add serve
 WORKDIR /app
 COPY --from=front /usr/src/front/build  .
-CMD ["serve", "-p", "80", "-s", "."]
+CMD ["serve", "-p", "8093", "-s", "."]
