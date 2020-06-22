@@ -155,7 +155,7 @@ public class ImageServiceImpl implements ImageService {
 
             String name = this.getImageName();
             System.out.println(file.getAbsolutePath());
-            String uploadDirectory = photoDir + name + "." + ext[1];
+            String uploadDirectory = photoDir + File.separator + name + "." + ext[1];
             File convertFile = new File(uploadDirectory);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);

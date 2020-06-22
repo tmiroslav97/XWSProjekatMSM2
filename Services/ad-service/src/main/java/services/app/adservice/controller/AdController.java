@@ -1,5 +1,7 @@
 package services.app.adservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -7,15 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import services.app.adservice.converter.AdConverter;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdRatingDTO;
 import services.app.adservice.model.CustomPrincipal;
 import services.app.adservice.service.intf.AdService;
-
-
 
 
 @RestController
@@ -30,10 +29,13 @@ public class AdController {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    @Value("${directory.prop}")
+    private String photoDir;
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
         System.out.println("Service ad !!!!!");
-        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), photoDir), HttpStatus.OK);
     }
 
 
@@ -44,9 +46,9 @@ public class AdController {
         Integer flag = adService.createAd(adCreateDTO);
         if (flag == 1) {
             return new ResponseEntity<>("Oglas uspesno kreiran.", HttpStatus.CREATED);
-        }else if (flag == 2){
+        } else if (flag == 2) {
             return new ResponseEntity<>("Dozvoljeno je dodati samo 3 oglasa.", HttpStatus.BAD_REQUEST);
-        }else {
+        } else {
             return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
         }
     }
@@ -66,7 +68,7 @@ public class AdController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value="/publisher",method = RequestMethod.GET)
+    @RequestMapping(value = "/publisher", method = RequestMethod.GET)
     public ResponseEntity<?> findAllPageAdFromPublisher(@RequestParam(value = "nextPage", required = false) Integer nextPage,
                                                         @RequestParam(value = "size", required = false) Integer size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -76,18 +78,18 @@ public class AdController {
 
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    @RequestMapping(value ="/rating",method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO){
+    @RequestMapping(value = "/rating", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO) {
 
         Integer rez = adService.addRatingToAd(adRatingDTO);
-        if(rez == 1){
+        if (rez == 1) {
             return new ResponseEntity<>("Ocenili ste oglas.", HttpStatus.OK);
         }
         return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
 
-    @RequestMapping(value="/accept",method = RequestMethod.POST)
+    @RequestMapping(value = "/accept", method = RequestMethod.POST)
     public Boolean acceptCarCalendar(@RequestBody AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO) {
         return adService.acceptCarCalendar(acceptReqestCalendarTermsDTO);
     }

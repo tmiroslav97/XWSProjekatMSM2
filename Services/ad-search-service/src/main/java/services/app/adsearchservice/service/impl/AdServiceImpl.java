@@ -2,6 +2,7 @@ package services.app.adsearchservice.service.impl;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,6 @@ import services.app.adsearchservice.dto.ad.AdPageContentDTO;
 import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.dto.car.CarCalendarTermSynchronizeDTO;
-import services.app.adsearchservice.dto.car.CarSynchronizeDTO;
 import services.app.adsearchservice.dto.image.ImagesSynchronizeDTO;
 import services.app.adsearchservice.exception.ExistsException;
 import services.app.adsearchservice.exception.NotFoundException;
@@ -29,7 +29,6 @@ import services.app.adsearchservice.service.intf.CarCalendarTermService;
 import services.app.adsearchservice.service.intf.CarService;
 import services.app.adsearchservice.service.intf.ImageService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +47,9 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private CarService carService;
 
+    @Value("${directory.prop}")
+    private String photoDir;
+
     @Override
     public Ad findById(Long id) {
         return adRepository.findById(id).orElseThrow(() -> new NotFoundException("Oglas ne postoji."));
@@ -65,13 +67,13 @@ public class AdServiceImpl implements AdService {
         Ad ad = AdConverter.toCreateAdFromAdSynchronizeDTO(adSynchronizeDTO);
         ad = adRepository.save(ad);
         System.out.println("ad repository");
-        for(ImagesSynchronizeDTO dto : adSynchronizeDTO.getImagesSynchronizeDTOS()){
+        for (ImagesSynchronizeDTO dto : adSynchronizeDTO.getImagesSynchronizeDTOS()) {
             Image im = ImageConverter.toImageFromImageSyncDTO(dto);
             im.setAd(ad);
             im = imageService.save(im);
             System.out.println("slika" + im.getName());
         }
-        for(CarCalendarTermSynchronizeDTO dto: adSynchronizeDTO.getCarCalendarTermSynchronizeDTOS()){
+        for (CarCalendarTermSynchronizeDTO dto : adSynchronizeDTO.getCarCalendarTermSynchronizeDTOS()) {
             CarCalendarTerm cct = CarCalendarTermsConverter.toCarCalendarTermFromSyncDTO(dto);
             cct.setAd(ad);
             cct = carCalendarTermService.save(cct);
@@ -90,9 +92,9 @@ public class AdServiceImpl implements AdService {
     public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startDate, endDate, pageable);
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
 //        List<AdPageDTO> ret = new ArrayList<>();
-                System.out.println(ret.size());
+        System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -130,7 +132,7 @@ public class AdServiceImpl implements AdService {
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
 
 
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
 
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
@@ -144,12 +146,13 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Ad save(Ad ad) {
-        if(ad.getId() != null){
-            if(adRepository.existsById(ad.getId())){
+        if (ad.getId() != null) {
+            if (adRepository.existsById(ad.getId())) {
                 throw new ExistsException(String.format("Oglas vec postoji."));
             }
         }
 
-        return adRepository.save(ad);    }
+        return adRepository.save(ad);
+    }
 
 }

@@ -1,6 +1,7 @@
 package services.app.adservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +59,9 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private AdSearchClient adSearchClient;
 
+    @Value("${directory.prop}")
+    private String photoDir;
+
     @Override
     public Ad findById(Long id) {
         return adRepository.findById(id).orElseThrow(() -> new NotFoundException("Oglas ne postoi."));
@@ -75,7 +79,7 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeletedAndPublisherUser(false, Long.valueOf(userId), pageable);
 
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
@@ -135,7 +139,7 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
         System.out.println(ads.getSize());
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -362,7 +366,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdDetailViewDTO getAdDetailView(Long ad_id) {
 
-        AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id));
+        AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), photoDir);
         System.out.println("GET DETAIL VIEW ");
 
 
