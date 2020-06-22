@@ -14,15 +14,14 @@ import agent.app.model.*;
 import agent.app.repository.AdRepository;
 import agent.app.service.intf.*;
 import org.joda.time.DateTime;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -56,6 +55,8 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private ImageService imageService;
 
+    @Value("${directory.prop}")
+    private String photoDir;
 
     @Override
     public Ad findById(Long id) {
@@ -106,16 +107,16 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer createAd(AdCreateDTO adCreateDTO, String email) {
         Integer rez = endUserService.getAdLimitNum(email);
-        if(rez == 4){
+        if (rez == 4) {
             System.out.println("nije end userrrr");
-        }else if(rez == 0){
+        } else if (rez == 0) {
             System.out.println("end user");
             System.out.println("ne sme dodavati vise oglasa");
             return 2;
         }
-        if(rez != 4){
+        if (rez != 4) {
             Integer r = endUserService.reduceAdLimitNum(email);
-            System.out.println("Limit num: "+ r);
+            System.out.println("Limit num: " + r);
         }
 
         Ad ad = AdConverter.toCreateAdFromRequest(adCreateDTO);
@@ -148,11 +149,11 @@ public class AdServiceImpl implements AdService {
         ad = this.save(ad);
 
         //dodeljene slike
-        if(adCreateDTO.getImagesDTO() != null){
+        if (adCreateDTO.getImagesDTO() != null) {
             List<String> slike = adCreateDTO.getImagesDTO();
-            for(String slika : slike){
+            for (String slika : slike) {
                 Image image = imageService.findByName(slika);
-                if(image != null){
+                if (image != null) {
                     System.out.println("slika: " + image.getName());
                     image.setAd(ad);
                     image = imageService.editImage(image);
@@ -173,7 +174,7 @@ public class AdServiceImpl implements AdService {
     public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startDate, endDate, pageable);
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
 
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
@@ -201,9 +202,9 @@ public class AdServiceImpl implements AdService {
 //        }
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
-      
 
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
@@ -221,7 +222,7 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeletedAndPublisherUserEmail(false, email, pageable);
 
-        List<AdPageDTO> ret = ads.stream().map(AdConverter::toCreateAdPageDTOFromAd).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
@@ -235,7 +236,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public Set<Ad> findAllByIds(List<Long> adIds) {
         Set<Ad> ads = new HashSet<>();
-        for(Long adId: adIds){
+        for (Long adId : adIds) {
             Ad ad = this.findById(adId);
             ads.add(ad);
         }
@@ -247,14 +248,14 @@ public class AdServiceImpl implements AdService {
         double averageGrade = 0.0;
         double max = 0.0;
         System.out.println("Average method");
-        for(Ad ad:adRepository.findAll()){
-            if(ad.getRatingCnt()==0){
+        for (Ad ad : adRepository.findAll()) {
+            if (ad.getRatingCnt() == 0) {
                 continue;
-            }else{
-                averageGrade = ad.getRatingNum()/ad.getRatingCnt();
-                if(averageGrade>max){
+            } else {
+                averageGrade = ad.getRatingNum() / ad.getRatingCnt();
+                if (averageGrade > max) {
                     System.out.println("Average: " + averageGrade);
-                    max=averageGrade;
+                    max = averageGrade;
                 }
             }
 
@@ -270,8 +271,8 @@ public class AdServiceImpl implements AdService {
     @Override
     public Ad findAdWithGrade(Double max_grade) {
         System.out.println("Metodaaa averg... ");
-        for(Ad ad:adRepository.findAll()){
-            if((ad.getRatingNum()/ad.getRatingCnt())==max_grade){
+        for (Ad ad : adRepository.findAll()) {
+            if ((ad.getRatingNum() / ad.getRatingCnt()) == max_grade) {
                 System.out.println(max_grade);
                 return ad;
             }
@@ -284,12 +285,12 @@ public class AdServiceImpl implements AdService {
         Ad adT = null;
         float max = 0;
         System.out.println("Average method za kilometrazu");
-        for(Ad ad:adRepository.findAll()){
+        for (Ad ad : adRepository.findAll()) {
 
 
-            if(ad.getCar().getMileage()>max){
+            if (ad.getCar().getMileage() > max) {
                 System.out.println("Max km: " + ad.getCar().getMileage());
-                max=ad.getCar().getMileage();
+                max = ad.getCar().getMileage();
                 adT = ad;
             }
 
@@ -305,8 +306,8 @@ public class AdServiceImpl implements AdService {
     @Override
     public Ad findAdWithMileage(Float max_mileage) {
         System.out.println("Metodaaa ... ");
-        for(Ad ad:adRepository.findAll()){
-            if(ad.getCar().getMileage()==max_mileage){
+        for (Ad ad : adRepository.findAll()) {
+            if (ad.getCar().getMileage() == max_mileage) {
                 System.out.println(ad.getCar().getMileage());
                 return ad;
             }

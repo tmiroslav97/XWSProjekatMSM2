@@ -16,7 +16,7 @@ import java.util.HashSet;
 public class AdConverter extends AbstractConverter {
 
     @Value("${directory.prop}")
-    private String photoDir;
+    private static String photoDir;
 
     public static Ad toCreateAdFromRequest(AdCreateDTO adCreateDTO) {
         DistanceLimitEnum distanceLimitEnum = null;
@@ -51,7 +51,7 @@ public class AdConverter extends AbstractConverter {
     public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad) {
         String encodedString = "";
         try {
-            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + ad.getCoverPhoto()));
+            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
@@ -73,7 +73,7 @@ public class AdConverter extends AbstractConverter {
     public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad) {
         String encodedString = "";
         try {
-            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + ad.getCoverPhoto()));
+            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";

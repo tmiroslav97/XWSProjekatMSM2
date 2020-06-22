@@ -3,6 +3,7 @@ package services.app.adsearchservice.converter;
 
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.beans.factory.annotation.Value;
 import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.model.Ad;
@@ -13,11 +14,14 @@ import java.util.Base64;
 
 public class AdConverter {
 
+    @Value("${directory.prop}")
+    private static String photoDir;
 
     public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad){
+
         String encodedString = "";
         try {
-            byte[]  fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + ad.getCoverPhoto()));
+            byte[]  fileContent = FileUtils.readFileToByteArray(new File(photoDir + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";

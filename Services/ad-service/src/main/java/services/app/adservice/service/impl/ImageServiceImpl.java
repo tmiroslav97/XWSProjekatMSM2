@@ -91,7 +91,7 @@ public class ImageServiceImpl implements ImageService {
         byte[] fileContent = null;
         String encodedString = "";
         try {
-            fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\adService\\" + name));
+            fileContent = FileUtils.readFileToByteArray(new File(photoDir + name));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
@@ -155,7 +155,7 @@ public class ImageServiceImpl implements ImageService {
 
             String name = this.getImageName();
             System.out.println(file.getAbsolutePath());
-            String uploadDirectory = file.getAbsolutePath() + "\\" + name + "." + ext[1];
+            String uploadDirectory = photoDir + name + "." + ext[1];
             File convertFile = new File(uploadDirectory);
             convertFile.createNewFile();
             FileOutputStream fout = new FileOutputStream(convertFile);

@@ -34,10 +34,10 @@ public class AdConverter {
                 .build();
     }
 
-    public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad) {
+    public static AdPageDTO toCreateAdPageDTOFromAd(Ad ad, String photoDir) {
         String encodedString = "";
         try {
-            byte[] fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\agent\\" + ad.getCoverPhoto()));
+            byte[] fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
@@ -56,10 +56,10 @@ public class AdConverter {
                 .build();
     }
 
-    public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad) {
+    public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad, String photoDir) {
         String encodedString = "";
         try {
-            byte[] fileContent = FileUtils.readFileToByteArray(new File("C:\\XMLPhotos\\agent\\" + ad.getCoverPhoto()));
+            byte[] fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
