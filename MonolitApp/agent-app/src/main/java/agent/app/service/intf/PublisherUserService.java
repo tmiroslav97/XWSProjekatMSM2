@@ -24,6 +24,7 @@ public interface PublisherUserService {
     List<PriceList> findPriceListsFromPublishUser(String publishUserUsername);
     AdStatisticsDTO findBestAverageGrade(String email);
     AdStatisticsDTO findMaxMileage(String email);
+    AdStatisticsDTO findMaxComment(String email);
     AdPageContentDTO findAll(Integer page, Integer size, String email);
 
 }

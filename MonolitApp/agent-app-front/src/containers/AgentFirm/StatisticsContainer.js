@@ -16,13 +16,24 @@ const StatisticsContainer = () => {
     const ad = useSelector(adSelector);
     const isFetchAd = ad.isFetch;
     const email = jwt_decode(token).sub;
-    const [flag, setFlag] = useState();
+    const [flag, setFlag] = useState(1);
+
+    useEffect(() => {
+        return () => {
+            dispatch(putAd({
+                'data': [],
+                'isFetch': false
+            }));
+        };
+    }, []);
+
 
     const handleGrade = () => {
         setFlag(1);
         dispatch(
             fetchBestGrade(email)
         );
+
     }
 
     const handleMileage  = () => {
