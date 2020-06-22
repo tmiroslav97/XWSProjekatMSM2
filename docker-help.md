@@ -104,3 +104,12 @@ Remove all containers
 
 Remove all images
 `docker rmi $(docker images -q)`
+
+Put initial data from host to volume with temporary container, add folder and its content (if we are positioned in terminal in C)
+`docker run -v xwsprojekatmsm2_images:/var/data --name helper busybox true`
+`docker cp XMLPhotos\\adService helper:/var/data`
+`docker rm helper`
+
+### Links
+https://stackoverflow.com/questions/37468788/what-is-the-right-way-to-add-data-to-an-existing-named-volume-in-docker
+https://github.com/moby/moby/issues/25245#issuecomment-365970076

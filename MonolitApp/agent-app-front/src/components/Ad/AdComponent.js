@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-
+import { history } from '../../index';
 
 
 const AdComponent = (props) => {
@@ -73,8 +73,7 @@ const AdComponent = (props) => {
                                     {variant.mileage}
                                 </Card.Text>
                             </Row>
-                            <Card.Link href={'/agent-firm/ad-detail-view/' + variant.id} >Vise detalja </Card.Link>
-
+                            <Button variant="link" onClick={() => { history.push('/agent-firm/ad-detail-view/' + variant.id); }}>Vise detalja</Button>
                         </Col>
 
                         <Col>

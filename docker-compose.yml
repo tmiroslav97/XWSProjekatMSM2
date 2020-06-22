@@ -71,16 +71,17 @@ services:
       - "8086:8086"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      PHOTO_DIR: /var/data/adService
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
-      PHOTO_DIR: img-ad
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    volumes:
+      - images:/var/data/adService
     depends_on: 
       - eureka-serviceregistry
       - mysql
-    volumes:
-      - img-ad:/img-ad
+    
 
   car-request-service:
     image: car-request-service
@@ -140,10 +141,13 @@ services:
       - "8085:8085"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      PHOTO_DIR: /var/data/adService
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_search_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    volumes:
+      - images:/var/data/adService
     depends_on: 
       - eureka-serviceregistry
       - mysql
@@ -219,10 +223,13 @@ services:
     ports:
       - "8083:8083"
     environment:
+      PHOTO_DIR: /var/data/agent
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: rent_a_car?createDatabaseIfNotExist=true&serverTimezone=UTC
+    volumes:
+      - images:/var/data/agent
     depends_on: 
       - mysql
   
@@ -239,7 +246,7 @@ services:
       - db-data:/var/lib/mysql
 
 volumes:
-  img-ad:
+  images:
   db-data:
 
 networks:
