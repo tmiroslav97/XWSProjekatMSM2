@@ -121,7 +121,7 @@ public class PublisherUserServiceImpl implements PublisherUserService {
         double averageGrade = 0.0;
         double max = 0.0;
         System.out.println("Average method");
-        for (Ad ad : adService.findAll()) {
+        for (Ad ad : adService.findMyAds(email)) {
             if (ad.getRatingCnt() == 0) {
                 continue;
             } else {
@@ -142,7 +142,7 @@ public class PublisherUserServiceImpl implements PublisherUserService {
         Ad adT = null;
         float max = 0;
         System.out.println("Average method za kilometrazu");
-        for (Ad ad : adService.findAll()) {
+        for (Ad ad : adService.findMyAds(email)) {
             if (ad.getCar().getMileage() > max) {
                 System.out.println("Max km: " + ad.getCar().getMileage());
                 max = ad.getCar().getMileage();
