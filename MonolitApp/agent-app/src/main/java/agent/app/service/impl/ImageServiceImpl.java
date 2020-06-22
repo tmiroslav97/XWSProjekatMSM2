@@ -146,13 +146,14 @@ public class ImageServiceImpl implements ImageService {
             fout.write(photo.getBytes());
             fout.close();
 
-            Integer rez = this.addImage(name);
+            Integer rez = this.addImage(name + "." + ext[1]);
+
             if (rez != 1) {
                 System.out.println("desila se greska prilikom dodavanja slike");
                 return null;
             }
             System.out.println("dodata slika");
-            return name;
+            return name + "." + ext[1];
         } catch (Exception e) {
             return null;
         }

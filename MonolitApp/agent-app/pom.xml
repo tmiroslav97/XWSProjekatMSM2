@@ -120,7 +120,7 @@
 <!--						<source>${project.basedir}/src/main/resources/request.xsd</source>-->
 <!--					</sources>-->
 <!--					<xjbSources>-->
-<!--						<xjbSource>${project.basedir}/src/main/resources/request.xjb</xjbSource>-->
+<!--						<xjbSource>${project.basedir}/src/main/resources/type.xjb</xjbSource>-->
 <!--					</xjbSources>-->
 <!--					<outputDirectory>${project.basedir}/src/main/java</outputDirectory>-->
 <!--					<clearOutputDir>false</clearOutputDir>-->

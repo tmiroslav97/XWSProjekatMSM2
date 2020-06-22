@@ -111,8 +111,6 @@ public class AdController {
         return new ResponseEntity<>(adService.findAll(nextPage, size, principal.getName()), HttpStatus.OK);
     }
 
-
-    //@PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findAllSearch(@RequestParam(value = "nextPage", required = false) Integer nextPage,
                                            @RequestParam(value = "size", required = false) Integer size,
@@ -120,14 +118,8 @@ public class AdController {
                                            @RequestParam(value = "startDate") String startDate,
                                            @RequestParam(value = "endDate") String endDate) {
 
-
-        DateTime startD = DateAPI.dateStringToDateTime(startDate);
-        DateTime endD = DateAPI.dateStringToDateTime(endDate);
-//        System.out.println(startD);
-//        System.out.println(endD);
-//        System.out.println(startD.toString(DateTimeFormat.forPattern("HH:mm dd-MM-yyyy")));
-//        System.out.println(endD.toString(DateTimeFormat.forPattern("HH:mm dd-MM-yyyy")));
-//        System.out.println(location);
+        DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+        DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
 
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
     }

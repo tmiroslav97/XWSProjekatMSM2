@@ -47,12 +47,12 @@ public class TypeConverter {
     }
 
     public static DateTime parseDate(String date) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.YYYY HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-YYYY");
         return dtf.parseDateTime(date);
     }
 
     public static String printDate(DateTime dateTime) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.YYYY HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-YYYY");
         return dtf.print(dateTime);
     }
 }
