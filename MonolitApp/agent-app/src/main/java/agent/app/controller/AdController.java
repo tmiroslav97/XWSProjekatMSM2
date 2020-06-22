@@ -132,7 +132,7 @@ public class AdController {
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findBestAverageGradeAd(@RequestParam(value = "email") String email) {
         System.out.println("Best average grade");
@@ -144,7 +144,7 @@ public class AdController {
 
     }
 
-//        @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/max-mileage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findMaxMileageAd(@RequestParam(value = "email") String email) {
         System.out.println("Max mileage contoller");
