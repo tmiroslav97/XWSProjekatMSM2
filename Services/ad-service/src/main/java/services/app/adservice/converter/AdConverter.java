@@ -114,7 +114,7 @@ public class AdConverter extends AbstractConverter {
 //                .imagesSynchronizeDTOS(ImageConverter.toImagesSynchronizeDTOFromImages(ad.getImages()))
                 .distanceLimitFlag(ad.getDistanceLimitFlag().toString())
                 .distanceLimit(ad.getDistanceLimit())
-                .publishedDate(ad.getPublishedDate().toString())
+                .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .ratingNum(ad.getRatingNum())
                 .ratingCnt(ad.getRatingCnt())
                 .deleted(ad.getDeleted())

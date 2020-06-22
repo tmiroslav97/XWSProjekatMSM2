@@ -12,13 +12,13 @@ public class DateAPI {
         return new DateTime(DateTimeZone.UTC);
     }
 
-    public static String DateTimeTiStringDateTime(DateTime dateTime) {
+    public static String DateTimeToStringDateTime(DateTime dateTime) {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
         return dtf.print(dateTime);
     }
 
     public static DateTime DateTimeStringToDateTime(String dateStr) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyy");
         return dtf.parseDateTime(dateStr);
     }
 

@@ -15,16 +15,16 @@ public class CarCalendarTermConverter {
     public static CarCalendarTerm toCreateCarCalendarTermFromRequest(CarCalendarTermCreateDTO carCalendarTermCreateDTO){
 
         return CarCalendarTerm.builder()
-                .startDate(DateAPI.dateStringToDateTime(carCalendarTermCreateDTO.getStartDate()))
-                .endDate(DateAPI.dateStringToDateTime(carCalendarTermCreateDTO.getEndDate()))
+                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermCreateDTO.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermCreateDTO.getEndDate()))
                 .build();
     }
 
     public static CarCalendarTerm toCarCalendarTermFromRequest(CarCalendarTermDTO carCalendarTermDTO){
 
         return CarCalendarTerm.builder()
-                .startDate(DateAPI.dateStringToDateTime(carCalendarTermDTO.getStartDate()))
-                .endDate(DateAPI.dateStringToDateTime(carCalendarTermDTO.getEndDate()))
+                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getEndDate()))
                 .build();
     }
 
@@ -33,8 +33,8 @@ public class CarCalendarTermConverter {
         for(CarCalendarTerm cct : carCalendarTermSet){
             CarCalendarTermSynchronizeDTO cctDTO = CarCalendarTermSynchronizeDTO.builder()
                     .id(cct.getId())
-                    .startDate(cct.getStartDate().toString())
-                    .endDate(cct.getEndDate().toString())
+                    .startDate(DateAPI.DateTimeToStringDateTime(cct.getStartDate()))
+                    .endDate(DateAPI.DateTimeToStringDateTime(cct.getEndDate()))
                     .adId(cct.getAd().getId())
                     .build();
             carCalendarTermSynchronizeDTOS.add(cctDTO);

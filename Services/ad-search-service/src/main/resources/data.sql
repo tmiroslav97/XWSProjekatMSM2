@@ -1,15 +1,11 @@
-INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage,
-                 year)
-VALUES (1, 'Fiat', '500', 'Limuzina', false, 2, 'Dizel', 'Automatski', 120, '2020-05-20');
-INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage,
-                 year)
-VALUES (2, 'Mercedes-Benz', 'C-klasa', 'Limuzina', false, 2, 'Dizel', 'Automatski', 200, '2020-05-20');
-INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage,
-                 year)
-VALUES (3, 'Audi', 'A3', 'Limuzina', false, 3, 'Dizel', 'Automatski', 125, '2017-05-20');
-INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage,
-                 year)
-VALUES (4, 'BMW', '320d', 'Limuzina', true, 3, 'Benzin', 'Manuelni', 200, '2019-02-20');
+INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
+VALUES (1, 'Fiat', '500', 'Limuzina', false, 2, 'Dizel', 'Automatski', 120, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
+VALUES (2, 'Mercedes-Benz', 'C-klasa', 'Limuzina', false, 2, 'Dizel', 'Automatski', 200, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
+VALUES (3, 'Audi', 'A3', 'Limuzina', false, 3, 'Dizel', 'Automatski', 125, STR_TO_DATE('20-05-2017', '%d-%m-%Y'));
+INSERT INTO car (id, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
+VALUES (4, 'BMW', '320d', 'Limuzina', true, 3, 'Benzin', 'Manuelni', 200, STR_TO_DATE('20-05-2019', '%d-%m-%Y'));
 
 
 INSERT INTO ad_search_db.ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_per_day, publisher_user)

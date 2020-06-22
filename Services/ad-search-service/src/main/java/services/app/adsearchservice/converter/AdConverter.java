@@ -45,7 +45,7 @@ public class AdConverter {
                 .coverPhoto(dto.getCoverPhoto())
                 .distanceLimitFlag(DistanceLimitEnum.valueOf(dto.getDistanceLimitFlag()))
                 .distanceLimit(dto.getDistanceLimit())
-                .publishedDate(DateAPI.DateTimeStringToDateTimeFromFronted(dto.getPublishedDate()))
+                .publishedDate(DateAPI.DateTimeStringToDateTime(dto.getPublishedDate()))
                 .ratingNum(dto.getRatingNum())
                 .ratingCnt(dto.getRatingCnt())
                 .deleted(dto.getDeleted())

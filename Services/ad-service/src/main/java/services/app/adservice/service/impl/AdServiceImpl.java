@@ -268,7 +268,7 @@ public class AdServiceImpl implements AdService {
             int cnt = 0;
             for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
                 Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getEndDate()));
+                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.DateStringToDateTimeFromFronted(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.DateStringToDateTimeFromFronted(acceptReqestCalendarTermsDTO.getEndDate()));
                 if (carCalendarTerm != null) {
                     return true;
                 } else {
@@ -279,7 +279,7 @@ public class AdServiceImpl implements AdService {
         } else {
             for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
                 Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.dateStringToDateTimeZ(acceptReqestCalendarTermsDTO.getEndDate()));
+                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.DateStringToDateTimeFromFronted(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.DateStringToDateTimeFromFronted(acceptReqestCalendarTermsDTO.getEndDate()));
                 if (carCalendarTerm != null) {
                     return true;
                 } else {

@@ -168,7 +168,7 @@ public class ImageServiceImpl implements ImageService {
                 return null;
             }
             System.out.println("dodata slika");
-            return name;
+            return name + "." + ext[1];
         } catch (Exception e) {
             return null;
         }

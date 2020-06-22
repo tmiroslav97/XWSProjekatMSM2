@@ -8,8 +8,8 @@ public class CarCalendarTermsConverter {
     public static CarCalendarTerm toCarCalendarTermFromSyncDTO(CarCalendarTermSynchronizeDTO dto){
         return CarCalendarTerm.builder()
                 .id(dto.getId())
-                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(dto.getStartDate()))
-                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(dto.getEndDate()))
+                .startDate(DateAPI.DateTimeStringToDateTime(dto.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTime(dto.getEndDate()))
                 .build();
     }
 }

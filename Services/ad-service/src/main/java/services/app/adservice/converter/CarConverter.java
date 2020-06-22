@@ -11,7 +11,7 @@ public class CarConverter {
         System.out.println("android flag "+carCreateDTO.getAndroidFlag());
 //        System.out.println("android flag "+ carCreateDTO.getAndroidFlag());
         return Car.builder()
-                .year(DateAPI.dateStringToYear(carCreateDTO.getYear()))
+                .year(DateAPI.DateStringToDateTimeFromFronted(carCreateDTO.getYear()))
                 .carManufacturer(carCreateDTO.getCarManufacturer())
                 .carModel(carCreateDTO.getCarModel())
                 .gearboxType(carCreateDTO.getGearboxType())
@@ -27,7 +27,7 @@ public class CarConverter {
     public static CarSynchronizeDTO toCarSynchronizeDTOFromCar(Car car){
         return CarSynchronizeDTO.builder()
                 .id(car.getId())
-                .year(car.getYear().toString())
+                .year(DateAPI.DateTimeToStringDateTime(car.getYear()))
                 .carManufacturer(car.getCarManufacturer())
                 .carModel(car.getCarModel())
                 .gearboxType(car.getGearboxType())
