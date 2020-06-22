@@ -22,7 +22,7 @@ public class DateAPI {
         return dtf.parseDateTime(dateStr);
     }
 
-    //za datume i vrijeme sa fronta koji stizu u formatu: 2020-06-03T03:03
+    //za datume sa fronta koji stizu u formatu: 2020-06-03T03:03
     public static DateTime DateStringToDateTimeFromFronted(String dateStr) {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
 

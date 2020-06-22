@@ -8,7 +8,7 @@ public class CarConverter {
     public static Car toCarFromCarSyncDTO(CarSynchronizeDTO dto){
         return Car.builder()
                 .id(dto.getId())
-                .year(DateAPI.dateStringToYear(dto.getYear()))
+                .year(DateAPI.DateStringToDateTimeFromFronted(dto.getYear()))
                 .carManufacturer(dto.getCarManufacturer())
                 .carModel(dto.getCarModel())
                 .gearboxType(dto.getGearboxType())

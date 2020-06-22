@@ -40,8 +40,8 @@ public class AdController {
                                            @RequestParam(value = "endDate") String endDate) {
 
 
-        DateTime startD = DateAPI.dateStringToDateTime(startDate);
-        DateTime endD = DateAPI.dateStringToDateTime(endDate);
+        DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+        DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
 
 
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
