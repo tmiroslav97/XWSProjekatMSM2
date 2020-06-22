@@ -1,6 +1,8 @@
 package agent.app.service.impl;
 
 import agent.app.converter.AdConverter;
+import agent.app.dto.ad.AdPageContentDTO;
+import agent.app.dto.ad.AdPageDTO;
 import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
@@ -13,12 +15,17 @@ import agent.app.service.intf.AdService;
 import agent.app.service.intf.PublisherUserService;
 import agent.app.service.intf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class PublisherUserServiceImpl implements PublisherUserService {
@@ -148,5 +155,11 @@ public class PublisherUserServiceImpl implements PublisherUserService {
         AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
         return adPage;
     }
+
+    @Override
+    public AdPageContentDTO findAll(Integer page, Integer size, String email) {
+        return adService.findAll(page,size,email);
+    }
+
 
 }

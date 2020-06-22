@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping(value = "/publisher", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PublisherUserController {
@@ -26,23 +28,31 @@ public class PublisherUserController {
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findBestAverageGradeAd(@RequestParam(value = "email") String email) {
+    public ResponseEntity<?> findBestAverageGradeAd(Principal principal) {
         System.out.println("Best average grade");
 //        System.out.println(principal);
 //        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //        Principal principal = (Principal) auth.getPrincipal();
-        System.out.println(email);
-        return new ResponseEntity<>(publisherUserService.findBestAverageGrade(email), HttpStatus.OK);
+        return new ResponseEntity<>(publisherUserService.findBestAverageGrade(principal.getName()), HttpStatus.OK);
 
     }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/max-mileage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findMaxMileageAd(@RequestParam(value = "email") String email) {
+    public ResponseEntity<?> findMaxMileageAd(Principal principal) {
         System.out.println("Max mileage contoller");
-        System.out.println(email);
-        return new ResponseEntity<>(publisherUserService.findMaxMileage(email), HttpStatus.OK);
+        System.out.println(principal.getName());
+        return new ResponseEntity<>(publisherUserService.findMaxMileage(principal.getName()), HttpStatus.OK);
 
     }
 
+
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value="/publisher",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findAllPageAdFromPublisher(@RequestParam(value = "nextPage", required = false) Integer nextPage,
+                                                        @RequestParam(value = "size", required = false) Integer size,
+                                                        Principal principal) {
+
+        return new ResponseEntity<>(publisherUserService.findAll(nextPage, size, principal.getName()), HttpStatus.OK);
+    }
 }
