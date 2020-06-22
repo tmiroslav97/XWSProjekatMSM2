@@ -1,5 +1,7 @@
 package agent.app.service.intf;
 
+import agent.app.dto.ad.AdPageContentDTO;
+import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
 import agent.app.model.CarCalendarTerm;
 import agent.app.model.PriceList;
@@ -20,4 +22,8 @@ public interface PublisherUserService {
     Boolean existsByEmail(String email);
     PublisherUser findByEmail(String email);
     List<PriceList> findPriceListsFromPublishUser(String publishUserUsername);
+    AdStatisticsDTO findBestAverageGrade(String email);
+    AdStatisticsDTO findMaxMileage(String email);
+    AdPageContentDTO findAll(Integer page, Integer size, String email);
+
 }

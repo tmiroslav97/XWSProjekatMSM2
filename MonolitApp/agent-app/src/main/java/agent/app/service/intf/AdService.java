@@ -42,11 +42,4 @@ public interface AdService {
 
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);
 
-    Ad findAdWithGrade(Double max_grade);
-
-    AdStatisticsDTO findBestAverageGrade(String email);
-
-    Ad findAdWithMileage(Float max_mileage);
-
-    AdStatisticsDTO findMaxMileage(String email);
 }
