@@ -16,4 +16,8 @@ public class AppConfig {
 
     @Value("${directory.prop}")
     private String photoDir;
+
+    @Value("${soap.gateway.zuul}")
+    private String zuul;
+
 }

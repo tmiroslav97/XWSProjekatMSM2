@@ -223,6 +223,7 @@ services:
     ports:
       - "8083:8083"
     environment:
+      ZUUL_GATEWAY: zuul
       PHOTO_DIR: /var/data/agent
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root

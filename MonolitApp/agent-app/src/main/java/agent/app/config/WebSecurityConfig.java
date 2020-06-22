@@ -79,7 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/gb-type");
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/fuel-type");
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/car-model");
-        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/img-icon/**", "/images/**", "/imgs/**", "/img/**", "/*.html", "/**/favicon.ico", "/favicon.ico", "/**/*.html",
+        web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/img-icon/**", "/images/**", "/imgs/**", "/img/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js", "/**/assets/**");
     }
 }
