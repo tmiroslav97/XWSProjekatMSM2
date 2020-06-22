@@ -297,6 +297,7 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdStatisticsDTO findBestAverageGrade(String email) {
+        Ad adT = null;
         double averageGrade = 0.0;
         double max = 0.0;
         System.out.println("Average method");
@@ -308,17 +309,13 @@ public class AdServiceImpl implements AdService {
                 if (averageGrade > max) {
                     System.out.println("Average: " + averageGrade);
                     max = averageGrade;
+                    adT = ad;
                 }
             }
-
         }
-        System.out.println("repository .... ");
-        Ad maxAd = findAdWithGrade(max);
-        System.out.println("Id tog oglasa: " + maxAd.getId());
-        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(maxAd);
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
         return adPage;
     }
-
 
     @Override
     public Ad findAdWithGrade(Double max_grade) {
@@ -338,8 +335,6 @@ public class AdServiceImpl implements AdService {
         float max = 0;
         System.out.println("Average method za kilometrazu");
         for (Ad ad : adRepository.findAll()) {
-
-
             if (ad.getCar().getMileage() > max) {
                 System.out.println("Max km: " + ad.getCar().getMileage());
                 max = ad.getCar().getMileage();
@@ -349,22 +344,9 @@ public class AdServiceImpl implements AdService {
 
         }
 
-//        Ad maxAd = findAdWithMileage(max);
-//        System.out.println("Id tog oglasa: " + maxAd.getId());
         AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
         return adPage;
     }
 
-    @Override
-    public Ad findAdWithMileage(Float max_mileage) {
-        System.out.println("Metodaaa ... ");
-        for (Ad ad : adRepository.findAll()) {
-            if (ad.getCar().getMileage() == max_mileage) {
-                System.out.println(ad.getCar().getMileage());
-                return ad;
-            }
-        }
-        return null;
-    }
 
 }
