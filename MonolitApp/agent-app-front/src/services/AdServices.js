@@ -3,7 +3,8 @@ import HttpBaseClient from './HttpBaseClient';
 const FINALPOINTS = {
     AD_BASE: '/ad',
     IMAGE_BASE: 'image',
-    CALENDAR_BASE: '/calendar'
+    CALENDAR_BASE: '/calendar',
+    PUBLISHER_BASE: '/publisher'
     
 };
 
@@ -81,7 +82,7 @@ class AdServices extends HttpBaseClient {
 
     fetchAdsPaginatedfFromPublisher = async payload => {
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/publisher", {
+            FINALPOINTS.PUBLISHER_BASE + "/publisher", {
                 params: {
                     nextPage: payload.nextPage,
                     size: payload.size
@@ -168,7 +169,7 @@ class AdServices extends HttpBaseClient {
         console.log("Best grade ad service")
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/best-average-grade" , {
+            FINALPOINTS.PUBLISHER_BASE + "/best-average-grade" , {
                     params: {
                         email: payload
                     }
@@ -182,7 +183,7 @@ class AdServices extends HttpBaseClient {
         console.log("Max mileage service")
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/max-mileage" , {
+            FINALPOINTS.PUBLISHER_BASE + "/max-mileage" , {
                     params: {
                         email: payload
                     }
