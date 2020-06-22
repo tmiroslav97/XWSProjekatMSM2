@@ -127,6 +127,7 @@ public class EndUserServiceImpl implements EndUserService {
         EndUser endUser = this.findByEmail(email);
         Integer br = getAdLimitNum(email);
         endUser.setAdLimitNum(br - 1);
+        endUser = endUserRepository.save(endUser);
         return br - 1;
     }
 }

@@ -34,6 +34,10 @@ public interface AdService {
 
     Integer createAd(AdCreateDTO adCreateDTO, String email);
 
+    Integer isExistToken(String token);
+
+    String generateToken();
+
     void syncData();
 
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);
