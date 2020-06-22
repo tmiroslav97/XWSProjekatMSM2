@@ -1,11 +1,15 @@
 package agent.app.service.impl;
 
+import agent.app.converter.AdConverter;
+import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
+import agent.app.model.Ad;
 import agent.app.model.PriceList;
 import agent.app.model.PublisherUser;
 import agent.app.model.User;
 import agent.app.repository.PublisherUserRepository;
+import agent.app.service.intf.AdService;
 import agent.app.service.intf.PublisherUserService;
 import agent.app.service.intf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,9 @@ public class PublisherUserServiceImpl implements PublisherUserService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AdService adService;
 
     @Override
     public PublisherUser findById(Long id) {
@@ -100,4 +107,46 @@ public class PublisherUserServiceImpl implements PublisherUserService {
         List<PriceList> priceLists = new ArrayList<>(publisherUser.getPriceLists());
         return priceLists;
     }
+
+    @Override
+    public AdStatisticsDTO findBestAverageGrade(String email) {
+        Ad adT = null;
+        double averageGrade = 0.0;
+        double max = 0.0;
+        System.out.println("Average method");
+        for (Ad ad : adService.findAll()) {
+            if (ad.getRatingCnt() == 0) {
+                continue;
+            } else {
+                averageGrade = ad.getRatingNum() / ad.getRatingCnt();
+                if (averageGrade > max) {
+                    System.out.println("Average: " + averageGrade);
+                    max = averageGrade;
+                    adT = ad;
+                }
+            }
+        }
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxMileage(String email) {
+        Ad adT = null;
+        float max = 0;
+        System.out.println("Average method za kilometrazu");
+        for (Ad ad : adService.findAll()) {
+            if (ad.getCar().getMileage() > max) {
+                System.out.println("Max km: " + ad.getCar().getMileage());
+                max = ad.getCar().getMileage();
+                adT = ad;
+            }
+
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
 }

@@ -41,8 +41,5 @@ public interface AdService {
     void syncData();
 
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);
-    
-    AdStatisticsDTO findBestAverageGrade(String email);
 
-    AdStatisticsDTO findMaxMileage(String email);
 }
