@@ -76,12 +76,12 @@ const CartComponent = (props) => {
                     <Col md={6} xs={12}>
                         <Form.Row>
                             <Form.Group as={Col}>
-                                <Form.Label>Datum pocetka rentiranja {props.startDate} </Form.Label>
+                                <Form.Label>Datum pocetka rentiranja {props.startDate.replace('T', " ")} </Form.Label>
                             </Form.Group>
                         </Form.Row>
                         <Form.Row >
                             <Form.Group as={Col}>
-                                <Form.Label>Datum zavrsetka rentiranja {props.endDate}</Form.Label>
+                                <Form.Label>Datum zavrsetka rentiranja {props.endDate.replace('T', " ")}</Form.Label>
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>

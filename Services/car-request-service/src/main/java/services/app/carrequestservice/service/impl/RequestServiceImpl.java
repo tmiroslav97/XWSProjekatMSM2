@@ -142,8 +142,8 @@ public class RequestServiceImpl implements RequestService {
                     ads.add(ad);
                 }
                 request = Request.builder()
-                        .startDate(DateAPI.dateStringToDateTime(itemSubmitRequestDTO.getStartDate()))
-                        .endDate(DateAPI.dateStringToDateTime(itemSubmitRequestDTO.getEndDate()))
+                        .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getStartDate()))
+                        .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getEndDate()))
                         .submitDate(DateAPI.DateTimeNow())
                         .status(RequestStatusEnum.PENDING)
                         .ads(ads)
@@ -167,9 +167,9 @@ public class RequestServiceImpl implements RequestService {
                     }
                     ads.add(ad);
                     request = Request.builder()
-                            .startDate(DateAPI.dateStringToDateTime(itemSubmitRequestDTO.getStartDate()))
-                            .endDate(DateAPI.dateStringToDateTime(itemSubmitRequestDTO.getEndDate()))
-                            .submitDate(DateAPI.dateTimeNow())
+                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getStartDate()))
+                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getEndDate()))
+                            .submitDate(DateAPI.DateTimeNow())
                             .status(RequestStatusEnum.PENDING)
                             .ads(ads)
                             .bundle(itemSubmitRequestDTO.getBundle())
