@@ -1,7 +1,6 @@
 package services.app.adservice.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import services.app.adservice.config.AppConfig;
 import services.app.adservice.converter.AdConverter;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
@@ -22,20 +22,19 @@ import services.app.adservice.service.intf.AdService;
 public class AdController {
 
     private final AdService adService;
+    private final AppConfig appConfig;
 
-    public AdController(AdService adService) {
+    public AdController(AdService adService, AppConfig appConfig) {
         this.adService = adService;
+        this.appConfig = appConfig;
     }
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${directory.prop}")
-    private String photoDir;
-
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
         System.out.println("Service ad !!!!!");
-        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), photoDir), HttpStatus.OK);
+        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), appConfig.getPhotoDir()), HttpStatus.OK);
     }
 
 

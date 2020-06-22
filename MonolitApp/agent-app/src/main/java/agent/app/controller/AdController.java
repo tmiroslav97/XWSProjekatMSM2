@@ -1,55 +1,41 @@
 package agent.app.controller;
 
+import agent.app.config.AppConfig;
 import agent.app.converter.AdConverter;
 import agent.app.converter.DateAPI;
 import agent.app.dto.ad.AdCreateDTO;
-import agent.app.model.CarManufacturer;
 import agent.app.service.intf.AdService;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/ad")
 public class AdController {
 
     private final AdService adService;
+    private final AppConfig appConfig;
 
-    public AdController(AdService adService) {
+    public AdController(AdService adService, AppConfig appConfig) {
         this.adService = adService;
+        this.appConfig = appConfig;
     }
 
     ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${directory.prop}")
-    private String photoDir;
 
     //    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
         System.out.println("Service ad !!!!!");
-        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), photoDir), HttpStatus.OK);
+        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), appConfig.getPhotoDir()), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")

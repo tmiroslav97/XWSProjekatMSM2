@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import services.app.adservice.client.AdSearchClient;
 import services.app.adservice.client.AuthenticationClient;
 import services.app.adservice.client.PricelistAndDiscountClient;
+import services.app.adservice.config.AppConfig;
 import services.app.adservice.converter.AdConverter;
 import services.app.adservice.converter.CarCalendarTermConverter;
 import services.app.adservice.converter.DateAPI;
@@ -59,8 +60,8 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private AdSearchClient adSearchClient;
 
-    @Value("${directory.prop}")
-    private String photoDir;
+    @Autowired
+    private AppConfig appConfig;
 
     @Override
     public Ad findById(Long id) {
@@ -79,7 +80,7 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeletedAndPublisherUser(false, Long.valueOf(userId), pageable);
 
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
@@ -139,7 +140,7 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
         System.out.println(ads.getSize());
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -366,7 +367,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public AdDetailViewDTO getAdDetailView(Long ad_id) {
 
-        AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), photoDir);
+        AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), appConfig.getPhotoDir());
         System.out.println("GET DETAIL VIEW ");
 
 

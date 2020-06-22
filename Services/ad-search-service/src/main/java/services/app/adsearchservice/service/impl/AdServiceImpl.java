@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import services.app.adsearchservice.config.AppConfig;
 import services.app.adsearchservice.converter.AdConverter;
 import services.app.adsearchservice.converter.CarCalendarTermsConverter;
 import services.app.adsearchservice.converter.CarConverter;
@@ -47,8 +48,8 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private CarService carService;
 
-    @Value("${directory.prop}")
-    private String photoDir;
+    @Autowired
+    private AppConfig appConfig;
 
     @Override
     public Ad findById(Long id) {
@@ -92,7 +93,7 @@ public class AdServiceImpl implements AdService {
     public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startDate, endDate, pageable);
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
 //        List<AdPageDTO> ret = new ArrayList<>();
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
@@ -132,7 +133,7 @@ public class AdServiceImpl implements AdService {
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
 
 
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, photoDir)).collect(Collectors.toList());
+        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
 
         System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
