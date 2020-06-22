@@ -24,6 +24,8 @@ public interface AdService {
 
     Ad save(Ad ad);
 
+    Ad edit(Ad ad);
+
     void delete(Ad ad);
 
     void logicalDeleteOrRevertAds(List<Ad> ads, Boolean status);

@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.POST, Constants.REST_PATH + "/auth/login");
         web.ignoring().antMatchers(HttpMethod.POST, Constants.REST_PATH + "/auth/sign-up");
-//        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/**");
+        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/**");
 //        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad");
 //        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/{id}");
 //        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/search");
