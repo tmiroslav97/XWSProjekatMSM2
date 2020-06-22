@@ -28,13 +28,8 @@ public class AdController {
         this.appConfig = appConfig;
     }
 
-    ObjectMapper objectMapper = new ObjectMapper();
-
-
-    //    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
-        System.out.println("Service ad !!!!!");
         return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), appConfig.getPhotoDir()), HttpStatus.OK);
     }
 
@@ -88,7 +83,6 @@ public class AdController {
         }
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findAllPageAd(@RequestParam(value = "nextPage", required = false) Integer nextPage,
                                            @RequestParam(value = "size", required = false) Integer size) {
