@@ -151,17 +151,17 @@ public class Request {
 
     @JsonProperty("submitDate")
     public String getTheSubmitDate() {
-        return DateAPI.StringDateFromDateTime(submitDate);
+        return DateAPI.DateTimeToStringDateTime(submitDate);
     }
 
     @JsonProperty("startDate")
     public String getTheStartDate() {
-        return DateAPI.StringDateFromDateTime(startDate);
+        return DateAPI.DateTimeToStringDateTime(startDate);
     }
 
     @JsonProperty("endDate")
     public String getTheEndDate() {
-        return DateAPI.StringDateFromDateTime(endDate);
+        return DateAPI.DateTimeToStringDateTime(endDate);
     }
     /**
      * Gets the value of the id property.
