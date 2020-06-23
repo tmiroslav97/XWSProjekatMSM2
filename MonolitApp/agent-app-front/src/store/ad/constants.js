@@ -14,6 +14,8 @@ export const FETCH_CALENDAR = 'fetch_calendar';
 export const ADD_TERM = 'add_term';
 export const FETCH_BEST_GRADE = 'fetch_best_grade';
 export const FETCH_MAX_MILEAGE = 'fetch_max_mileage';
+export const FETCH_MAX_COMMENTS = 'fetch_max_comments';
+
 
 
 

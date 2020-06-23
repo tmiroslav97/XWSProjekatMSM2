@@ -102,8 +102,8 @@ public class AdConverter {
                 .carManufacturer(ad.getCar().getCarManufacturer())
                 .carModel(ad.getCar().getCarModel())
                 .mileage(ad.getCar().getMileage())
-                .averageGrade((float) (ad.getRatingNum() / ad.getRatingCnt()))
-                //comment
+                .averageGrade((float) (ad.getRatingNum() * 1.0 / ad.getRatingCnt()))
+                .comment(ad.getComments().size())
                 .build();
     }
 }

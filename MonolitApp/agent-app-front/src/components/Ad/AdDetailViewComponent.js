@@ -19,6 +19,12 @@ const AdDetailViewComponent = (props) => {
     }
 
 
+    var averageGrade = 0;
+    if(props.ad.ratingNum === 0){
+        averageGrade = 0;
+    }else{
+        averageGrade = props.ad.ratingNum / props.ad.ratingCnt;
+    }
 
 
 
@@ -68,7 +74,7 @@ const AdDetailViewComponent = (props) => {
                                 <ListGroup.Item>Godiste: {props.handleYear(props.ad.year)}</ListGroup.Item>
                                 <ListGroup.Item>Posjedovanje android uredjaja: {androidFlag}</ListGroup.Item>
                                 <ListGroup.Item>Broj rentiranja: {props.ad.rentCnt}</ListGroup.Item>
-                                <ListGroup.Item>Ocjena: neki broj </ListGroup.Item>
+                                <ListGroup.Item>Ocjena: {averageGrade}</ListGroup.Item>
                                 <ListGroup.Item></ListGroup.Item>
 
                             </ListGroup>

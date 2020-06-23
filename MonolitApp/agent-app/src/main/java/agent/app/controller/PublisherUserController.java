@@ -46,6 +46,15 @@ public class PublisherUserController {
 
     }
 
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/max-comments", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> findMaxCommentsAd(Principal principal) {
+        System.out.println("Max comments contoller");
+        System.out.println(principal.getName());
+        return new ResponseEntity<>(publisherUserService.findMaxComment(principal.getName()), HttpStatus.OK);
+
+    }
+
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping(value="/publisher",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

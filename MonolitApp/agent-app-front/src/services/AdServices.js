@@ -192,6 +192,20 @@ class AdServices extends HttpBaseClient {
         console.log(response);
         return response.data;
     };
+
+    fetchMaxCommentsAd = async payload => {
+        console.log("Max comments service")
+        console.log(payload)
+        const response = await this.getApiClient().get(
+            FINALPOINTS.PUBLISHER_BASE + "/max-comments" , {
+                    params: {
+                        email: payload
+                    }
+                }      
+        );
+        console.log(response);
+        return response.data;
+    };
 }
 
     
