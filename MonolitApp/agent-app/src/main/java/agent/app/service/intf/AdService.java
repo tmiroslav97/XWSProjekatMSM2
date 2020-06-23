@@ -1,10 +1,7 @@
 package agent.app.service.intf;
 
 
-import agent.app.dto.ad.AdCreateDTO;
-import agent.app.dto.ad.AdPageContentDTO;
-import agent.app.dto.ad.AdPageDTO;
-import agent.app.dto.ad.AdStatisticsDTO;
+import agent.app.dto.ad.*;
 import agent.app.model.Ad;
 import org.joda.time.DateTime;
 
@@ -39,6 +36,8 @@ public interface AdService {
     Integer isExistToken(String token);
 
     String generateToken();
+
+    Integer addRatingToAd(AdRatingDTO adRatingDTO);
 
     void syncData();
 

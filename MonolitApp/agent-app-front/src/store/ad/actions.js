@@ -13,9 +13,23 @@ import{
     PUT_CALENDAR,
     FETCH_CALENDAR,
     ADD_TERM,
+    PUT_SEARCH_DATA,
+    RATING_AD,
+    ADD_COMMENT,
+    PUT_COMMENTS,
+    FETCH_COMMENTS,
+    APPROVED_COMMENT,
+    FETCH_ALL_COMMENTS,
+    FETCH_ALL_COMMENTS_FROM_USER,
     FETCH_BEST_GRADE,
     FETCH_MAX_MILEAGE
 } from './constants';
+
+
+export const putSearchData = payload => ({
+    type: PUT_SEARCH_DATA,
+    payload
+});
 
 export const createdAd = payload => ({
     type: CREATED_AD,
@@ -83,6 +97,42 @@ export const fetchCalendar = payload => ({
 
 export const addTerm = payload => ({
     type: ADD_TERM,
+    payload
+});
+
+
+export const ratingAd = payload => ({
+    type: RATING_AD,
+    payload
+});
+
+export const addCommentForAd = payload => ({
+    type: ADD_COMMENT,
+    payload
+});
+
+export const putComments = payload => ({
+    type: PUT_COMMENTS,
+    payload
+});
+
+export const fetchComments = payload => ({
+    type: FETCH_COMMENTS,
+    payload
+});
+
+export const fetchAllComments = payload => ({
+    type: FETCH_ALL_COMMENTS,
+    payload
+});
+
+export const fetchAllCommentsFromUser = payload => ({
+    type: FETCH_ALL_COMMENTS_FROM_USER,
+    payload
+});
+
+export const approvedComment = payload => ({
+    type: APPROVED_COMMENT,
     payload
 });
 

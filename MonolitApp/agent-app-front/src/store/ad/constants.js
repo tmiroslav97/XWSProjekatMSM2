@@ -12,6 +12,14 @@ export const CREATED_AD_PHOTOS ='createdAdPhotos';
 export const PUT_CALENDAR = 'put_calendar';
 export const FETCH_CALENDAR = 'fetch_calendar';
 export const ADD_TERM = 'add_term';
+export const PUT_SEARCH_DATA ='put_search_data';
+export const RATING_AD = 'rating_ad';
+export const ADD_COMMENT = 'add_comment';
+export const FETCH_COMMENTS = 'fetch_comments';
+export const PUT_COMMENTS = 'put_comments';
+export const APPROVED_COMMENT = 'approved_comment';
+export const FETCH_ALL_COMMENTS_FROM_USER = 'fetch_all_comments_from_user';
+export const FETCH_ALL_COMMENTS = 'fetch_all_comments';
 export const FETCH_BEST_GRADE = 'fetch_best_grade';
 export const FETCH_MAX_MILEAGE = 'fetch_max_mileage';
 

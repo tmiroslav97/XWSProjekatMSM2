@@ -1,12 +1,6 @@
 package agent.app.dto.ad;
 
-import agent.app.dto.car.CarCalendarTermCreateDTO;
-import agent.app.dto.car.CarCreateDTO;
-import agent.app.model.Image;
 import lombok.*;
-
-import java.util.List;
-import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +9,7 @@ import java.util.Set;
 @Builder
 @ToString
 public class AdDetailViewDTO {
+    private Long id;
     private String name;
     private String coverPhoto;
     private String location;
@@ -36,6 +31,7 @@ public class AdDetailViewDTO {
     private Boolean androidFlag;
     private Float pricePerKm;
     private Float pricePerKmCDW;
+    private Long priceId;
     private Float pricePerDay;
     private Long publisherUserId;
     private String publisherUserFirstName;

@@ -2,31 +2,73 @@ import React, { useState, useEffect } from 'react';
 import AdDetailViewComponent from '../../components/Ad/AdDetailViewComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
-
+import jwt_decode from 'jwt-decode';
 import PaginationContainer from '../Pagination/PaginationContainer';
 import PaginationSize from '../../components/Pagination/PaginationSize';
-import { adSelector } from '../../store/ad/selectors'; 
-import { fetchAd } from '../../store/ad/actions';
+import { adSelector, searchDataSelector, commentsSelector } from '../../store/ad/selectors';
+import { putSuccessMsg, putWarnMsg } from '../../store/common/actions';
+import { fetchAd, fetchAllComments, fetchAllCommentsFromUser } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 
 
 const AdDetailViewContainer = (props) => {
     const dispatch = useDispatch();
+    const searchData = useSelector(searchDataSelector);
     const ad = useSelector(adSelector);
     const isFetchAd = ad.isFetch;
     const adId = props.match.params.ad;
     const token = localStorage.getItem('token');
 
+    const comments = useSelector(commentsSelector);
+    const [flagComments, setFlagComments] = useState(false);
+
     useEffect(() => {
         dispatch(
             fetchAd({
-               adId
+                adId
             })
         );
     }, []);
-    
-    console.log(ad);
-    
+
+    const hasRole = (accessRole) => {
+        if (token != null) {
+            const roles = jwt_decode(token).roles;
+            const role = roles.filter(val => accessRole.includes(val));
+            return role.length > 0;
+        } else {
+            return false;
+        }
+    };
+
+    const addToCart = (ad) => {
+        let cart = new Map();
+        if (JSON.parse(localStorage.getItem('cart')) != null) {
+            cart = new Map(JSON.parse(localStorage.getItem('cart')));
+        }
+        if (cart.get(ad.publisherUserId) == null) {
+            cart.set(ad.publisherUserId, { bundle: false, startDate: searchData.startDate, endDate: searchData.endDate, ads: [{ id: ad.id, adName: ad.name }] });
+            dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
+        } else {
+            var temp = cart.get(ad.publisherUserId);
+            var flag = false;
+            for (let item of temp.ads) {
+                if (item.id == ad.id) {
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (flag) {
+                dispatch(putWarnMsg('Oglas ste vec dodali u korpu'));
+            } else {
+                cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name });
+                dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
+            }
+        }
+
+        localStorage.setItem('cart', JSON.stringify(Array.from(cart.entries())));
+    };
+
     const handleDateFormat = (event) => {
         var datum = new Date(event);
         let date = datum.getDate();
@@ -47,39 +89,87 @@ const AdDetailViewContainer = (props) => {
         if (minutes < 10) {
             minutes = "0" + minutes;
         }
-        ret = + hours + ":" + minutes + " " +  date  + "-" + month + "-" + year;
+        ret = + hours + ":" + minutes + " " + date + "-" + month + "-" + year;
         return ret;
     }
-    
+
     const handleYear = (event) => {
         var datum = new Date(event);
         var year = datum.getFullYear();
         return year;
     }
 
-    return(
-       
+    const getCommentsFromUser = (adId) => {
+        console.log("oglas usera " + adId);
+        dispatch(
+            fetchAllCommentsFromUser({
+                'id': adId
+            })
+        );
+        setFlagComments(true);
+    }
+    const getComments = (adId) =>{
+        console.log("oglas " + adId);
+        dispatch(
+            fetchAllComments({
+                'id': adId
+            })
+        );
+        setFlagComments(true);
+    }
+
+    const getCommentsView = ()=>{
+        let list = [];
+        if(comments.isFetch){
+            comments.data.map((comment)=>{
+                let ss = comment.creationDate.substring(0, 10);
+                let ss2 = comment.creationDate.substring(11, 16);
+                ss = ss2 + " " + ss;
+                list.push(
+                    <tr key={comment.id}>
+                        <td>{ss}</td>
+                        <td>{comment.publisherUserFirstName + ' ' + comment.publisherUserLastName}</td>
+                        <td>{comment.content}</td>
+                    </tr>
+                );
+            })
+        }
+        return list;
+    }
+
+    const hideComments =()=>{
+        setFlagComments(false);
+    }
+    return (
+
         <Container >
-       
+
             <Row>
                 <Col >
-                {/* <AdDetailViewComponent id={adId} ad={ad.data}/> */}
-                
+                    {/* <AdDetailViewComponent id={adId} ad={ad.data}/> */}
+
 
                     {
-                        isFetchAd ?  <AdDetailViewComponent id={adId} 
-                                                            ad={ad.data} 
-                                                            token={token}
-                                                            handleDateFormat={handleDateFormat}
-                                                            handleYear={handleYear}
-                                                            /> : <SpinnerContainer />
+                        isFetchAd ? <AdDetailViewComponent id={adId}
+                            ad={ad.data}
+                            token={token}
+                            handleDateFormat={handleDateFormat}
+                            handleYear={handleYear}
+                            hasRole={hasRole}
+                            addToCart={addToCart}
+                            getCommentsFromUser={getCommentsFromUser}
+                            getComments={getComments}
+                            flagComments={flagComments} setFlagComments={setFlagComments}
+                            getCommentsView={getCommentsView}
+                            hideComments={hideComments}
+                        /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>
 
         </Container>
 
-       
+
     );
 }
 
