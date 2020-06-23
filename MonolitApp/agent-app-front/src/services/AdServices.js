@@ -4,7 +4,8 @@ const FINALPOINTS = {
     AD_BASE: '/ad',
     IMAGE_BASE: 'image',
     CALENDAR_BASE: '/calendar',
-    PUBLISHER_BASE: '/publisher'
+    PUBLISHER_BASE: '/publisher',
+    COMMENT_BASE: '/comment'
     
 };
 
@@ -163,6 +164,72 @@ class AdServices extends HttpBaseClient {
 
         return response.data;
     };
+    
+    ratingAd = async payload => {
+        console.log("********* DODAVANJE OCENE ***********")
+        console.log(payload);
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/rating",
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+
+        );
+
+        return response.data;
+    };
+
+    addCommentForAd = async payload => {
+        console.log("********* DODAVANJE KOMENTARA ***********")
+        console.log(payload);
+        const response = await this.getApiClient().post(
+            FINALPOINTS.COMMENT_BASE,
+            payload,
+            {
+                headers: {
+                    'Content-Type': 'application/json; charset=utf-8'
+                }
+            }
+
+        );
+
+        return response.data;
+    };
+
+    fetchAllUnapprovedCommentForAd = async payload => {
+        console.log("FETCH COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/all-unapproved"
+        );
+        return response.data;
+    };
+
+    fetchAllCommentForAd = async payload => {
+        console.log("FETCH COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/"+ payload.id
+        );
+        return response.data;
+    };
+
+    fetchAllCommentForAdAndUser = async payload => {
+        console.log("FETCH COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/from-user/" + payload.id
+        );
+        return response.data;
+    };
+
+    approvedCommentForAd = async payload => {
+        console.log("APPROVED COMMENTS") 
+        const response = await this.getApiClient().get(
+            FINALPOINTS.COMMENT_BASE + "/approved/" + payload.id
+        );
+        return response.data;
+    };
 
     
     fetchBestGradeAd = async payload => {
@@ -184,6 +251,20 @@ class AdServices extends HttpBaseClient {
         console.log(payload)
         const response = await this.getApiClient().get(
             FINALPOINTS.PUBLISHER_BASE + "/max-mileage" , {
+                    params: {
+                        email: payload
+                    }
+                }      
+        );
+        console.log(response);
+        return response.data;
+    };
+
+    fetchMaxCommentsAd = async payload => {
+        console.log("Max comments service")
+        console.log(payload)
+        const response = await this.getApiClient().get(
+            FINALPOINTS.PUBLISHER_BASE + "/max-comments" , {
                     params: {
                         email: payload
                     }

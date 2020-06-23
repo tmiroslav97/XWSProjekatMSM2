@@ -1,25 +1,22 @@
-package services.app.adservice.service.impl;
+package agent.app.service.impl;
 
+import agent.app.converter.CommentConverter;
+import agent.app.dto.car.StatisticCarDTO;
+import agent.app.dto.comment.CommentCreateDTO;
+import agent.app.dto.comment.CommentDTO;
+import agent.app.exception.ExistsException;
+import agent.app.exception.NotFoundException;
+import agent.app.model.Ad;
+import agent.app.model.Comment;
+import agent.app.model.PublisherUser;
+import agent.app.repository.CommentRepository;
+import agent.app.service.intf.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import services.app.adservice.client.AuthenticationClient;
-import services.app.adservice.converter.CommentConverter;
-import services.app.adservice.dto.car.StatisticCarDTO;
-import services.app.adservice.dto.comment.CommentCreateDTO;
-import services.app.adservice.dto.comment.CommentDTO;
-import services.app.adservice.dto.user.PublisherUserDTO;
-import services.app.adservice.exception.ExistsException;
-import services.app.adservice.exception.NotFoundException;
-import services.app.adservice.model.Ad;
-import services.app.adservice.model.Car;
-import services.app.adservice.model.Comment;
-import services.app.adservice.model.CustomPrincipal;
-import services.app.adservice.repository.CommentRepository;
-import services.app.adservice.service.intf.AdService;
-import services.app.adservice.service.intf.CommentService;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -34,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     private AdService adService;
 
     @Autowired
-    private AuthenticationClient authenticationClient;
+    private PublisherUserService publisherUserService;
 
     @Override
     public Comment finById(Long id) {
@@ -94,8 +91,8 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = CommentConverter.toCommentFromCommentCreateDTO(commentCreateDTO);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
-        Long publisherUser = authenticationClient.findPublishUserByEmail(principal.getToken());
+        Principal principal = (Principal) auth.getPrincipal();
+        PublisherUser publisherUser = publisherUserService.findByEmail(principal.getName());
         comment.setPublisherUser(publisherUser);
 
         Ad ad = adService.findById(commentCreateDTO.getAdId());
@@ -116,9 +113,9 @@ public class CommentServiceImpl implements CommentService {
         for(Comment comment: commentSet){
             if(comment.getApproved()){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
+                PublisherUser publisherUser = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
+                commentDTO.setPublisherUserFirstName(publisherUser.getFirstName());
+                commentDTO.setPublisherUserLastName(publisherUser.getLastName());
                 list.add(commentDTO);
             }
         }
@@ -133,22 +130,22 @@ public class CommentServiceImpl implements CommentService {
         List<CommentDTO> list = new ArrayList<>();
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
-        Long publisherUser = authenticationClient.findPublishUserByEmail(principal.getToken());
+        Principal principal = (Principal) auth.getPrincipal();
+        PublisherUser publisherUser = publisherUserService.findByEmail(principal.getName());
 
         Set<Comment> commentSet = ad.getComments();
         for(Comment comment: commentSet){
             if(comment.getApproved()){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
+                PublisherUser pu = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
+                commentDTO.setPublisherUserFirstName(pu.getFirstName());
+                commentDTO.setPublisherUserLastName(pu.getLastName());
                 list.add(commentDTO);
-            }else if(comment.getApproved() && comment.getPublisherUser().equals(publisherUser)){
+            }else if(comment.getPublisherUser().equals(publisherUser)){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
+                PublisherUser pu = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
+                commentDTO.setPublisherUserFirstName(pu.getFirstName());
+                commentDTO.setPublisherUserLastName(pu.getLastName());
                 list.add(commentDTO);
             }
         }
@@ -162,9 +159,9 @@ public class CommentServiceImpl implements CommentService {
         for(Comment comment: comments){
             if(!comment.getApproved()){
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
+                PublisherUser pu = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
+                commentDTO.setPublisherUserFirstName(pu.getFirstName());
+                commentDTO.setPublisherUserLastName(pu.getLastName());
                 list.add(commentDTO);
             }
         }

@@ -121,9 +121,12 @@ public class PublisherUserServiceImpl implements PublisherUserService {
         double averageGrade = 0.0;
         double max = 0.0;
         System.out.println("Average method");
-        for (Ad ad : adService.findAll()) {
+        for (Ad ad : adService.findMyAds(email)) {
             if (ad.getRatingCnt() == 0) {
-                continue;
+                averageGrade = 0.0;
+                max = averageGrade;
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
             } else {
                 averageGrade = ad.getRatingNum() / ad.getRatingCnt();
                 if (averageGrade > max) {
@@ -142,13 +145,42 @@ public class PublisherUserServiceImpl implements PublisherUserService {
         Ad adT = null;
         float max = 0;
         System.out.println("Average method za kilometrazu");
-        for (Ad ad : adService.findAll()) {
-            if (ad.getCar().getMileage() > max) {
-                System.out.println("Max km: " + ad.getCar().getMileage());
-                max = ad.getCar().getMileage();
+        for (Ad ad : adService.findMyAds(email)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
                 adT = ad;
+            } else {
+                if (ad.getCar().getMileage() > max) {
+                    System.out.println("Max km: " + ad.getCar().getMileage());
+                    max = ad.getCar().getMileage();
+                    adT = ad;
+                }
             }
 
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxComment(String email) {
+        Ad adT = null;
+        int max = 0;
+        System.out.println("Average method za komentare");
+        for (Ad ad : adService.findMyAds(email)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                if (ad.getComments().size() >= max) {
+                    System.out.println("Komentari "  + ad.getComments().size());
+                    max = ad.getComments().size();
+                    adT = ad;
+                }
+            }
 
         }
 

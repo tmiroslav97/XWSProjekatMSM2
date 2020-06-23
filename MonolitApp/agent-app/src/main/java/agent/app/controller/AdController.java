@@ -4,6 +4,7 @@ import agent.app.config.AppConfig;
 import agent.app.converter.AdConverter;
 import agent.app.converter.DateAPI;
 import agent.app.dto.ad.AdCreateDTO;
+import agent.app.dto.ad.AdRatingDTO;
 import agent.app.service.intf.AdService;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
@@ -110,4 +111,14 @@ public class AdController {
     }
 
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value = "/rating", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO) {
+
+        Integer rez = adService.addRatingToAd(adRatingDTO);
+        if (rez == 1) {
+            return new ResponseEntity<>("Ocenili ste oglas.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
+    }
 }

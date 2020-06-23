@@ -65,6 +65,7 @@ public class AdConverter {
             encodedString = "Nije uspjelo";
         }
         return AdDetailViewDTO.builder()
+                .id(ad.getId())
                 .name(ad.getName())
                 .location(ad.getLocation())
                 .coverPhoto(encodedString)
@@ -86,6 +87,7 @@ public class AdConverter {
                 .androidFlag(ad.getCar().getAndroidFlag())
                 .pricePerKm(ad.getPriceList().getPricePerKm())
                 .pricePerKmCDW(ad.getPriceList().getPricePerKmCDW())
+                .priceId(ad.getPriceList().getId())
                 .pricePerDay(ad.getPriceList().getPricePerDay())
                 .publisherUserId(ad.getPublisherUser().getId())
                 .publisherUserFirstName(ad.getPublisherUser().getFirstName())
@@ -102,8 +104,8 @@ public class AdConverter {
                 .carManufacturer(ad.getCar().getCarManufacturer())
                 .carModel(ad.getCar().getCarModel())
                 .mileage(ad.getCar().getMileage())
-                .averageGrade((float) (ad.getRatingNum() / ad.getRatingCnt()))
-                //comment
+                .averageGrade((float) (ad.getRatingNum() * 1.0 / ad.getRatingCnt()))
+                .comment(ad.getComments().size())
                 .build();
     }
 }

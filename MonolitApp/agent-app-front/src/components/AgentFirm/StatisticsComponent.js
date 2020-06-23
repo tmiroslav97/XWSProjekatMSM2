@@ -5,7 +5,6 @@ import AdsTableComponent from '../AgentFirm/AdsTableComponent'
 
 const StatisticsComponent = (props) => {
 
-var k = "grade";
   console.log(props.ad)
   return (
 
@@ -17,7 +16,7 @@ var k = "grade";
           <Button onClick={props.handleMileage} variant="outline-warning" block>Predjena kilometraza</Button>{' '}
           <Button onClick={props.handleComment} variant="outline-danger" block>Komentari</Button>{' '}
           {
-            props.isFetchAd ? <AdsTableComponent ad={props.ad} flag={props.flag}></AdsTableComponent> :null
+            props.isFetchAd ? <AdsTableComponent ad={props.ad} flag={props.flag}></AdsTableComponent> : null
           }
        </Col>
      </Row>

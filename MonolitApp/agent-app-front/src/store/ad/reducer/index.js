@@ -5,7 +5,9 @@ import {
     PUT_IMAGE_NAME,
     PUT_AD,
     PUT_IMAGE_SRC,
-    PUT_CALENDAR
+    PUT_CALENDAR,
+    PUT_SEARCH_DATA,
+    PUT_COMMENTS
 } from '../constants';
 
 const initialState = {
@@ -34,6 +36,20 @@ const initialState = {
     calendar:{
         data:[],
         isFetch: false
+    },
+    searchData:{
+        location: '',
+        startDate: '',
+        endDate: '',
+        nextPage: 0,
+        size : 10
+    },
+    comments:{
+        data: [],
+        // totalPageCnt: 0,
+        // nextPage: 0,
+        // size: 10,
+        isFetch: false
     }
 
 };
@@ -50,7 +66,9 @@ const actionHandler = {
     [PUT_IMAGE_NAME]: computationFunctions.putImageName,
     [PUT_AD]: computationFunctions.putAd,
     [PUT_IMAGE_SRC]: computationFunctions.putImageSrc,
-    [PUT_CALENDAR]: computationFunctions.putCalendar
+    [PUT_CALENDAR]: computationFunctions.putCalendar,
+    [PUT_SEARCH_DATA]: computationFunctions.putSearchData,
+    [PUT_COMMENTS]: computationFunctions.putComments
 
 
 };

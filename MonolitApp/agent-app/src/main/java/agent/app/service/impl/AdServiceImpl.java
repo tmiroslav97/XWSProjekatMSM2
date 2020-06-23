@@ -4,10 +4,7 @@ package agent.app.service.impl;
 import agent.app.config.AppConfig;
 import agent.app.converter.AdConverter;
 import agent.app.converter.CarCalendarTermConverter;
-import agent.app.dto.ad.AdCreateDTO;
-import agent.app.dto.ad.AdPageContentDTO;
-import agent.app.dto.ad.AdPageDTO;
-import agent.app.dto.ad.AdStatisticsDTO;
+import agent.app.dto.ad.*;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
@@ -77,6 +74,12 @@ public class AdServiceImpl implements AdService {
             }
         }
 
+        return adRepository.save(ad);
+    }
+
+    @Override
+    public Ad edit(Ad ad) {
+        this.findById(ad.getId());
         return adRepository.save(ad);
     }
 
@@ -216,6 +219,16 @@ public class AdServiceImpl implements AdService {
         return 1;
     }
 
+    @Override
+    public Integer addRatingToAd(AdRatingDTO adRatingDTO) {
+        Ad ad = this.findById(adRatingDTO.getAdId());
+        ad.setRatingNum(ad.getRatingNum() + adRatingDTO.getRating());
+        ad.setRatingCnt(ad.getRatingCnt() + 1);
+        ad = this.edit(ad);
+        return 1;
+
+    }
+
 
     @Override
     public void syncData() {
@@ -283,6 +296,11 @@ public class AdServiceImpl implements AdService {
 
 
         return adPageContentDTO;
+    }
+
+    @Override
+    public List<Ad> findMyAds(String email) {
+        return adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
     }
 
     @Override
