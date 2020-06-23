@@ -69,7 +69,7 @@ const AdDetailViewComponent = (props) => {
                 <Row>
                     <Col>
                         {
-                            props.flagComments == false ?
+                            props.flagComments === false ?
                                 <div>
                                     {
                                         props.hasRole(['ROLE_USER']) ?
@@ -78,10 +78,14 @@ const AdDetailViewComponent = (props) => {
                                     }
                                 </div>
                                 :
-                                <Button  
-                                variant="outline-success" 
-                                onClick={() => { props.hideComments(); }}
-                                >Sakrij komentare</Button>
+                                null
+                        }
+                        {props.flagComments === true ?
+                            <Button
+                                variant="outline-success"
+                                onClick={props.hideComments}
+                            >Sakrij komentare</Button>
+                            : null
                         }
 
                     </Col>

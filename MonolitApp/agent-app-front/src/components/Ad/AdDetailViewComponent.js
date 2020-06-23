@@ -25,7 +25,7 @@ const AdDetailViewComponent = (props) => {
                 <Card.Title as="h4">{props.ad.name}</Card.Title>
                 <Row>
                     <Col md={5}>
-                        <Card.Img src={`data:image/jpeg;base64,${props.ad.coverPhoto}`}/>
+                        <Card.Img src={`data:image/jpeg;base64,${props.ad.coverPhoto}`} />
 
                         {/* <Carousel>
                                     <Carousel.Item>
@@ -69,19 +69,31 @@ const AdDetailViewComponent = (props) => {
                 <Row>
                     <Col>
                         {
-                            props.flagComments == false ?
+                            props.flagComments === false ?
                                 <div>
                                     {
                                         props.hasRole(['ROLE_USER']) ?
-                                        <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
-                                        : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
+                                            <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
+                                            : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
+                                    
+                                    }
+                                    {
+                                        props.hasRole(['ROLE_AGENT']) ?
+                                            <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
+                                            : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
+                                    
                                     }
                                 </div>
                                 :
-                                <Button  
-                                variant="outline-success" 
-                                onClick={() => { props.hideComments(); }}
-                                >Sakrij komentare</Button>
+                                null
+
+                        }
+                        {props.flagComments === true ?
+                            <Button
+                                variant="outline-success"
+                                onClick={props.hideComments}
+                            >Sakrij komentare</Button>
+                            : null
                         }
 
                     </Col>
