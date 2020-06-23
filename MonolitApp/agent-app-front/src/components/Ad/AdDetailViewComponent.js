@@ -12,11 +12,20 @@ const AdDetailViewComponent = (props) => {
         androidFlag = "Da"
     }
 
+    if (props.token === null) {
+        disable = true;
+    }
+
+    var averageGrade = 0;
+    if (props.ad.ratingNum === 0) {
+        averageGrade = 0;
+    } else {
+        averageGrade = props.ad.ratingNum / props.ad.ratingCnt;
+    }
+
 
 
     return (
-
-
         <Card
             border="secondary"
             className="mt-5"
@@ -39,10 +48,7 @@ const AdDetailViewComponent = (props) => {
                                         </Carousel.Caption>
                                     </Carousel.Item>
                                 </Carousel> */}
-                        <>
-                            <br />
 
-                        </>
                         <ListGroup variant="flush">
                             <ListGroup.Item>Datum objavljivanja: {props.handleDateFormat(props.ad.publishedDate)}</ListGroup.Item>
                             <ListGroup.Item>Oglas objavio: {props.ad.publisherUserFirstName} {props.ad.publisherUserLastName} </ListGroup.Item>
@@ -59,7 +65,7 @@ const AdDetailViewComponent = (props) => {
                             <ListGroup.Item>Godiste: {props.handleYear(props.ad.year)}</ListGroup.Item>
                             <ListGroup.Item>Posjedovanje android uredjaja: {androidFlag}</ListGroup.Item>
                             <ListGroup.Item>Broj rentiranja: {props.ad.rentCnt}</ListGroup.Item>
-                            <ListGroup.Item>Ocjena: neki broj </ListGroup.Item>
+                            <ListGroup.Item>Ocjena: {averageGrade}</ListGroup.Item>
                             <ListGroup.Item></ListGroup.Item>
 
                         </ListGroup>
@@ -75,13 +81,13 @@ const AdDetailViewComponent = (props) => {
                                         props.hasRole(['ROLE_USER']) ?
                                             <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
                                             : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
-                                    
+
                                     }
                                     {
                                         props.hasRole(['ROLE_AGENT']) ?
                                             <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
                                             : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
-                                    
+
                                     }
                                 </div>
                                 :
@@ -127,7 +133,6 @@ const AdDetailViewComponent = (props) => {
                 </Row>
             </Card.Body>
         </Card>
-
     );
 }
 

@@ -23,7 +23,8 @@ import {
     FETCH_ALL_COMMENTS_FROM_USER,
     FETCH_ALL_COMMENTS,
     FETCH_BEST_GRADE,
-    FETCH_MAX_MILEAGE
+    FETCH_MAX_MILEAGE,
+    FETCH_MAX_COMMENTS
 } from './constants';
 
 import {
@@ -277,6 +278,17 @@ export function* fetchMaxMileageAd() {
     console.log(payload);
     yield put(putAd({ 'isFetch': false }));
     const data = yield call(AdServices.fetchMaxMileageAd, payload);
+    yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetchMaxCommentsAd() {
+    const { payload } = yield take(FETCH_MAX_COMMENTS);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchMaxCommentsAd, payload);
     yield put(putAd({
         'data': data,
         'isFetch': true

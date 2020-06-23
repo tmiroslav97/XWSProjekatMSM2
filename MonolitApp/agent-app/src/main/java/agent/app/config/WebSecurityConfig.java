@@ -59,6 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(Constants.REST_PATH + "/auth/**").permitAll()
+                .antMatchers(Constants.REST_PATH + "/ad/**").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
                 .cors()
@@ -72,10 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.POST, Constants.REST_PATH + "/auth/login");
         web.ignoring().antMatchers(HttpMethod.POST, Constants.REST_PATH + "/auth/sign-up");
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/**");
-//        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad");
-//        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/{id}");
-//        web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/ad/search");
-
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/car-man");
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/car-type");
         web.ignoring().antMatchers(HttpMethod.GET, Constants.REST_PATH + "/gb-type");

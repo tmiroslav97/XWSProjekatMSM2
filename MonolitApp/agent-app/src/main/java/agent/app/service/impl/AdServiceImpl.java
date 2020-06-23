@@ -299,6 +299,11 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public List<Ad> findMyAds(String email) {
+        return adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
+    }
+
+    @Override
     public Set<Ad> findAllByIds(List<Long> adIds) {
         Set<Ad> ads = new HashSet<>();
         for (Long adId : adIds) {

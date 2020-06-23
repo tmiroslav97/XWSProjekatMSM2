@@ -22,7 +22,8 @@ import{
     FETCH_ALL_COMMENTS,
     FETCH_ALL_COMMENTS_FROM_USER,
     FETCH_BEST_GRADE,
-    FETCH_MAX_MILEAGE
+    FETCH_MAX_MILEAGE,
+    FETCH_MAX_COMMENTS
 } from './constants';
 
 
@@ -145,3 +146,9 @@ export const fetchMaxMileage = payload => ({
     type: FETCH_MAX_MILEAGE,
     payload
 });
+
+export const fetchMaxComments = payload => ({
+    type: FETCH_MAX_COMMENTS,
+    payload
+});
+

@@ -22,6 +22,8 @@ export const FETCH_ALL_COMMENTS_FROM_USER = 'fetch_all_comments_from_user';
 export const FETCH_ALL_COMMENTS = 'fetch_all_comments';
 export const FETCH_BEST_GRADE = 'fetch_best_grade';
 export const FETCH_MAX_MILEAGE = 'fetch_max_mileage';
+export const FETCH_MAX_COMMENTS = 'fetch_max_comments';
+
 
 
 
