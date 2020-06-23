@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AdComponent from '../../components/Ad/AdComponent';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBestGrade, fetchMaxMileage } from '../../store/ad/actions';
+import { fetchBestGrade, fetchMaxMileage, fetchMaxComments } from '../../store/ad/actions';
 import StatisticsComponent from '../../components/AgentFirm/StatisticsComponent'
 import { adSelector } from '../../store/ad/selectors';
 import { tokenSelector } from '../../store/user/selectors';
@@ -46,7 +46,7 @@ const StatisticsContainer = () => {
     const handleComment  = () => {
         setFlag(3);
         dispatch(
-            fetchMaxMileage(email)
+            fetchMaxComments(email)
         );
     }
 

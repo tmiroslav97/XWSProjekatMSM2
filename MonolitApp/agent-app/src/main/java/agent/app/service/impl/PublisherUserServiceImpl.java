@@ -167,7 +167,7 @@ public class PublisherUserServiceImpl implements PublisherUserService {
     @Override
     public AdStatisticsDTO findMaxComment(String email) {
         Ad adT = null;
-        float max = 0;
+        int max = 0;
         System.out.println("Average method za komentare");
         for (Ad ad : adService.findMyAds(email)) {
             if (ad.getRatingCnt() == 0) {
@@ -175,8 +175,8 @@ public class PublisherUserServiceImpl implements PublisherUserService {
                 ad.setRatingCnt(1L); //zbog djeljenja sa 0
                 adT = ad;
             } else {
-                if (ad.getComments().size() > max) {
-                    System.out.println("Max km: " + ad.getCar().getMileage());
+                if (ad.getComments().size() >= max) {
+                    System.out.println("Komentari "  + ad.getComments().size());
                     max = ad.getComments().size();
                     adT = ad;
                 }

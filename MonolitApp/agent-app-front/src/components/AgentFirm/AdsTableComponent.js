@@ -45,7 +45,7 @@ const AdsTableComponent = (props) => {
                   <td>{props.ad.carModel}</td>
                   <td>{props.ad.averageGrade}</td>
                   <td>{props.ad.mileage}</td>
-                  <td>255</td>
+                  <td>{props.ad.comment}</td>
                 </tr>
 
               </tbody>

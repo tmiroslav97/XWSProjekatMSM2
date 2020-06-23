@@ -14,7 +14,8 @@ import{
     FETCH_CALENDAR,
     ADD_TERM,
     FETCH_BEST_GRADE,
-    FETCH_MAX_MILEAGE
+    FETCH_MAX_MILEAGE,
+    FETCH_MAX_COMMENTS
 } from './constants';
 
 export const createdAd = payload => ({
@@ -95,3 +96,9 @@ export const fetchMaxMileage = payload => ({
     type: FETCH_MAX_MILEAGE,
     payload
 });
+
+export const fetchMaxComments = payload => ({
+    type: FETCH_MAX_COMMENTS,
+    payload
+});
+
