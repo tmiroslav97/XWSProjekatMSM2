@@ -80,7 +80,7 @@ const MyAdComponent = (props) => {
                         <Col>
                             {
                                 disable ? null : <Button className="mb-2" variant="outline-success" 
-                               
+                                onClick={() => { props.viewAd(variant.id);}}
                                 >Pregled oglasa</Button>
                             }
                             {
