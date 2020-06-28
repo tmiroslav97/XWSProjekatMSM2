@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import services.app.authenticationservice.dto.AgentRegDTO;
+import services.app.authenticationservice.dto.agent.AgentRegDTO;
 import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.exception.ExistsException;
 import services.app.authenticationservice.exception.NotFoundException;

@@ -1,4 +1,4 @@
-package services.app.authenticationservice.dto;
+package services.app.authenticationservice.dto.agent;
 
 
 import lombok.AllArgsConstructor;
