@@ -10,18 +10,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import services.app.authenticationservice.converter.AgentConverter;
-import services.app.authenticationservice.converter.EndUserConverter;
-import services.app.authenticationservice.dto.EndUserDTO;
-import services.app.authenticationservice.dto.EndUserPageDTO;
+import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.dto.agent.AgentDTO;
 import services.app.authenticationservice.dto.agent.AgentPageDTO;
 import services.app.authenticationservice.dto.agent.AgentRegDTO;
-import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.exception.ExistsException;
 import services.app.authenticationservice.exception.NotFoundException;
 import services.app.authenticationservice.model.Agent;
 import services.app.authenticationservice.model.Authority;
-import services.app.authenticationservice.model.EndUser;
 import services.app.authenticationservice.repository.AgentRepository;
 import services.app.authenticationservice.service.intf.AgentService;
 import services.app.authenticationservice.service.intf.AuthorityService;
@@ -125,6 +121,20 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public Integer editAgent() {
         return null;
+    }
+
+    @Override
+    public Integer logicDeleteOrRevertById(Long id, Boolean status) {
+        Agent agent = this.findById(id);
+        if (status) {
+            agent.setDeleted(status);
+            this.save(agent);
+            return 1;
+        } else {
+            agent.setDeleted(status);
+            this.save(agent);
+            return 2;
+        }
     }
 
     @Override

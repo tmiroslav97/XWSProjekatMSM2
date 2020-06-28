@@ -85,7 +85,7 @@ const RegAgentContainer = () => {
 
     const handleRevert = async (id) => {
         const result = await UserService.agentDeleteOrRevert({ "id": id, "status": false });
-        if (result === 'Agent uspjesno logicki obrisan.') {
+        if (result === 'Agent uspjesno vracen.') {
             dispatch(putSuccessMsg(result));
             fetchAgentsPaginated({ nextPage, size });
         } else {

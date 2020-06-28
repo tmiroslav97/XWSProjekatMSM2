@@ -18,6 +18,8 @@ public interface AgentService {
 
     Integer editAgent();
 
+    Integer logicDeleteOrRevertById(Long id, Boolean status);
+
     Integer deleteById(Long id);
 
     void delete(Agent agent);

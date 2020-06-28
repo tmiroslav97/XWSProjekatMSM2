@@ -77,6 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.POST, "/user/find-publish-user/ws/{email}");
         web.ignoring().antMatchers(HttpMethod.GET, "/end-user");
         web.ignoring().antMatchers(HttpMethod.PUT, "/end-user/**");
+        web.ignoring().antMatchers(HttpMethod.PUT, "/agent/**");
         web.ignoring().antMatchers(HttpMethod.GET, "/", "/webjars/**", "/*.html", "/favicon.ico", "/**/*.html",
                 "/**/*.css", "/**/*.js", "/**/assets/**");
     }

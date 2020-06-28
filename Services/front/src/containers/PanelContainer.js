@@ -125,8 +125,8 @@ const PanelContainer = ({ match }) => {
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
-                                <Nav.Link eventKey="reg-agent" onClick={() => { history.push("/panel/reg-agent"); }}>
-                                    Registruj agenta
+                                <Nav.Link eventKey="man-agent" onClick={() => { history.push("/panel/man-agent"); }}>
+                                    Agenti
                                 </Nav.Link>
                             </Nav.Item>
                         }
@@ -145,7 +145,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/end-user-reqs`} component={EndUserRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/comments`} component={CommentsContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
-                    <PrivateRoute exact path={`${match.path}/reg-agent`} component={RegAgentContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
+                    <PrivateRoute exact path={`${match.path}/man-agent`} component={RegAgentContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                 </Col>
             </Row>
         </Container >
