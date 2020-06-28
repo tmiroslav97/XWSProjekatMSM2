@@ -4,18 +4,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import services.app.authenticationservice.converter.AgentConverter;
+import services.app.authenticationservice.converter.EndUserConverter;
+import services.app.authenticationservice.dto.EndUserDTO;
+import services.app.authenticationservice.dto.EndUserPageDTO;
+import services.app.authenticationservice.dto.agent.AgentDTO;
+import services.app.authenticationservice.dto.agent.AgentPageDTO;
 import services.app.authenticationservice.dto.agent.AgentRegDTO;
 import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.exception.ExistsException;
 import services.app.authenticationservice.exception.NotFoundException;
 import services.app.authenticationservice.model.Agent;
 import services.app.authenticationservice.model.Authority;
+import services.app.authenticationservice.model.EndUser;
 import services.app.authenticationservice.repository.AgentRepository;
 import services.app.authenticationservice.service.intf.AgentService;
 import services.app.authenticationservice.service.intf.AuthorityService;
 import services.app.authenticationservice.service.intf.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -39,6 +51,18 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public Agent findById(Long id) {
         return agentRepository.findById(id).orElseThrow(() -> new NotFoundException("Agent sa zadatim id- em ne postoji."));
+    }
+
+    @Override
+    public AgentPageDTO findAll(Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("email").ascending());
+        Page<Agent> agentPage = agentRepository.findAll(pageable);
+        List<AgentDTO> agentDTOList = AgentConverter.fromEntityList(new ArrayList<>(agentPage.getContent()), AgentConverter::fromAgentToAgentDTO);
+        AgentPageDTO agentPageDTO = AgentPageDTO.builder()
+                .agents(agentDTOList)
+                .totalPageCnt(agentPage.getTotalPages())
+                .build();
+        return agentPageDTO;
     }
 
     @Override

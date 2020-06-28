@@ -28,14 +28,28 @@ const RegAgentContainer = () => {
     }, [nextPage, size]);
 
     const fetchAgentsPaginated = async (payload) => {
+        setAgents({
+            'data': [],
+            'totalPageCnt': agents.totalPageCnt,
+            'nextPage': nextPage,
+            'size': size,
+            'isFetch': false
+        });
         const result = await UserService.fetchAgentsPaginated(payload);
-        setAgents(result);
+        setAgents({
+            'data': result.agents,
+            'totalPageCnt': result.totalPageCnt,
+            'nextPage': nextPage,
+            'size': size,
+            'isFetch': true
+        });
     }
 
     const registerAgent = async (payload) => {
         const result = await UserService.registerAgent(payload);
         if (result === 'Agent uspjesno registrovan.') {
             dispatch(putSuccessMsg(result));
+            fetchAgentsPaginated({nextPage, size});
         } else {
             dispatch(putErrorMsg(result));
         }

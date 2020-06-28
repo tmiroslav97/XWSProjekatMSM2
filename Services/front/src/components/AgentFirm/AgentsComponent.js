@@ -11,7 +11,7 @@ const AgentsComponent = (props) => {
                         <tr>
                             <th>Email</th>
                             <th>Ime i prezime</th>
-                            <th>Lokalni</th>
+                            <th>Lokalni agent</th>
                             <th className="text-right">Logičko brisanje</th>
                         </tr>
                     </thead>

@@ -13,4 +13,5 @@ public class AgentDTO {
     String firstName;
     String lastName;
     Boolean local;
+    Boolean deleted;
 }
