@@ -9,6 +9,19 @@ const FINALPOINTS = {
 
 class UserService extends HttpBaseClient {
 
+    agentDeleteOrRevert = async payload => {
+        const response = await this.getApiClient().put(
+            FINALPOINTS.AGENT_SERVICE_BASE + '/' + payload.id,
+            payload.status, {
+            headers: {
+                'action': 'log-del',
+                'Content-Type': 'application/json;charset=UTF-8'
+            }
+        }
+        );
+        return response.data;
+    };
+
     fetchAgentsPaginated = async payload => {
         const response = await this.getApiClient().get(
             FINALPOINTS.AGENT_SERVICE_BASE, {

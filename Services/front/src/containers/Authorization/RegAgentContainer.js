@@ -11,7 +11,7 @@ import PaginationSize from '../../components/Pagination/PaginationSize';
 
 const RegAgentContainer = () => {
     const dispatch = useDispatch();
-    
+
     const [validated, setValidated] = useState(false);
     const [nextPage, setNextPage] = useState(0);
     const [size, setSize] = useState(10);
@@ -24,7 +24,7 @@ const RegAgentContainer = () => {
     });
 
     useEffect(() => {
-        fetchAgentsPaginated({nextPage, size});
+        fetchAgentsPaginated({ nextPage, size });
     }, [nextPage, size]);
 
     const fetchAgentsPaginated = async (payload) => {
@@ -49,7 +49,7 @@ const RegAgentContainer = () => {
         const result = await UserService.registerAgent(payload);
         if (result === 'Agent uspjesno registrovan.') {
             dispatch(putSuccessMsg(result));
-            fetchAgentsPaginated({nextPage, size});
+            fetchAgentsPaginated({ nextPage, size });
         } else {
             dispatch(putErrorMsg(result));
         }
@@ -73,12 +73,24 @@ const RegAgentContainer = () => {
         }
     };
 
-    const handleLogDelete = (id) => {
-
+    const handleLogDelete = async (id) => {
+        const result = await UserService.agentDeleteOrRevert({ "id": id, "status": true });
+        if (result === 'Agent uspjesno logicki obrisan.') {
+            dispatch(putSuccessMsg(result));
+            fetchAgentsPaginated({ nextPage, size });
+        } else {
+            dispatch(putErrorMsg(result));
+        }
     };
 
-    const handleRevert = (id) => {
-
+    const handleRevert = async (id) => {
+        const result = await UserService.agentDeleteOrRevert({ "id": id, "status": false });
+        if (result === 'Agent uspjesno logicki obrisan.') {
+            dispatch(putSuccessMsg(result));
+            fetchAgentsPaginated({ nextPage, size });
+        } else {
+            dispatch(putErrorMsg(result));
+        }
     };
 
 
