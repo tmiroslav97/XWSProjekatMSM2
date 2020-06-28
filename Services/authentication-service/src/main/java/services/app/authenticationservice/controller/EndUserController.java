@@ -22,7 +22,7 @@ public class EndUserController {
         this.endUserService = endUserService;
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAll(@RequestParam(value = "nextPage", required = false) Integer nextPage, @RequestParam(value = "size", required = false) Integer size) {
         if (nextPage != null) {
@@ -32,7 +32,7 @@ public class EndUserController {
         }
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> blockOrUnblockById(@RequestHeader("action") String action, @PathVariable("id") Long id, @RequestBody Boolean status) {
         if (action.equals("block")) {

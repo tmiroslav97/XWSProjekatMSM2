@@ -3,6 +3,7 @@ package services.app.authenticationservice.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import services.app.authenticationservice.dto.agent.AgentRegDTO;
 import services.app.authenticationservice.service.intf.AgentService;
@@ -17,7 +18,7 @@ public class AgentController {
         this.agentService = agentService;
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> getAll(@RequestParam(value = "nextPage", required = false) Integer nextPage, @RequestParam(value = "size", required = false) Integer size) {
         if (nextPage != null) {
@@ -27,7 +28,7 @@ public class AgentController {
         }
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> registerAgent(@RequestBody AgentRegDTO agentRegDTO) {
         Integer flag = agentService.registerAgent(agentRegDTO);
@@ -40,7 +41,7 @@ public class AgentController {
         }
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> delOrRevert(@RequestHeader("action") String action, @PathVariable("id") Long id, @RequestBody Boolean status) {
         if (action.equals("log-del")) {
