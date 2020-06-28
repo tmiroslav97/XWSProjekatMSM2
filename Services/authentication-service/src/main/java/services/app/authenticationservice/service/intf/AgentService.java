@@ -1,9 +1,11 @@
 package services.app.authenticationservice.service.intf;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import services.app.authenticationservice.dto.AgentRegDTO;
 import services.app.authenticationservice.model.Agent;
 
 import java.util.List;
+
 
 public interface AgentService {
     Agent findById(Long id);

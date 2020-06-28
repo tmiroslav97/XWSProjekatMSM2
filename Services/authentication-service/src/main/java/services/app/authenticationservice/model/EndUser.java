@@ -35,8 +35,8 @@ public class EndUser extends User {
     public EndUser(Long id, String email, String password, String firstName,
                    String lastName, DateTime lastPasswordResetDate,
                    List<Authority> authorities, Boolean deleted, Integer adLimitNum,
-                   Boolean enabled, Boolean obliged, Integer canceledCnt) {
-        super(id, email, password, firstName, lastName, lastPasswordResetDate, deleted, authorities);
+                   Boolean enabled, Boolean local, Boolean obliged, Integer canceledCnt) {
+        super(id, email, password, firstName, lastName, lastPasswordResetDate, local, deleted, authorities);
         this.adLimitNum = adLimitNum;
         this.enabled = enabled;
         this.obliged = obliged;

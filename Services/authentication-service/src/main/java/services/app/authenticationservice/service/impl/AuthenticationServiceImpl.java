@@ -51,10 +51,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .authenticate(new UsernamePasswordAuthenticationToken(jwtAuthenticationRequest.getUsername(),
                         jwtAuthenticationRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User user = (User) authentication.getPrincipal();
         List<String> roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toList());
+
+        if (!user.getLocal()){
+            throw new NotFoundException("Korisnik ne postoji u sistemu!");
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
         String jwt = tokenUtils.generateToken(user.getEmail(), roles);
         return jwt;
     }

@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import services.app.authenticationservice.model.Agent;
 
 public interface AgentRepository extends JpaRepository<Agent, Long> {
+
+    Boolean existsByIdentifier(String identifier);
 }

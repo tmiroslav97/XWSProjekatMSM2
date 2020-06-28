@@ -27,6 +27,7 @@ services:
       - "8084:8084"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      CLOUDAMQP_URL: amqp://llczznly:CsYfEvoLUMjGFKescLDRmbl6rcTLRZos@swan.rmq.cloudamqp.com/llczznly
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql

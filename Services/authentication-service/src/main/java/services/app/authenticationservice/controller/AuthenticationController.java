@@ -26,7 +26,6 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(@RequestBody JwtAuthenticationRequest authenticationRequest) {
-        System.out.println("login");
         return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
     }
 
