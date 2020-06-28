@@ -9,7 +9,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class DateAPI {
 
     public static DateTime DateTimeNow() {
-        return new DateTime(DateTimeZone.UTC);
+        return new DateTime();
     }
 
     public static String DateTimeTiStringDateTime(DateTime dateTime) {
