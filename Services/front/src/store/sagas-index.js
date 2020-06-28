@@ -32,7 +32,7 @@ export default function* rootSaga() {
             yield call(saga);
           } catch (e) {
             yield put(putErrorMsg(e.response.data));
-            yield put(putErrorMsg(null));
+            // yield put(putErrorMsg(null));
             //console.log(e.response.data);
           }
         }
