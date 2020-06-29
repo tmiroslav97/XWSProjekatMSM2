@@ -312,4 +312,10 @@ public class AdServiceImpl implements AdService {
         return ads;
     }
 
+    @Override
+    public Integer syncData(String identifier, String email) {
+
+        return 1;
+    }
+
 }

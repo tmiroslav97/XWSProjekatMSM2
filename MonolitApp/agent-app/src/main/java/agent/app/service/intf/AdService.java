@@ -21,6 +21,8 @@ public interface AdService {
 
     Set<Ad> findAllByIds(List<Long> adIds);
 
+    Integer syncData(String identifier, String email);
+
     Ad save(Ad ad);
 
     Ad edit(Ad ad);

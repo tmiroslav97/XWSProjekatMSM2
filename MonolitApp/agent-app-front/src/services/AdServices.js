@@ -18,7 +18,7 @@ class AdServices extends HttpBaseClient {
                 payload,
                 {
                     headers: {
-                        'Content-Type': 'application/json; charset=utf-8'
+                        'Content-Type': 'text/plain'
                     }
                 }
 

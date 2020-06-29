@@ -120,4 +120,15 @@ public class AdController {
         }
         return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
+
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/sync", method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<?> syncData(@RequestBody String identifier, Principal principal) {
+        Integer flag = adService.syncData(identifier, principal.getName());
+        if (flag == 1) {
+            return new ResponseEntity<>("Sinhronizacija uspjesno obavljena.", HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

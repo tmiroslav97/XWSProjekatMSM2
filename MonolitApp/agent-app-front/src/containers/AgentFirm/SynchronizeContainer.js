@@ -17,9 +17,7 @@ const SynchronizeContainer = () => {
             event.stopPropagation();
             setValidated(true);
         } else {
-            syncData({
-                "identifier": data.get('identifier'),
-            });
+            syncData(data.get('identifier'),);
             setValidated(false);
         }
     };
