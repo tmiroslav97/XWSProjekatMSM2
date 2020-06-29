@@ -2,6 +2,7 @@ package agent.app.service.impl;
 
 
 import agent.app.config.AppConfig;
+import agent.app.config.RabbitMQConfiguration;
 import agent.app.converter.AdConverter;
 import agent.app.converter.CarCalendarTermConverter;
 import agent.app.dto.ad.*;
@@ -11,7 +12,11 @@ import agent.app.exception.NotFoundException;
 import agent.app.model.*;
 import agent.app.repository.AdRepository;
 import agent.app.service.intf.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
+import org.springframework.amqp.core.DirectExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,6 +44,9 @@ public class AdServiceImpl implements AdService {
     private PriceListService priceListService;
 
     @Autowired
+    private DiscountListService discountListService;
+
+    @Autowired
     private CarCalendarTermService carCalendarTermService;
 
     @Autowired
@@ -55,6 +63,14 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private DirectExchange directExchange;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Ad findById(Long id) {
@@ -314,7 +330,24 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Integer syncData(String identifier, String email) {
+        List<PriceList> pls = priceListService.findAllByPublisherUser(email);
+        for(PriceList pl : pls){
+            System.out.println(pl.getPricePerDay());
+        }
+        List<DiscountList> dls = discountListService.findAllByAgent(email);
+        for(DiscountList dl : dls){
+            System.out.println(dl.getDiscount());
+        }
 
+        List<Ad> ads = adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
+        for (Ad ad : ads){
+            try {
+                String adStr = objectMapper.writeValueAsString(ad);
+                rabbitTemplate.convertAndSend(directExchange.getName(), RabbitMQConfiguration.AD_SYNC_QUEUE_NAME, adStr);
+            }catch (JsonProcessingException exception){
+                continue;
+            }
+        }
         return 1;
     }
 

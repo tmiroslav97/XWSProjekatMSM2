@@ -16,7 +16,6 @@ import java.util.Set;
 @Getter
 @Entity
 @Builder
-@ToString
 @Table(name = DbTableConstants.PRICELIST)
 public class PriceList {
 
@@ -31,6 +30,9 @@ public class PriceList {
    })
    @Column(name = DbColumnConstants.CREATIONDATE, nullable = false)
    private DateTime creationDate;
+
+   @Column(name = DbColumnConstants.MAINID, unique = true)
+   private Long mainId;
 
    @Column(name = DbColumnConstants.PRICEPERDAY, nullable = false)
    private Float pricePerDay;

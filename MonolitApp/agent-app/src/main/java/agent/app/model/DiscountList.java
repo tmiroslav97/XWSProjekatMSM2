@@ -40,6 +40,9 @@ public class DiscountList {
     @Column(name = DbColumnConstants.ENDDATE, nullable = false)
     private DateTime endDate;
 
+    @Column(name = DbColumnConstants.MAINID, unique = true)
+    private Long mainId;
+
     @Column(name = DbColumnConstants.DISCOUNT, nullable = false)
     private Float discount;
 
