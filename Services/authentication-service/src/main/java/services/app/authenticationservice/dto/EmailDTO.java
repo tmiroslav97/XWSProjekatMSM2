@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailDTO implements Serializable {
-    String email;
-    String subject;
-    String message;
+    private String email;
+    private String subject;
+    private String message;
 }

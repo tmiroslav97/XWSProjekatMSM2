@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgentDTO {
-    Long id;
-    String email;
-    String firstName;
-    String lastName;
-    Boolean local;
-    Boolean deleted;
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private Boolean local;
+    private Boolean deleted;
 }

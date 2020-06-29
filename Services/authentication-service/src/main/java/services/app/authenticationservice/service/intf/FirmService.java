@@ -1,6 +1,6 @@
 package services.app.authenticationservice.service.intf;
 
-import services.app.authenticationservice.dto.FirmRegDTO;
+import services.app.authenticationservice.dto.firm.FirmRegDTO;
 import services.app.authenticationservice.model.Firm;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package services.app.authenticationservice.dto;
+package services.app.authenticationservice.dto.firm;
 
 import lombok.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EndUserPageDTO {
-    private List<EndUserDTO> endUsers;
+public class FirmPageDTO {
+    private List<FirmDTO> firms;
     private Integer totalPageCnt;
 }

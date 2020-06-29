@@ -27,4 +27,13 @@ public class Firm {
 
     @Column(name = DbColumnConstants.FIRMNAME, nullable = false)
     private String firmName;
+
+    @Column(name = DbColumnConstants.EMAIL, nullable = false)
+    private String email;
+
+    @Column(name = DbColumnConstants.IDENTIFIER, nullable = false)
+    private String identifier;
+
+    @Column(name = DbColumnConstants.DELETED, nullable = false)
+    private Boolean deleted=false;
 }

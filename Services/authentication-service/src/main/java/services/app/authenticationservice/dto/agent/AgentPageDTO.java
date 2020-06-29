@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AgentPageDTO {
-    List<AgentDTO> agents;
-    Integer totalPageCnt;
+    private List<AgentDTO> agents;
+    private Integer totalPageCnt;
 }
