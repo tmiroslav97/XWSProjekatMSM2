@@ -33,7 +33,7 @@ public class FirmController {
     public ResponseEntity<?> registerFirm(@RequestBody FirmRegDTO firmRegDTO) {
         Integer flag = firmService.registerFirm(firmRegDTO);
         if (flag == 1) {
-            return new ResponseEntity<>("Firma uspjesno registrovan.", HttpStatus.CREATED);
+            return new ResponseEntity<>("Firma uspjesno registrovana.", HttpStatus.CREATED);
         } else if (flag == 2) {
             return new ResponseEntity<>("Greska pri registraciji firme.", HttpStatus.BAD_REQUEST);
         } else {

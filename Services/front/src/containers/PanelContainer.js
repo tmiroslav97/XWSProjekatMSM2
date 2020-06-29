@@ -19,6 +19,7 @@ import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
 import CommentsContainer from '../containers/Comment/CommentsContainer';
 import RegAgentContainer from '../containers/Authorization/RegAgentContainer';
+import RegFirmContainer from '../containers/Authorization/RegFirmContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -130,6 +131,13 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
+                        {hasRole(['ROLE_ADMIN']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="man-firm" onClick={() => { history.push("/panel/man-firm"); }}>
+                                    Firme
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
                     </Nav>
                 </Col>
                 <Col sm={10} md={10} xs={12}>
@@ -146,6 +154,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/comments`} component={CommentsContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/man-agent`} component={RegAgentContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
+                    <PrivateRoute exact path={`${match.path}/man-firm`} component={RegFirmContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                 </Col>
             </Row>
         </Container >

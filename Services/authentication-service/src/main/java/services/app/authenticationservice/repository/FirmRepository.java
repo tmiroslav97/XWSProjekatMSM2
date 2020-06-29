@@ -6,4 +6,7 @@ import services.app.authenticationservice.model.Firm;
 
 @Repository
 public interface FirmRepository extends JpaRepository<Firm, Long> {
+
+    Boolean existsByEmail(String email);
+    Boolean existsByIdentifier(String identifier);
 }

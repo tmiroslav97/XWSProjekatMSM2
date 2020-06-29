@@ -11,6 +11,7 @@ public class FirmDTO {
     private Long id;
     private String email;
     private String firmName;
+    private String address;
     private Long pmb;
     private Boolean deleted;
 }

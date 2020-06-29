@@ -103,7 +103,7 @@ public class AgentServiceImpl implements AgentService {
         EmailDTO emailDTO = EmailDTO.builder()
                 .email(agentRegDTO.getEmail())
                 .subject("Registracija na RENT-A-CAR")
-                .message("Postovani,\n" +
+                .message("Postovani,\n\n" +
                         "Registrovani ste na rent-a-car sistem!\n" +
                         "Vas jedinstveni kod za verifikaciju i pristup je (pod navodnicima):\n\n" +
                         "\"" + generatedString + "\"" + "\n\n" +

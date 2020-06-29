@@ -1,6 +1,4 @@
 import HttpBaseClient from './HttpBaseClient';
-import { useDispatch } from 'react-redux';
-import { putErrorMsg } from '../store/common/actions';
 
 const FINALPOINTS = {
     END_USER_SERVICE_BASE: '/auth/end-user',

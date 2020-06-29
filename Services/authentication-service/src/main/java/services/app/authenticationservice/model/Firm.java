@@ -1,16 +1,16 @@
 package services.app.authenticationservice.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import services.app.authenticationservice.common.db.DbColumnConstants;
 import services.app.authenticationservice.common.db.DbTableConstants;
 
 import javax.persistence.*;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = DbTableConstants.FIRM)
 public class Firm {

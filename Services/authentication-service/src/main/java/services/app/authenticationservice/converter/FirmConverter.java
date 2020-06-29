@@ -9,6 +9,7 @@ public class FirmConverter extends AbstractConverter {
         return FirmDTO.builder()
                 .id(firm.getId())
                 .email(firm.getEmail())
+                .address(firm.getAddress())
                 .firmName(firm.getFirmName())
                 .deleted(firm.getDeleted())
                 .pmb(firm.getPmb())
