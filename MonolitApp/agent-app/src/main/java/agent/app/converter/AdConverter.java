@@ -4,15 +4,17 @@ import agent.app.dto.ad.AdCreateDTO;
 import agent.app.dto.ad.AdDetailViewDTO;
 import agent.app.dto.ad.AdPageDTO;
 import agent.app.dto.ad.AdStatisticsDTO;
+import agent.app.dto.sync.AdSyncDTO;
 import agent.app.model.Ad;
 import agent.app.model.enumeration.DistanceLimitEnum;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.Base64;
+import java.util.Date;
 import java.util.HashSet;
 
-public class AdConverter {
+public class AdConverter extends AbstractConverter {
 
     public static Ad toCreateAdFromRequest(AdCreateDTO adCreateDTO) {
         return Ad.builder()
@@ -106,6 +108,15 @@ public class AdConverter {
                 .mileage(ad.getCar().getMileage())
                 .averageGrade((float) (ad.getRatingNum() * 1.0 / ad.getRatingCnt()))
                 .comment(ad.getComments().size())
+                .build();
+    }
+
+    public static AdSyncDTO toAdSyncDTOFromAd(Ad ad){
+        return AdSyncDTO.builder()
+                .name(ad.getName())
+                .location(ad.getLocation())
+                .distanceLimit(ad.getDistanceLimit())
+                .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .build();
     }
 }

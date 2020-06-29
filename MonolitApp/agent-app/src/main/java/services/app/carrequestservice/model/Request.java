@@ -102,17 +102,17 @@ public class Request {
 
     @JsonProperty("submitDate")
     public String getTheSubmitDate() {
-        return DateAPI.DateTimeTiStringDateTime(submitDate);
+        return DateAPI.DateTimeToStringDateTime(submitDate);
     }
 
     @JsonProperty("startDate")
     public String getTheStartDate() {
-        return DateAPI.DateTimeTiStringDateTime(startDate);
+        return DateAPI.DateTimeToStringDateTime(startDate);
     }
 
     @JsonProperty("endDate")
     public String getTheEndDate() {
-        return DateAPI.DateTimeTiStringDateTime(endDate);
+        return DateAPI.DateTimeToStringDateTime(endDate);
     }
     /**
      * Gets the value of the id property.

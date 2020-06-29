@@ -1,11 +1,12 @@
 package agent.app.converter;
 
 import agent.app.dto.pricelist.PriceListCreateDTO;
+import agent.app.dto.sync.PriceListSyncDTO;
 import agent.app.model.PriceList;
 
-public class PriceListConverter extends AbstractConverter{
+public class PriceListConverter extends AbstractConverter {
 
-    public static PriceList toCreatePriceListFromRequest(PriceListCreateDTO priceListCreateDTO){
+    public static PriceList toCreatePriceListFromRequest(PriceListCreateDTO priceListCreateDTO) {
 //        DateTime dt = DateAPI.DateTimeFromDateString(priceListCreateDTO.getCreationDate());
 
         return PriceList.builder()
@@ -16,7 +17,7 @@ public class PriceListConverter extends AbstractConverter{
                 .build();
     }
 
-    public static PriceListCreateDTO toCreatePriceListCreateDTOFromPriceList(PriceList priceList){
+    public static PriceListCreateDTO toCreatePriceListCreateDTOFromPriceList(PriceList priceList) {
         return PriceListCreateDTO.builder()
                 .id(priceList.getId())
                 .pricePerDay(priceList.getPricePerDay())
@@ -27,4 +28,12 @@ public class PriceListConverter extends AbstractConverter{
                 .build();
     }
 
+    public static PriceListSyncDTO toPriceListSyncDTOFromPriceList(PriceList priceList) {
+        return PriceListSyncDTO.builder()
+                .creationDate(DateAPI.DateTimeToStringDateTime(priceList.getCreationDate()))
+                .pricePerDay(priceList.getPricePerDay())
+                .pricePerKm(priceList.getPricePerKm())
+                .pricePerKmCDW(priceList.getPricePerKmCDW())
+                .build();
+    }
 }
