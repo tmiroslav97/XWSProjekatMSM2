@@ -6,26 +6,44 @@ const FINALPOINTS = {
     CALENDAR_BASE: '/calendar',
     PUBLISHER_BASE: '/publisher',
     COMMENT_BASE: '/comment'
-    
+
 };
 
 class AdServices extends HttpBaseClient {
-    
+
+    syncData = async payload => {
+        try {
+            const response = await this.getApiClient().post(
+                FINALPOINTS.AD_BASE + '/sync',
+                payload,
+                {
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
+
+            );
+            return response.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    };
+
     createdAdPhotos = async payload => {
         console.log("********************")
         console.log(payload);
         console.log("********************")
         const response = await this.getApiClient().post(
-            FINALPOINTS.AD_BASE + "/withImages", 
+            FINALPOINTS.AD_BASE + "/withImages",
             // payload,
-            { 
+            {
                 params: {
                     photos0: payload.photos0,
                     photos1: payload.photos1,
                     photos2: payload.photos2,
                     photos3: payload.photos3,
                     data: payload.data
-                } 
+                }
             }
             // {
             //     headers : {
@@ -33,7 +51,7 @@ class AdServices extends HttpBaseClient {
             //     },
             // }
         );
-        
+
         return response.data;
     };
 
@@ -48,9 +66,9 @@ class AdServices extends HttpBaseClient {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             }
-            
+
         );
-        
+
         return response.data;
     };
 
@@ -59,23 +77,23 @@ class AdServices extends HttpBaseClient {
             FINALPOINTS.IMAGE_BASE + "/upload",
             payload,
             {
-                headers : {
+                headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             }
-            );
-        
+        );
+
         return response.data;
     };
 
     fetchAdsPaginated = async payload => {
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE, {
-                params: {
-                    nextPage: payload.nextPage,
-                    size: payload.size
-                }
+            params: {
+                nextPage: payload.nextPage,
+                size: payload.size
             }
+        }
         );
 
         return response.data;
@@ -84,11 +102,11 @@ class AdServices extends HttpBaseClient {
     fetchAdsPaginatedfFromPublisher = async payload => {
         const response = await this.getApiClient().get(
             FINALPOINTS.PUBLISHER_BASE + "/publisher", {
-                params: {
-                    nextPage: payload.nextPage,
-                    size: payload.size
-                }
+            params: {
+                nextPage: payload.nextPage,
+                size: payload.size
             }
+        }
         );
 
         return response.data;
@@ -98,8 +116,8 @@ class AdServices extends HttpBaseClient {
         console.log("SERVICE AD")
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/"  + payload
-        
+            FINALPOINTS.AD_BASE + "/" + payload
+
         );
 
         return response.data;
@@ -110,16 +128,16 @@ class AdServices extends HttpBaseClient {
         console.log(payload);
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE + "/search", {
-                params: {
-                    location: payload.location,
-                    startDate: payload.startDate,
-                    endDate: payload.endDate,
-                    nextPage: payload.nextPage,
-                    size: payload.size
-                }
+            params: {
+                location: payload.location,
+                startDate: payload.startDate,
+                endDate: payload.endDate,
+                nextPage: payload.nextPage,
+                size: payload.size
             }
+        }
         );
-            console.log(response);
+        console.log(response);
         return response.data;
     };
 
@@ -128,14 +146,14 @@ class AdServices extends HttpBaseClient {
         console.log(payload);
         const response = await this.getApiClient().get(
             FINALPOINTS.IMAGE_BASE + "/getSrc", {
-                params: {
-                    ad_id: payload.ad_id,
-                    name: payload.name,
-                   
-                }
+            params: {
+                ad_id: payload.ad_id,
+                name: payload.name,
+
             }
+        }
         );
-            console.log(response);
+        console.log(response);
         return response.data;
     };
 
@@ -164,7 +182,7 @@ class AdServices extends HttpBaseClient {
 
         return response.data;
     };
-    
+
     ratingAd = async payload => {
         console.log("********* DODAVANJE OCENE ***********")
         console.log(payload);
@@ -200,7 +218,7 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllUnapprovedCommentForAd = async payload => {
-        console.log("FETCH COMMENTS") 
+        console.log("FETCH COMMENTS")
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/all-unapproved"
         );
@@ -208,15 +226,15 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllCommentForAd = async payload => {
-        console.log("FETCH COMMENTS") 
+        console.log("FETCH COMMENTS")
         const response = await this.getApiClient().get(
-            FINALPOINTS.COMMENT_BASE + "/"+ payload.id
+            FINALPOINTS.COMMENT_BASE + "/" + payload.id
         );
         return response.data;
     };
 
     fetchAllCommentForAdAndUser = async payload => {
-        console.log("FETCH COMMENTS") 
+        console.log("FETCH COMMENTS")
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/from-user/" + payload.id
         );
@@ -224,37 +242,37 @@ class AdServices extends HttpBaseClient {
     };
 
     approvedCommentForAd = async payload => {
-        console.log("APPROVED COMMENTS") 
+        console.log("APPROVED COMMENTS")
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/approved/" + payload.id
         );
         return response.data;
     };
 
-    
+
     fetchBestGradeAd = async payload => {
         console.log("Best grade ad service")
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.PUBLISHER_BASE + "/best-average-grade" , {
-                    params: {
-                        email: payload
-                    }
-                }      
+            FINALPOINTS.PUBLISHER_BASE + "/best-average-grade", {
+            params: {
+                email: payload
+            }
+        }
         );
         console.log(response);
         return response.data;
     };
 
-    fetchMaxMileageAd  = async payload => {
+    fetchMaxMileageAd = async payload => {
         console.log("Max mileage service")
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.PUBLISHER_BASE + "/max-mileage" , {
-                    params: {
-                        email: payload
-                    }
-                }      
+            FINALPOINTS.PUBLISHER_BASE + "/max-mileage", {
+            params: {
+                email: payload
+            }
+        }
         );
         console.log(response);
         return response.data;
@@ -264,17 +282,17 @@ class AdServices extends HttpBaseClient {
         console.log("Max comments service")
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.PUBLISHER_BASE + "/max-comments" , {
-                    params: {
-                        email: payload
-                    }
-                }      
+            FINALPOINTS.PUBLISHER_BASE + "/max-comments", {
+            params: {
+                email: payload
+            }
+        }
         );
         console.log(response);
         return response.data;
     };
 }
 
-    
+
 
 export default new AdServices();

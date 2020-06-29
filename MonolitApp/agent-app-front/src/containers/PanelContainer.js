@@ -17,6 +17,7 @@ import AgentRequestsContainer from './Request/AgentRequestsContainer';
 import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
 import StatisticsContainer from '../containers/AgentFirm/StatisticsContainer';
+import SynchronizeContainer from '../containers/AgentFirm/SynchronizeContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -107,10 +108,17 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
-                           {hasRole(['ROLE_AGENT']) &&
+                        {hasRole(['ROLE_AGENT']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="statistics" onClick={() => { history.push("/panel/statistics"); }}>
                                     Statistika
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_AGENT']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="sync" onClick={() => { history.push("/panel/sync"); }}>
+                                    Sinhronizacija
                                 </Nav.Link>
                             </Nav.Item>
                         }
@@ -128,6 +136,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/my-ads`} component={MyAdsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/statistics`} component={StatisticsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/sync`} component={SynchronizeContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                 </Col>
             </Row>
         </Container >
