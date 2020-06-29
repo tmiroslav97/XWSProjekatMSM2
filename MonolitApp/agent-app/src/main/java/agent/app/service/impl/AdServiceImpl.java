@@ -3,10 +3,13 @@ package agent.app.service.impl;
 
 import agent.app.config.AppConfig;
 import agent.app.config.RabbitMQConfiguration;
-import agent.app.converter.AdConverter;
-import agent.app.converter.CarCalendarTermConverter;
-import agent.app.dto.ad.*;
+import agent.app.converter.*;
+import agent.app.dto.ad.AdCreateDTO;
+import agent.app.dto.ad.AdPageContentDTO;
+import agent.app.dto.ad.AdPageDTO;
+import agent.app.dto.ad.AdRatingDTO;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
+import agent.app.dto.sync.*;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
 import agent.app.model.*;
@@ -18,7 +21,6 @@ import org.joda.time.DateTime;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -331,20 +333,53 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer syncData(String identifier, String email) {
         List<PriceList> pls = priceListService.findAllByPublisherUser(email);
-        for(PriceList pl : pls){
-            System.out.println(pl.getPricePerDay());
+        for (PriceList pl : pls) {
+            try {
+                PriceListSyncDTO plSync = PriceListConverter.toPriceListSyncDTOFromPriceList(pl);
+                String plSyncStr = objectMapper.writeValueAsString(plSync);
+                Long mainId = (Long) rabbitTemplate.convertSendAndReceive(directExchange.getName(), RabbitMQConfiguration.PL_SYNC_QUEUE_NAME, plSyncStr);
+                if (mainId != null) {
+                    pl.setMainId(mainId);
+                    priceListService.save(pl);
+                }
+            } catch (JsonProcessingException exception) {
+                continue;
+            }
         }
+
         List<DiscountList> dls = discountListService.findAllByAgent(email);
-        for(DiscountList dl : dls){
-            System.out.println(dl.getDiscount());
+        for (DiscountList dl : dls) {
+            try {
+                DiscountListSyncDTO dlSync = DiscountListConverter.toDiscountListSyncDTOFromDiscountList(dl);
+                String dlSyncStr = objectMapper.writeValueAsString(dlSync);
+                Long mainId = (Long) rabbitTemplate.convertSendAndReceive(directExchange.getName(), RabbitMQConfiguration.DL_SYNC_QUEUE_NAME, dlSyncStr);
+                if (mainId != null) {
+                    dl.setMainId(mainId);
+                    discountListService.save(dl);
+                }
+            } catch (JsonProcessingException exception) {
+                continue;
+            }
         }
 
         List<Ad> ads = adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
-        for (Ad ad : ads){
+        for (Ad ad : ads) {
             try {
-                String adStr = objectMapper.writeValueAsString(ad);
-                rabbitTemplate.convertAndSend(directExchange.getName(), RabbitMQConfiguration.AD_SYNC_QUEUE_NAME, adStr);
-            }catch (JsonProcessingException exception){
+                AdSyncDTO adSync = AdConverter.toAdSyncDTOFromAd(ad);
+                CarSyncDTO carSyncDTO = CarConverter.toCarSyncDTOFromCar(ad.getCar());
+                List<CarCalendarTermSyncDTO> carCalendarTermSyncDTOS = CarCalendarTermConverter.fromEntityList(ad.getCarCalendarTerms().stream().collect(Collectors.toList()), CarCalendarTermConverter::toCarCalendarTermSyncDTOFromCarCalendarTerm);
+                List<Long> discountIds = ad.getDiscountLists().stream().map(discountList -> discountList.getMainId()).collect(Collectors.toList());
+                adSync.setCarSyncDTO(carSyncDTO);
+                adSync.setCarCalendarTermSyncDTOList(carCalendarTermSyncDTOS);
+                adSync.setPriceList(ad.getPriceList().getMainId());
+                adSync.setDiscountList(discountIds);
+                String adSyncStr = objectMapper.writeValueAsString(adSync);
+                Long mainId = (Long) rabbitTemplate.convertSendAndReceive(directExchange.getName(), RabbitMQConfiguration.AD_SYNC_QUEUE_NAME, adSyncStr);
+                if (mainId != null) {
+                    ad.setMainId(mainId);
+                    this.save(ad);
+                }
+            } catch (JsonProcessingException exception) {
                 continue;
             }
         }
