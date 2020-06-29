@@ -89,7 +89,6 @@ public class AdController {
                                            @RequestParam(value = "size", required = false) Integer size) {
 
         if (nextPage != null) {
-            System.out.println("ima 1 str");
             return new ResponseEntity<>(adService.findAll(nextPage, size), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(adService.findAll(), HttpStatus.OK);
