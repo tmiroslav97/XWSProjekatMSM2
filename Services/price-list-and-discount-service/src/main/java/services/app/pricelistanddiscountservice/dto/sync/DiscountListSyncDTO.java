@@ -1,4 +1,4 @@
-package agent.app.dto.sync;
+package services.app.pricelistanddiscountservice.dto.sync;
 
 import lombok.*;
 

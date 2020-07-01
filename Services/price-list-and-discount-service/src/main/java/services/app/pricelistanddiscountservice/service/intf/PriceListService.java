@@ -17,5 +17,5 @@ public interface PriceListService {
     PriceList createPriceList(PriceListCreateDTO priceListCreateDTO);
     Integer editPriceList(PriceList priceList);
     Integer deleteById(Long id);
-
+    Long syncPriceList(String msg);
 }

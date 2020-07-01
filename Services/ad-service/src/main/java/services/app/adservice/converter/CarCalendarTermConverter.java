@@ -4,15 +4,16 @@ package services.app.adservice.converter;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.CarCalendarTermDTO;
 import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
+import services.app.adservice.dto.sync.CarCalendarTermSyncDTO;
 import services.app.adservice.model.CarCalendarTerm;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class CarCalendarTermConverter {
+public class CarCalendarTermConverter extends AbstractConverter {
 
-    public static CarCalendarTerm toCreateCarCalendarTermFromRequest(CarCalendarTermCreateDTO carCalendarTermCreateDTO){
+    public static CarCalendarTerm toCreateCarCalendarTermFromRequest(CarCalendarTermCreateDTO carCalendarTermCreateDTO) {
 
         return CarCalendarTerm.builder()
                 .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermCreateDTO.getStartDate()))
@@ -20,7 +21,7 @@ public class CarCalendarTermConverter {
                 .build();
     }
 
-    public static CarCalendarTerm toCarCalendarTermFromRequest(CarCalendarTermDTO carCalendarTermDTO){
+    public static CarCalendarTerm toCarCalendarTermFromRequest(CarCalendarTermDTO carCalendarTermDTO) {
 
         return CarCalendarTerm.builder()
                 .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getStartDate()))
@@ -28,9 +29,9 @@ public class CarCalendarTermConverter {
                 .build();
     }
 
-    public static List<CarCalendarTermSynchronizeDTO> toListCarCalendarTermSyncDTOFromListCarCalendarTerm(Set<CarCalendarTerm> carCalendarTermSet){
+    public static List<CarCalendarTermSynchronizeDTO> toListCarCalendarTermSyncDTOFromListCarCalendarTerm(Set<CarCalendarTerm> carCalendarTermSet) {
         List<CarCalendarTermSynchronizeDTO> carCalendarTermSynchronizeDTOS = new ArrayList<>();
-        for(CarCalendarTerm cct : carCalendarTermSet){
+        for (CarCalendarTerm cct : carCalendarTermSet) {
             CarCalendarTermSynchronizeDTO cctDTO = CarCalendarTermSynchronizeDTO.builder()
                     .id(cct.getId())
                     .startDate(DateAPI.DateTimeToStringDateTime(cct.getStartDate()))
@@ -41,5 +42,12 @@ public class CarCalendarTermConverter {
         }
 
         return carCalendarTermSynchronizeDTOS;
+    }
+
+    public static CarCalendarTerm toCarCalendarTermFromCarCalendarTermSyncDTO(CarCalendarTermSyncDTO carCalendarTermSyncDTO) {
+        return CarCalendarTerm.builder()
+                .startDate(DateAPI.DateTimeStringToDateTime(carCalendarTermSyncDTO.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTime(carCalendarTermSyncDTO.getEndDate()))
+                .build();
     }
 }

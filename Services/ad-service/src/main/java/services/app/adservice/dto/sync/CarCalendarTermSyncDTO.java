@@ -1,4 +1,4 @@
-package agent.app.dto.sync;
+package services.app.adservice.dto.sync;
 
 import lombok.*;
 
@@ -7,9 +7,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiscountListSyncDTO {
-    private String email;
+public class CarCalendarTermSyncDTO {
     private String startDate;
     private String endDate;
-    private Float discount;
 }

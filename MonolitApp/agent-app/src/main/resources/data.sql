@@ -109,6 +109,14 @@ VALUES (3, 'slika3.jpg', 1);
 INSERT INTO image(id, name, ad_id)
 VALUES (4, 'slika4.jpg', 1);
 INSERT INTO image(id, name, ad_id)
+VALUES (5, 'slika5.jpg', 2);
+INSERT INTO image(id, name, ad_id)
+VALUES (6, 'slika6.jpg', 2);
+INSERT INTO image(id, name, ad_id)
+VALUES (7, 'slika7.jpg', 2);
+INSERT INTO image(id, name, ad_id)
+VALUES (8, 'slika8.jpg', 2);
+INSERT INTO image(id, name, ad_id)
 VALUES (9, 'slika9.jpg', 3);
 INSERT INTO image(id, name, ad_id)
 VALUES (10, 'slika10.jpg', 3);

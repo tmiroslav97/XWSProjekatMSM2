@@ -62,7 +62,4 @@ public class Car {
     @Column(name = DbColumnConstants.TOKEN)
     private String token;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    private Ad ad;
 }

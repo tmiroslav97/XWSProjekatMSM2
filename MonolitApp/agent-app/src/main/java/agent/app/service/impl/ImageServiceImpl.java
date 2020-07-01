@@ -6,6 +6,7 @@ import agent.app.exception.NotFoundException;
 import agent.app.model.Image;
 import agent.app.repository.ImageRepository;
 import agent.app.service.intf.ImageService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -82,6 +84,19 @@ public class ImageServiceImpl implements ImageService {
         }
         Integer i = this.findAll().size();
         return i;
+    }
+
+    @Override
+    public String findImageByNameBase64(String name) {
+        byte[] fileContent = null;
+        String encodedString = "";
+        try {
+            fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + name));
+            encodedString = Base64.getEncoder().encodeToString(fileContent);
+        } catch (Exception e) {
+            encodedString = "Nije uspjelo";
+        }
+        return encodedString;
     }
 
 

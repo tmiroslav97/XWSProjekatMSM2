@@ -5,6 +5,7 @@ import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdDetailViewDTO;
 import services.app.adservice.dto.ad.AdPageDTO;
 import services.app.adservice.dto.ad.AdSynchronizeDTO;
+import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
 import services.app.adservice.model.enumeration.DistanceLimitEnum;
 
@@ -126,5 +127,22 @@ public class AdConverter extends AbstractConverter {
                 .carCalendarTermSynchronizeDTOS(CarCalendarTermConverter.toListCarCalendarTermSyncDTOFromListCarCalendarTerm(ad.getCarCalendarTerms()))
                 .build();
 
+    }
+
+    public static Ad toAdFromAdSyncDTO(AdSyncDTO adSyncDTO){
+        return Ad.builder()
+                .name(adSyncDTO.getName())
+                .location(adSyncDTO.getLocation())
+                .distanceLimitFlag(DistanceLimitEnum.valueOf(adSyncDTO.getDistanceLimitFlag()))
+                .distanceLimit(adSyncDTO.getDistanceLimit())
+                .publishedDate(DateAPI.DateTimeStringToDateTime(adSyncDTO.getPublishedDate()))
+                .priceList(adSyncDTO.getPriceList())
+                .deleted(false)
+                .enabled(true)
+                .rentCnt(0L)
+                .ratingCnt(0L)
+                .ratingNum(0L)
+                .comments(new HashSet<>())
+                .build();
     }
 }

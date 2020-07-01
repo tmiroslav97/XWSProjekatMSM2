@@ -2,6 +2,7 @@ package services.app.authenticationservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,11 +10,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import services.app.authenticationservice.config.RabbitMQConfiguration;
 import services.app.authenticationservice.converter.AgentConverter;
 import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.dto.agent.AgentDTO;
 import services.app.authenticationservice.dto.agent.AgentPageDTO;
 import services.app.authenticationservice.dto.agent.AgentRegDTO;
+import services.app.authenticationservice.dto.agent.AuthSyncDTO;
 import services.app.authenticationservice.exception.ExistsException;
 import services.app.authenticationservice.exception.NotFoundException;
 import services.app.authenticationservice.model.Agent;
@@ -152,5 +155,25 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public Agent save(Agent agent) {
         return agentRepository.save(agent);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.AUTH_SYNC_QUEUE_NAME)
+    public Integer verifyAgent(String msg) {
+        try {
+            AuthSyncDTO authSyncDTO = objectMapper.readValue(msg, AuthSyncDTO.class);
+            Agent agent = agentRepository.findByEmail(authSyncDTO.getEmail());
+            if (agent == null) {
+                return 2;
+            }
+            if (agent.getIdentifier().equals(authSyncDTO.getIdentifier())) {
+                return 1;
+            } else {
+                return 3;
+            }
+
+        } catch (JsonProcessingException exception) {
+            return 4;
+        }
     }
 }

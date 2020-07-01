@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ImageConverter {
+public class ImageConverter  extends AbstractConverter {
 
     public static List<ImagesSynchronizeDTO> toImagesSynchronizeDTOlistFromImages(Set<Image> images){
 

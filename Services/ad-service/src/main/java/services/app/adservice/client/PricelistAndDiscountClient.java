@@ -13,14 +13,14 @@ public interface PricelistAndDiscountClient {
                          @RequestHeader("userId")String userId,
                          @RequestHeader("email")String email,
                          @RequestHeader("roles")String roles,
-                         @RequestHeader("Auth")String token);
+                         @RequestHeader("Authorization")String token);
 
     @GetMapping("/pricelist/find-pricelist/{id}")
     Long findPriceList(@PathVariable Long id,
                        @RequestHeader("userId")String userId,
                        @RequestHeader("email")String email,
                        @RequestHeader("roles")String roles,
-                       @RequestHeader("Auth")String token);
+                       @RequestHeader("Authorization")String token);
 
     @GetMapping("/pricelist/find-price-per-day/{id}")
     Float findPricePerDay(@PathVariable Long id);

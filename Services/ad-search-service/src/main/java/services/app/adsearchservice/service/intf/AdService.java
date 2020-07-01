@@ -17,7 +17,7 @@ public interface AdService {
     AdPageContentDTO findAll(Integer page, Integer size);
     Integer syncData(AdSynchronizeDTO adSynchronizeDTO);
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);
-
+    Integer syncData(String msg);
     //moguce slati sort parametre
     AdPageDTO advancedSearch();
 

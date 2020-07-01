@@ -35,6 +35,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
       
   message-service:
     image: message-service
@@ -82,6 +83,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
     
 
   car-request-service:
@@ -105,6 +107,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
 
   price-list-and-discount-service:
     image: price-list-and-discount-service
@@ -127,6 +130,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
       
   ad-search-service:
     image: ad-search-service
@@ -152,6 +156,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
 
   codebook-service:
     image: codebook-service
@@ -234,6 +239,7 @@ services:
       - images:/var/data/agent
     depends_on: 
       - mysql
+      - rabbitmq-broker
   
   mysql:
     image: mysql:8.0.19
@@ -247,6 +253,14 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+  rabbitmq-broker:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq-broker
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - static-network
 volumes:
   images:
   db-data:

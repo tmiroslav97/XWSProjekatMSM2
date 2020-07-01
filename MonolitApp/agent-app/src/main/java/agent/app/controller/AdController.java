@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.security.Principal;
 
@@ -35,13 +34,13 @@ public class AdController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value="/withImages", method = RequestMethod.POST,
+    @RequestMapping(value = "/withImages", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createAdWithPhotos(@RequestParam(value = "photos0") MultipartFile photos0 ,
-                                                @RequestParam(value = "photos1") MultipartFile photos1 ,
-                                                @RequestParam(value = "photos2") MultipartFile photos2 ,
-                                                @RequestParam(value = "photos3") MultipartFile photos3 ,
+    public ResponseEntity<?> createAdWithPhotos(@RequestParam(value = "photos0") MultipartFile photos0,
+                                                @RequestParam(value = "photos1") MultipartFile photos1,
+                                                @RequestParam(value = "photos2") MultipartFile photos2,
+                                                @RequestParam(value = "photos3") MultipartFile photos3,
                                                 @RequestParam(value = "data") String data,
                                                 Principal principal) {
         System.out.println("///////////////////////////////////////////////////");
@@ -59,12 +58,10 @@ public class AdController {
         System.out.println("///////////////////////////////////////////////////");
 
 
-
-
         return new ResponseEntity<>("Oglas uspesno kreiran.", HttpStatus.CREATED);
 
     }
-    
+
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -77,9 +74,9 @@ public class AdController {
 
         if (flag == 1) {
             return new ResponseEntity<>("Oglas uspesno kreiran.", HttpStatus.CREATED);
-        }else if (flag == 2){
+        } else if (flag == 2) {
             return new ResponseEntity<>("Dozvoljeno je dodati samo 3 oglasa.", HttpStatus.BAD_REQUEST);
-        }else {
+        } else {
             return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
         }
     }
@@ -127,7 +124,11 @@ public class AdController {
         Integer flag = adService.syncData(identifier, principal.getName());
         if (flag == 1) {
             return new ResponseEntity<>("Sinhronizacija uspjesno obavljena.", HttpStatus.OK);
-        }else{
+        } else if (flag == 2) {
+            return new ResponseEntity<>("Niste registrovani na rent-a-car sistem.", HttpStatus.BAD_REQUEST);
+        } else if (flag == 3) {
+            return new ResponseEntity<>("Los identifikacioni kod za ret-a-car sistem.", HttpStatus.BAD_REQUEST);
+        } else {
             return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }
     }

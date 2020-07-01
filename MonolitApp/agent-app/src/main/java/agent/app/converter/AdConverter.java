@@ -116,6 +116,7 @@ public class AdConverter extends AbstractConverter {
                 .name(ad.getName())
                 .location(ad.getLocation())
                 .distanceLimit(ad.getDistanceLimit())
+                .distanceLimitFlag(ad.getDistanceLimitFlag().name())
                 .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .build();
     }

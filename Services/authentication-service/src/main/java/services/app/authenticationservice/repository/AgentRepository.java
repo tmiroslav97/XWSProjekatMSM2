@@ -8,4 +8,6 @@ import services.app.authenticationservice.model.Agent;
 public interface AgentRepository extends JpaRepository<Agent, Long> {
 
     Boolean existsByIdentifier(String identifier);
+
+    Agent findByEmail(String email);
 }

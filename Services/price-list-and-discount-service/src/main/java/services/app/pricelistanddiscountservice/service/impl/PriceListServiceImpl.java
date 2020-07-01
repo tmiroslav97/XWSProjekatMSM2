@@ -1,17 +1,19 @@
 package services.app.pricelistanddiscountservice.service.impl;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import services.app.pricelistanddiscountservice.client.AuthenticationClient;
+import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.PriceListConverter;
 import services.app.pricelistanddiscountservice.dto.pricelist.PriceListCreateDTO;
+import services.app.pricelistanddiscountservice.dto.sync.PriceListSyncDTO;
 import services.app.pricelistanddiscountservice.exception.ExistsException;
 import services.app.pricelistanddiscountservice.exception.NotFoundException;
 import services.app.pricelistanddiscountservice.model.CustomPrincipal;
@@ -32,6 +34,11 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public PriceList findById(Long id) {
@@ -56,9 +63,9 @@ public class PriceListServiceImpl implements PriceListService {
         System.out.println("PUBLISH USER " + publishUser);
         List<PriceList> priceLists = this.findAll();
         List<PriceList> priceListsFromPublishUser = new ArrayList<>();
-        if(!priceLists.isEmpty()){
-            for(PriceList pl : priceLists){
-                if(pl.getPublisherUser().equals(publishUser)){
+        if (!priceLists.isEmpty()) {
+            for (PriceList pl : priceLists) {
+                if (pl.getPublisherUser().equals(publishUser)) {
                     System.out.println("dodata price lista");
                     priceListsFromPublishUser.add(pl);
                 }
@@ -73,8 +80,8 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Override
     public PriceList save(PriceList priceList) {
-        if(priceList.getId() != null){
-            if(priceListRepository.existsById(priceList.getId())){
+        if (priceList.getId() != null) {
+            if (priceListRepository.existsById(priceList.getId())) {
                 throw new ExistsException(String.format("Cenovnik vec postoji."));
             }
         }
@@ -110,6 +117,21 @@ public class PriceListServiceImpl implements PriceListService {
         PriceList priceList = this.findById(id);
         this.delete(priceList);
         return 1;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.PL_SYNC_QUEUE_NAME)
+    public Long syncPriceList(String msg) {
+        try {
+            PriceListSyncDTO priceListSyncDTO = objectMapper.readValue(msg, PriceListSyncDTO.class);
+            PriceList priceList = PriceListConverter.toPriceListFromPriceListSyncDTO(priceListSyncDTO);
+            Long userId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_ID_QUEUE_NAME, priceListSyncDTO.getEmail());
+            priceList.setPublisherUser(userId);
+            priceList = this.save(priceList);
+            return priceList.getId();
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package services.app.pricelistanddiscountservice.converter;
 
 import services.app.pricelistanddiscountservice.dto.pricelist.PriceListCreateDTO;
+import services.app.pricelistanddiscountservice.dto.sync.PriceListSyncDTO;
 import services.app.pricelistanddiscountservice.model.PriceList;
 
 public class PriceListConverter extends AbstractConverter{
@@ -22,6 +23,15 @@ public class PriceListConverter extends AbstractConverter{
                 .pricePerKmCDW(priceList.getPricePerKmCDW())
 //                .publisherUsername(priceList.getPublisherUser().getEmail())
                 .creationDate(priceList.getCreationDate().toString())
+                .build();
+    }
+
+    public static PriceList toPriceListFromPriceListSyncDTO(PriceListSyncDTO priceListSyncDTO){
+        return PriceList.builder()
+                .pricePerDay(priceListSyncDTO.getPricePerDay())
+                .pricePerKm(priceListSyncDTO.getPricePerKm())
+                .pricePerKmCDW(priceListSyncDTO.getPricePerKmCDW())
+                .creationDate(DateAPI.DateTimeStringToDateTime(priceListSyncDTO.getCreationDate()))
                 .build();
     }
 

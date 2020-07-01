@@ -1,10 +1,12 @@
 package services.app.authenticationservice.service.impl;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import services.app.authenticationservice.config.RabbitMQConfiguration;
 import services.app.authenticationservice.exception.NotFoundException;
 import services.app.authenticationservice.model.User;
 import services.app.authenticationservice.repository.UserRepository;
@@ -24,7 +26,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         if (user == null) {
             throw new UsernameNotFoundException(String.format("No user found with email '%s'.", email));
         } else {
-            System.out.println();
             return user;
         }
     }
@@ -57,5 +58,16 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public User save(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.USER_ID_QUEUE_NAME)
+    public Long findUserIdByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            return user.getId();
+        } else {
+            return null;
+        }
     }
 }

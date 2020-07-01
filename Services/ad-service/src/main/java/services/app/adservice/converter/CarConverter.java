@@ -2,9 +2,10 @@ package services.app.adservice.converter;
 
 import services.app.adservice.dto.car.CarCreateDTO;
 import services.app.adservice.dto.car.CarSynchronizeDTO;
+import services.app.adservice.dto.sync.CarSyncDTO;
 import services.app.adservice.model.Car;
 
-public class CarConverter {
+public class CarConverter extends AbstractConverter{
 
     public static Car toCreateCarFromRequest(CarCreateDTO carCreateDTO){
 
@@ -39,4 +40,19 @@ public class CarConverter {
                 .build();
     }
 
+    public static Car toCarFromCarSyncDTO(CarSyncDTO carSyncDTO){
+        return Car.builder()
+                .year(DateAPI.DateTimeStringToDateTime(carSyncDTO.getYear()))
+                .carManufacturer(carSyncDTO.getCarManufacturer())
+                .childrenSeatNum(carSyncDTO.getChildrenSeatNum())
+                .carModel(carSyncDTO.getCarModel())
+                .gearboxType(carSyncDTO.getGearboxType())
+                .fuelType(carSyncDTO.getFuelType())
+                .carType(carSyncDTO.getCarType())
+                .mileage(carSyncDTO.getMileage())
+                .cdw(carSyncDTO.getCdw())
+                .androidFlag(carSyncDTO.getAndroidFlag())
+                .token(carSyncDTO.getToken())
+                .build();
+    }
 }

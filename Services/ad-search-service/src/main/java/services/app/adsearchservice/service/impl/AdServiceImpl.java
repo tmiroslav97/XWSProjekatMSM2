@@ -1,14 +1,17 @@
 package services.app.adsearchservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import services.app.adsearchservice.config.AppConfig;
+import services.app.adsearchservice.config.RabbitMQConfiguration;
 import services.app.adsearchservice.converter.AdConverter;
 import services.app.adsearchservice.converter.CarCalendarTermsConverter;
 import services.app.adsearchservice.converter.CarConverter;
@@ -50,6 +53,8 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private AppConfig appConfig;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Ad findById(Long id) {
@@ -102,6 +107,33 @@ public class AdServiceImpl implements AdService {
                 .build();
 
         return adPageContentDTO;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.AD_SEARCH_SYNC_QUEUE_NAME)
+    public Integer syncData(String msg) {
+        try {
+            AdSynchronizeDTO adSynchronizeDTO = objectMapper.readValue(msg, AdSynchronizeDTO.class);
+            Ad ad = AdConverter.toCreateAdFromAdSynchronizeDTO(adSynchronizeDTO);
+            ad = adRepository.save(ad);
+            for (ImagesSynchronizeDTO dto : adSynchronizeDTO.getImagesSynchronizeDTOS()) {
+                Image im = ImageConverter.toImageFromImageSyncDTO(dto);
+                im.setAd(ad);
+                im = imageService.save(im);
+            }
+            for (CarCalendarTermSynchronizeDTO dto : adSynchronizeDTO.getCarCalendarTermSynchronizeDTOS()) {
+                CarCalendarTerm cct = CarCalendarTermsConverter.toCarCalendarTermFromSyncDTO(dto);
+                cct.setAd(ad);
+                cct = carCalendarTermService.save(cct);
+            }
+            Car car = CarConverter.toCarFromCarSyncDTO(adSynchronizeDTO.getCarSynchronizeDTO());
+            car = carService.save(car);
+            ad.setCar(car);
+            ad = adRepository.save(ad);
+            return 1;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
     }
 
     @Override

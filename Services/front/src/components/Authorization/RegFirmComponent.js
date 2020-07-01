@@ -6,33 +6,29 @@ const RegFirmComponent = (props) => {
     return (
         <Container>
             <Row>
-                <Col md={5} xs={12}>
-                    <h2 className="border-bottom">Registracija agenta</h2>
+                <Col md={6} xs={12}>
+                    <h2 className="border-bottom">Registracija firme</h2>
                 </Col>
             </Row>
             <Row>
-                <Col md={5} xs={12}>
+                <Col md={6} xs={12}>
                     <Form noValidate validated={props.validated} id="regForm" onSubmit={props.onSubmit}>
                         <Form.Row>
-                            <Form.Group as={Col} md={8}>
+                            <Form.Group as={Col}>
                                 <Form.Label>E-mail adresa</Form.Label>
                                 <Form.Control required type="email" name="email" id="txtEmail" placeholder="E-mail" />
                             </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group as={Col} md={8}>
+                            <Form.Group as={Col}>
                                 <Form.Label>Naziv firme</Form.Label>
                                 <Form.Control required type="text" name="firmName" id="txtFirstName" placeholder="Naziv firme" />
                             </Form.Group>
                         </Form.Row>
                         <Form.Row>
-                            <Form.Group as={Col} md={8}>
+                            <Form.Group as={Col}>
                                 <Form.Label>Adresa firme</Form.Label>
                                 <Form.Control required type="text" name="address" id="txtFirstName" placeholder="Adresa firme" />
                             </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group as={Col} md={8}>
+                            <Form.Group as={Col}>
                                 <Form.Label>PMB</Form.Label>
                                 <Form.Control required type="number" min="0" name="pmb" id="txtFirstName" placeholder="PMB" />
                             </Form.Group>

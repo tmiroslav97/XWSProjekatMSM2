@@ -25,4 +25,7 @@ public interface AgentService {
     void delete(Agent agent);
 
     Agent save(Agent agent);
+
+    Integer verifyAgent(String msg);
+
 }

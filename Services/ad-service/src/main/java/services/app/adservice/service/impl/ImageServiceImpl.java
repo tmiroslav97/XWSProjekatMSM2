@@ -91,12 +91,41 @@ public class ImageServiceImpl implements ImageService {
         byte[] fileContent = null;
         String encodedString = "";
         try {
-            fileContent = FileUtils.readFileToByteArray(new File(photoDir + name));
+            fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + name));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
         }
         return encodedString;
+    }
+
+    @Override
+    public String saveImageBase64(String imageBase64) {
+        try {
+
+            File file = new File(photoDir);
+            if (!file.exists()) {
+                if (!file.mkdirs()) {
+                    return null;
+                }
+            }
+            String name = this.getImageName();
+            String uploadDirectory = photoDir + File.separator + name + ".jpg";
+            byte[] decodedBytes = Base64.getDecoder().decode(imageBase64);
+            File convertFile = new File(uploadDirectory);
+            convertFile.createNewFile();
+            FileOutputStream fout = new FileOutputStream(convertFile);
+            fout.write(decodedBytes);
+            fout.close();
+
+            Integer rez = this.addImage(name + ".jpg");
+            if (rez != 1) {
+                return null;
+            }
+            return name + ".jpg";
+        } catch (Exception exception) {
+            return null;
+        }
     }
 
 

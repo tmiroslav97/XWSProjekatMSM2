@@ -7,9 +7,7 @@ import lombok.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiscountListSyncDTO {
+public class AuthSyncDTO {
     private String email;
-    private String startDate;
-    private String endDate;
-    private Float discount;
+    private String identifier;
 }
