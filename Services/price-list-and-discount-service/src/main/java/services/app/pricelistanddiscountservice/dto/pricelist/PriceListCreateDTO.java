@@ -15,4 +15,5 @@ public class PriceListCreateDTO {
     private Float pricePerDay;
     private Long id;
     private String publisherUsername;
+    private Long publisherUserId;
 }

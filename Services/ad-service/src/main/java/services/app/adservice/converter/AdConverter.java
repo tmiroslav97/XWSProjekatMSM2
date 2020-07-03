@@ -58,7 +58,6 @@ public class AdConverter extends AbstractConverter {
                 .name(ad.getName())
                 .location(ad.getLocation())
                 .coverPhoto(encodedString)
-//                .price(ad.getPriceList().getPricePerDay())
                 .carManufacturer(ad.getCar().getCarManufacturer())
                 .carModel(ad.getCar().getCarModel())
                 .childrenSeatNum(ad.getCar().getChildrenSeatNum())
@@ -84,6 +83,7 @@ public class AdConverter extends AbstractConverter {
                 .ratingNum(ad.getRatingNum())
                 .ratingCnt(ad.getRatingCnt())
                 .rentCnt(ad.getRentCnt())
+                .priceId(ad.getPriceList())
                 .distanceLimitFlag(ad.getDistanceLimitFlag().toString())
                 .year(ad.getCar().getYear().toString())
                 .distanceLimit(ad.getDistanceLimit())
@@ -96,12 +96,7 @@ public class AdConverter extends AbstractConverter {
                 .childrenSeatNum(ad.getCar().getChildrenSeatNum())
                 .cdw(ad.getCar().getCdw())
                 .androidFlag(ad.getCar().getAndroidFlag())
-//                .pricePerKm(ad.getPriceList().getPricePerKm())
-//                .pricePerKmCDW(ad.getPriceList().getPricePerKmCDW())
-//                .pricePerDay(ad.getPriceList().getPricePerDay())
                 .publisherUserId(ad.getPublisherUser())
-//                .publisherUserFirstName(ad.getPublisherUser().getFirstName())
-//                .publisherUserLastName(ad.getPublisherUser().getLastName())
                 .build();
     }
 

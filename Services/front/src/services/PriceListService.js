@@ -8,28 +8,24 @@ class PriceListService extends HttpBaseClient {
 
 
     fetchPriceLists = async payload => {
-        
+
         console.log(payload)
         const response = await this.getApiClient().get(
-            FINALPOINTS.PRICE_LIST_BASE 
+            FINALPOINTS.PRICE_LIST_BASE
         );
 
         return response.data;
     };
 
-    fetchPriceListsFromPublisher = async payload => {
-        
-        console.log(payload)
+    fetchPriceListsFromPublisher = async () => {
         const response = await this.getApiClient().get(
-            FINALPOINTS.PRICE_LIST_BASE + "/publisher"
+            "/pad/publisher/pricelist"
         );
 
         return response.data;
     };
 
     fetchPriceList = async payload => {
-        
-        console.log(payload)
         const response = await this.getApiClient().get(
             FINALPOINTS.PRICE_LIST_BASE + "/" + payload.id
         );
@@ -56,8 +52,8 @@ class PriceListService extends HttpBaseClient {
     deletePriceList = async payload => {
         const response = await this.getApiClient().delete(
             FINALPOINTS.PRICE_LIST_BASE, {
-                params: { 'id': payload }
-            }
+            params: { 'id': payload }
+        }
         );
         return response.data;
     };

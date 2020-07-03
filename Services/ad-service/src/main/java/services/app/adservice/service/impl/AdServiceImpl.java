@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import services.app.adservice.client.AdSearchClient;
 import services.app.adservice.client.AuthenticationClient;
-import services.app.adservice.client.PricelistAndDiscountClient;
 import services.app.adservice.config.AppConfig;
 import services.app.adservice.config.RabbitMQConfiguration;
 import services.app.adservice.converter.*;
@@ -23,8 +22,9 @@ import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
+import services.app.adservice.dto.pricelist.PriceListDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
-import services.app.adservice.dto.user.PublisherUserDTO;
+import services.app.adservice.dto.user.UserFLNameDTO;
 import services.app.adservice.exception.ExistsException;
 import services.app.adservice.exception.NotFoundException;
 import services.app.adservice.model.*;
@@ -56,9 +56,6 @@ public class AdServiceImpl implements AdService {
     private ImageService imageService;
 
     @Autowired
-    private PricelistAndDiscountClient pricelistAndDiscountClient;
-
-    @Autowired
     private AuthenticationClient authenticationClient;
 
     @Autowired
@@ -84,13 +81,23 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdPageContentDTO findAll(Integer page, Integer size, String userId) {
-//        User pu = userService.findByEmail(email);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeletedAndPublisherUser(false, Long.valueOf(userId), pageable);
 
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
-        System.out.println(ret.size());
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads){
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            try {
+                String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
+                PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+                adPageDTO.setPrice(priceListDTO.getPricePerDay());
+                ret.add(adPageDTO);
+            } catch (JsonProcessingException exception) {
+                ret.add(adPageDTO);
+                continue;
+            }
+        }
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -187,16 +194,17 @@ public class AdServiceImpl implements AdService {
         //dodeljen cenovnik
         if (adCreateDTO.getPriceListCreateDTO().getId() == null) {
             //pravljenje novog cenovnika
-            Long priceList = pricelistAndDiscountClient.createPricelist(adCreateDTO.getPriceListCreateDTO(), principal.getUserId(), principal.getEmail(),
-                    principal.getRoles(), principal.getToken());
-            System.out.println("ID nove price liste: " + priceList);
-            ad.setPriceList(priceList);
+            try {
+                adCreateDTO.getPriceListCreateDTO().setPublisherUserId(Long.valueOf(principal.getUserId()));
+                String priceListCreateDTOStr = objectMapper.writeValueAsString(adCreateDTO.getPriceListCreateDTO());
+                Long priceListId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_NEW_EDIT_QUEUE_NAME, priceListCreateDTOStr);
+                System.out.println("ID nove price liste: " + priceListId);
+                ad.setPriceList(priceListId);
+            } catch (JsonProcessingException exception) {
+                ad.setPriceList(null);
+            }
         } else {
-            //dodavanje vec postojeceg cenovnika
-            Long priceList = pricelistAndDiscountClient.findPriceList(adCreateDTO.getPriceListCreateDTO().getId(), principal.getUserId(), principal.getEmail(),
-                    principal.getRoles(), principal.getToken());
-            System.out.println("ID stare price liste od tog publisher-a: " + priceList);
-            ad.setPriceList(priceList);
+            ad.setPriceList(adCreateDTO.getPriceListCreateDTO().getId());
         }
         //dodeljeni termini
         if (adCreateDTO.getCarCalendarTermCreateDTOList() != null) {
@@ -266,7 +274,6 @@ public class AdServiceImpl implements AdService {
 //        adSynchronizeDTO.setImagesSynchronizeDTOS(imagesSynchronizeDTOS);
 //        adSearchClient.synchronizeDatabase(adSynchronizeDTO, principal.getUserId(), principal.getEmail(),
 //                principal.getRoles(), principal.getToken());
-
 
 
         return 1;
@@ -425,21 +432,23 @@ public class AdServiceImpl implements AdService {
     public AdDetailViewDTO getAdDetailView(Long ad_id) {
 
         AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), appConfig.getPhotoDir());
-        System.out.println("GET DETAIL VIEW ");
+
+        try {
+            String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, adDV.getPriceId());
+            PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            adDV.setPricePerDay(priceListDTO.getPricePerDay());
+            adDV.setPricePerKm(priceListDTO.getPricePerKm());
+            adDV.setPricePerKmCDW(priceListDTO.getPricePerKmCDW());
+
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, adDV.getPublisherUserId());
+            UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            adDV.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adDV.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+        } catch (JsonProcessingException exception) {
+            return adDV;
+        }
 
 
-        Float priceList = pricelistAndDiscountClient.findPricePerDay(adDV.getPriceId());
-        System.out.println("Cijena : " + priceList);
-        adDV.setPricePerDay(priceList);
-
-        System.out.println(adDV.getPublisherUserId());
-        PublisherUserDTO puDTO = authenticationClient.findPublishUserById(adDV.getPublisherUserId());
-        adDV.setPublisherUserFirstName(puDTO.getPublisherUserFirstName());
-        adDV.setPublisherUserLastName(puDTO.getPublisherUserLastName());
-        System.out.println(adDV);
-        System.out.println(puDTO.getPublisherUserId());
-        System.out.println(puDTO.getPublisherUserFirstName());
-        System.out.println(puDTO.getPublisherUserLastName());
         return adDV;
 
     }

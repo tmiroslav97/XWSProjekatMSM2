@@ -8,8 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import services.app.adservice.config.AppConfig;
-import services.app.adservice.converter.AdConverter;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdRatingDTO;
@@ -22,19 +20,16 @@ import services.app.adservice.service.intf.AdService;
 public class AdController {
 
     private final AdService adService;
-    private final AppConfig appConfig;
 
-    public AdController(AdService adService, AppConfig appConfig) {
+    public AdController(AdService adService) {
         this.adService = adService;
-        this.appConfig = appConfig;
     }
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
-        System.out.println("Service ad !!!!!");
-        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), appConfig.getPhotoDir()), HttpStatus.OK);
+        return new ResponseEntity<>(adService.getAdDetailView(id), HttpStatus.OK);
     }
 
 
@@ -58,7 +53,6 @@ public class AdController {
                                            @RequestParam(value = "size", required = false) Integer size) {
 
         if (nextPage != null) {
-            System.out.println("ima 1 str");
             return new ResponseEntity<>(adService.findAll(nextPage, size), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(adService.findAll(), HttpStatus.OK);

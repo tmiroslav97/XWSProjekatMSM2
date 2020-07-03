@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,8 @@ public class FirmServiceImpl implements FirmService {
     private FirmRepository firmRepository;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    @Qualifier(value = "cloudRabbitTemplate")
+    private RabbitTemplate cloudRabbitTemplate;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -101,7 +103,7 @@ public class FirmServiceImpl implements FirmService {
                 .build();
         try {
             String msg = objectMapper.writeValueAsString(emailDTO);
-            rabbitTemplate.convertAndSend("emails", msg);
+            cloudRabbitTemplate.convertAndSend("emails", msg);
             return 1;
         } catch (JsonProcessingException exception) {
             return 2;

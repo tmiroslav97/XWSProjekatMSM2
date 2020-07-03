@@ -105,10 +105,17 @@ Remove all containers
 Remove all images
 `docker rmi $(docker images -q)`
 
+Remove volumes (all connected containers must be stopped, maybe event removed)
+```
+docker volume ls
+docker volume rm volume_name volume_name
+```
 Put initial data from host to volume with temporary container, add folder and its content (if we are positioned in terminal in C)
-`docker run -v xwsprojekatmsm2_images:/var/data --name helper busybox true`
-`docker cp XMLPhotos\\adService helper:/var/data`
-`docker rm helper`
+```
+docker run -v xwsprojekatmsm2_images:/var/data --name helper busybox true
+docker cp XMLPhotos\\adService helper:/var/data/adService
+docker rm helper
+```
 
 ### Links
 https://stackoverflow.com/questions/37468788/what-is-the-right-way-to-add-data-to-an-existing-named-volume-in-docker

@@ -12,6 +12,7 @@ public class PriceListConverter extends AbstractConverter{
                 .pricePerKm(priceListCreateDTO.getPricePerKm())
                 .pricePerKmCDW(priceListCreateDTO.getPricePerKmCDW())
                 .pricePerDay(priceListCreateDTO.getPricePerDay())
+                .publisherUser(priceListCreateDTO.getPublisherUserId())
                 .build();
     }
 

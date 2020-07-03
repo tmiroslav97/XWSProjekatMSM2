@@ -21,7 +21,6 @@ import services.app.pricelistanddiscountservice.model.PriceList;
 import services.app.pricelistanddiscountservice.repository.PriceListRepository;
 import services.app.pricelistanddiscountservice.service.intf.PriceListService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,26 +55,21 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public List<PriceListCreateDTO> findAllListDTOFromPublisher() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
-        Long publishUser = authenticationClient.findPublishUserByEmail(principal.getToken());
-        System.out.println("PUBLISH USER " + publishUser);
-        List<PriceList> priceLists = this.findAll();
-        List<PriceList> priceListsFromPublishUser = new ArrayList<>();
-        if (!priceLists.isEmpty()) {
-            for (PriceList pl : priceLists) {
-                if (pl.getPublisherUser().equals(publishUser)) {
-                    System.out.println("dodata price lista");
-                    priceListsFromPublishUser.add(pl);
-                }
-            }
-        }
+    public List<PriceListCreateDTO> findAllListDTOFromPublisher(Long userId) {
+        List<PriceList> priceListsFromPublishUser = priceListRepository.findAllByPublisherUser(userId);
         List<PriceListCreateDTO> ret = priceListsFromPublishUser.stream().map(PriceListConverter::toCreatePriceListCreateDTOFromPriceList).collect(Collectors.toList());
-//        if(ret == null){
-//            return null;
-//        }
         return ret;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.PL_GET_QUEUE_NAME)
+    public String findPriceListById(Long id) {
+        try {
+            PriceList priceList = this.findById(id);
+            return objectMapper.writeValueAsString(priceList);
+        }catch (JsonProcessingException exception){
+            return null;
+        }
     }
 
     @Override
@@ -95,12 +89,24 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
+    @RabbitListener(queues = RabbitMQConfiguration.PL_NEW_EDIT_QUEUE_NAME)
+    public Long createPriceListRMQ(String msg) {
+        try {
+            PriceListCreateDTO priceListCreateDTO = objectMapper.readValue(msg, PriceListCreateDTO.class);
+            PriceList priceList = PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO);
+            priceList = this.priceListRepository.save(priceList);
+            return priceList.getId();
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
+    }
+
+    @Override
     public PriceList createPriceList(PriceListCreateDTO priceListCreateDTO) {
-        PriceList priceList = PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
-        Long publisherUser = authenticationClient.findPublishUserByEmail(principal.getToken());
-        priceList.setPublisherUser(publisherUser);
+        PriceList priceList = PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO);
+        priceList.setPublisherUser(Long.valueOf(principal.getUserId()));
         priceList = this.priceListRepository.save(priceList);
         return priceList;
     }

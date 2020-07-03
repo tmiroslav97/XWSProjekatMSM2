@@ -49,7 +49,7 @@ const AdComponent = (props) => {
                                 </Col>
                                 <Col>
                                     <Card.Text>
-                                        {ad.price} $
+                                        {ad.price} RSD
                                     </Card.Text>
                                 </Col>
                             </Row>
@@ -71,7 +71,7 @@ const AdComponent = (props) => {
                                 </Col>
                                 <Col>
                                     <Card.Text>
-                                        {ad.mileage}
+                                        {ad.mileage} Km
                                     </Card.Text>
                                 </Col>
                             </Row>

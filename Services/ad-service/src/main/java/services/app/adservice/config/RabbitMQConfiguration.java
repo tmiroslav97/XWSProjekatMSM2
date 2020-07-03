@@ -10,6 +10,24 @@ public class RabbitMQConfiguration {
     public static final String USER_ID_QUEUE_NAME = "user_id";
     public static final String AD_SYNC_QUEUE_NAME = "ad_sync_rpc";
     public static final String AD_SEARCH_SYNC_QUEUE_NAME = "ad_search_sync";
+    public static final String PL_NEW_EDIT_QUEUE_NAME = "pl_new_edit";
+    public static final String PL_GET_QUEUE_NAME = "pl_get_queue";
+    public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
+
+    @Bean
+    public Queue userFLNameQueue() {
+        return new Queue(USER_FL_NAME_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue plGetQueue() {
+        return new Queue(PL_GET_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue plNewEditQueue() {
+        return new Queue(PL_NEW_EDIT_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue userIdQueue() {

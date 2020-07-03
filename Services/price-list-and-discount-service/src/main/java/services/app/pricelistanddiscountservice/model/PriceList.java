@@ -1,10 +1,12 @@
 package services.app.pricelistanddiscountservice.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import services.app.pricelistanddiscountservice.common.db.DbColumnConstants;
 import services.app.pricelistanddiscountservice.common.db.DbTableConstants;
+import services.app.pricelistanddiscountservice.converter.DateAPI;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -41,5 +43,9 @@ public class PriceList {
 
    @Column(name = DbColumnConstants.PUBLISHERUSER, nullable = false)
    private Long publisherUser;
- 
+
+   @JsonProperty("creationDate")
+   public String getTheCreationDate() {
+      return DateAPI.DateTimeToStringDateTime(creationDate);
+   }
 }

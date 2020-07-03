@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import services.app.authenticationservice.config.RabbitMQConfiguration;
+import services.app.authenticationservice.config.LocalRabbitMQConfiguration;
 import services.app.authenticationservice.converter.AgentConverter;
 import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.dto.agent.AgentDTO;
@@ -43,7 +44,8 @@ public class AgentServiceImpl implements AgentService {
     private AuthorityService authorityService;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    @Qualifier(value = "cloudRabbitTemplate")
+    private RabbitTemplate cloudRabbitTemplate;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -114,7 +116,7 @@ public class AgentServiceImpl implements AgentService {
                 .build();
         try {
             String msg = objectMapper.writeValueAsString(emailDTO);
-            rabbitTemplate.convertAndSend("emails", msg);
+            cloudRabbitTemplate.convertAndSend("emails", msg);
             return 1;
         } catch (JsonProcessingException exception) {
             return 2;
@@ -158,7 +160,7 @@ public class AgentServiceImpl implements AgentService {
     }
 
     @Override
-    @RabbitListener(queues = RabbitMQConfiguration.AUTH_SYNC_QUEUE_NAME)
+    @RabbitListener(queues = LocalRabbitMQConfiguration.AUTH_SYNC_QUEUE_NAME)
     public Integer verifyAgent(String msg) {
         try {
             AuthSyncDTO authSyncDTO = objectMapper.readValue(msg, AuthSyncDTO.class);
