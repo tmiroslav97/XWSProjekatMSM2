@@ -7,9 +7,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 
 public class DateAPI {
-
     public static DateTime DateTimeNow() {
-        return new DateTime(DateTimeZone.UTC);
+        String dateStr = DateTimeToStringDateTime(new DateTime());
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
+        return dtf.withZone(DateTimeZone.UTC).parseDateTime(dateStr);
     }
 
     public static String DateTimeToStringDateTime(DateTime dateTime) {
@@ -19,7 +20,7 @@ public class DateAPI {
 
     public static DateTime DateTimeStringToDateTime(String dateStr) {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
-        return dtf.parseDateTime(dateStr);
+        return dtf.withZone(DateTimeZone.UTC).parseDateTime(dateStr);
     }
 
     //za datume sa fronta koji stizu u formatu: 2020-06-03T03:03
@@ -36,7 +37,7 @@ public class DateAPI {
 
         String newDateStr = hh + ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
 
-        DateTime dateTime = DateTime.parse(newDateStr, dtf);
+        DateTime dateTime = dtf.withZone(DateTimeZone.UTC).parseDateTime(newDateStr);
 
         return dateTime;
     }
@@ -60,7 +61,7 @@ public class DateAPI {
 
         String newDateStr = hh + ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
 
-        DateTime dateTime = DateTime.parse(newDateStr, dtf);
+        DateTime dateTime = dtf.withZone(DateTimeZone.UTC).parseDateTime(newDateStr);
 
         return dateTime;
     }

@@ -7,9 +7,10 @@ import org.joda.time.format.DateTimeFormatter;
 
 
 public class DateAPI {
-
     public static DateTime DateTimeNow() {
-        return new DateTime();
+        String dateStr = DateTimeToStringDateTime(new DateTime());
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
+        return dtf.withZone(DateTimeZone.UTC).parseDateTime(dateStr);
     }
 
     public static String DateTimeToStringDateTime(DateTime dateTime) {
@@ -19,7 +20,7 @@ public class DateAPI {
 
     public static DateTime DateTimeStringToDateTime(String dateStr) {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
-        return dtf.parseDateTime(dateStr);
+        return dtf.withZone(DateTimeZone.UTC).parseDateTime(dateStr);
     }
 
     //za datume sa fronta koji stizu u formatu: 2020-06-03T03:03
@@ -36,7 +37,7 @@ public class DateAPI {
 
         String newDateStr = hh + ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
 
-        DateTime dateTime = DateTime.parse(newDateStr, dtf);
+        DateTime dateTime = dtf.withZone(DateTimeZone.UTC).parseDateTime(newDateStr);
 
         return dateTime;
     }
@@ -60,42 +61,8 @@ public class DateAPI {
 
         String newDateStr = hh + ":" + mm + " " + dd + "-" + MM + "-" + yyyy;
 
-        DateTime dateTime = DateTime.parse(newDateStr, dtf);
+        DateTime dateTime = dtf.withZone(DateTimeZone.UTC).parseDateTime(newDateStr);
 
         return dateTime;
     }
-
-    //    public static DateTime dateTimeNow() {
-//        DateTimeFormatter formatter = DateTimeFormat.forPattern("HH:mm dd-MM-yyyy");
-//        DateTime date = new DateTime(DateTimeZone.UTC);
-//        String dateStr = date.toString("HH:mm dd-MM-yyyy");
-//        DateTime dateTime = DateTime.parse(dateStr, formatter);
-//        return dateTime;
-//    }
-
-    //    //za datume sa fronta koji stizu u formatu: 2020-06-03T03:03
-//    public static DateTime dateStringToDateTime(String date) {
-//        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd-MM-yyyy");
-////        DateFormat formatter = new SimpleDateFormat("hh:mm dd-MM-yyyy");
-//        String dateString = date.replace("T", " ");
-////        System.out.println(dateString);
-//        String[] res = dateString.split(" ");
-//        String datum = res[0];
-////        System.out.println("DATUMMM : " + datum);
-//        String[] dio = datum.split("-");
-//        String yyyy = dio[0];
-//        String MM = dio[1];
-//        String dd = dio[2];
-//
-////        String vrijeme = res[1];
-////        dio = vrijeme.split(":");
-////        String hh = dio[0]; // 004
-////        String mm = dio[1];
-//
-//        String newDate = dd + "-" + MM + "-" + yyyy;
-//        System.out.println(newDate);
-//        DateTime dateTime = DateTime.parse(newDate, formatter);
-//
-//        return dateTime;
-//    }
 }
