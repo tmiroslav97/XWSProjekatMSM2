@@ -2,6 +2,8 @@ package services.app.adservice.dto.ad;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -36,4 +38,5 @@ public class AdDetailViewDTO {
     private Long publisherUserId;
     private String publisherUserFirstName;
     private String publisherUserLastName;
+    private List<String> images;
 }

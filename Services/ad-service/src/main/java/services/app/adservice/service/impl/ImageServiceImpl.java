@@ -168,7 +168,7 @@ public class ImageServiceImpl implements ImageService {
     public String uploadImage(MultipartFile photo) {
         try {
 
-            System.out.println("DIREKTORIJUM " + photoDir.toString());
+            System.out.println("DIREKTORIJUM " + photoDir);
 
             File file = new File(photoDir);
             if (!file.exists()) {

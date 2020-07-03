@@ -25,24 +25,20 @@ const AdDetailViewComponent = (props) => {
                 <Card.Title as="h4">{props.ad.name}</Card.Title>
                 <Row>
                     <Col md={5}>
-                        <Card.Img src={`data:image/jpeg;base64,${props.ad.coverPhoto}`} />
-
-                        {/* <Carousel>
-                                    <Carousel.Item>
-                                        <img
-                                            className="d-block w-100"
-                                            src="img/rent1.png"
-                                            alt="First slide"
-                                        />
-                                        <Carousel.Caption>
-                                            <h3>Dobro dosli na rent a car!</h3>
-                                        </Carousel.Caption>
-                                    </Carousel.Item>
-                                </Carousel> */}
-                        <>
-                            <br />
-
-                        </>
+                        <Carousel>
+                            {
+                                props.ad.images.map((img, idx) => {
+                                    return (
+                                        <Carousel.Item key={idx}>
+                                            <img
+                                                className="d-block w-100"
+                                                src={`data:image/jpeg;base64,${img}`}
+                                            />
+                                        </Carousel.Item>
+                                    );
+                                })
+                            }
+                        </Carousel>
                         <ListGroup variant="flush">
                             <ListGroup.Item>Datum objavljivanja: {props.handleDateFormat(props.ad.publishedDate)}</ListGroup.Item>
                             <ListGroup.Item>Oglas objavio: {props.ad.publisherUserFirstName} {props.ad.publisherUserLastName} </ListGroup.Item>
@@ -59,9 +55,9 @@ const AdDetailViewComponent = (props) => {
                             <ListGroup.Item>Godiste: {props.handleYear(props.ad.year)}</ListGroup.Item>
                             {props.ad.cdw ? <ListGroup.Item>Posjeduje CDW: Da</ListGroup.Item> : <ListGroup.Item>Posjeduje CDW: Ne</ListGroup.Item>}
                             {props.ad.pricePerKmCDW !== null && props.ad.cdw ? <ListGroup.Item>Cijena po Km sa CDW: {props.ad.pricePerKmCDW} RSD</ListGroup.Item> : null}
-                            {props.ad.distanceLimitFlag==="LIMITED" ? <ListGroup.Item>Postoji ogranicenje u kilometrazi: Da</ListGroup.Item> : <ListGroup.Item>Postoji ogranicenje u kilometrazi: Ne</ListGroup.Item>}
-                            {props.ad.distanceLimitFlag==="LIMITED" ? <ListGroup.Item>Ograniceno na: {props.ad.distanceLimit} Km</ListGroup.Item> : null}
-                            {props.ad.pricePerKm !== null && props.ad.distanceLimitFlag==="LIMITED" ? <ListGroup.Item>Cijena po Km: {props.ad.pricePerKm} RSD</ListGroup.Item> : null}
+                            {props.ad.distanceLimitFlag === "LIMITED" ? <ListGroup.Item>Postoji ogranicenje u kilometrazi: Da</ListGroup.Item> : <ListGroup.Item>Postoji ogranicenje u kilometrazi: Ne</ListGroup.Item>}
+                            {props.ad.distanceLimitFlag === "LIMITED" ? <ListGroup.Item>Ograniceno na: {props.ad.distanceLimit} Km</ListGroup.Item> : null}
+                            {props.ad.pricePerKm !== null && props.ad.distanceLimitFlag === "LIMITED" ? <ListGroup.Item>Cijena po Km: {props.ad.pricePerKm} RSD</ListGroup.Item> : null}
                             <ListGroup.Item>Posjeduje android uredjaja: {androidFlag}</ListGroup.Item>
                             <ListGroup.Item>Broj rentiranja: {props.ad.rentCnt}</ListGroup.Item>
                             {props.ad.ratingCnt != 0 ? <ListGroup.Item>Ocjena: {(props.ad.ratingNum / props.ad.ratingCnt).toFixed(2)}</ListGroup.Item> : <ListGroup.Item>Niko nije ocjenio oglas</ListGroup.Item>}

@@ -7,11 +7,14 @@ import services.app.adservice.dto.ad.AdPageDTO;
 import services.app.adservice.dto.ad.AdSynchronizeDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
+import services.app.adservice.model.Image;
 import services.app.adservice.model.enumeration.DistanceLimitEnum;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashSet;
+import java.util.List;
 
 public class AdConverter extends AbstractConverter {
 
@@ -68,12 +71,20 @@ public class AdConverter extends AbstractConverter {
 
     public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad, String photoDir) {
         String encodedString = "";
+        List<String> images = new ArrayList<>();
         try {
-            byte[] fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
+            byte[] fileContent = null;
+            for (Image image : ad.getImages()) {
+                fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + image.getName()));
+                encodedString = Base64.getEncoder().encodeToString(fileContent);
+                images.add(encodedString);
+            }
+            fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
         }
+
         return AdDetailViewDTO.builder()
                 .id(ad.getId())
                 .name(ad.getName())
@@ -97,6 +108,7 @@ public class AdConverter extends AbstractConverter {
                 .cdw(ad.getCar().getCdw())
                 .androidFlag(ad.getCar().getAndroidFlag())
                 .publisherUserId(ad.getPublisherUser())
+                .images(images)
                 .build();
     }
 
@@ -124,7 +136,7 @@ public class AdConverter extends AbstractConverter {
 
     }
 
-    public static Ad toAdFromAdSyncDTO(AdSyncDTO adSyncDTO){
+    public static Ad toAdFromAdSyncDTO(AdSyncDTO adSyncDTO) {
         return Ad.builder()
                 .name(adSyncDTO.getName())
                 .location(adSyncDTO.getLocation())
