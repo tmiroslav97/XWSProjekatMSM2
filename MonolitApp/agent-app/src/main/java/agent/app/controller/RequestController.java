@@ -40,16 +40,18 @@ public class RequestController {
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status, Principal principal) {
         String email = principal.getName();
-        return new ResponseEntity<>(requestClient.getPublisherRequestsResponse(email, status).getRequests(), HttpStatus.OK);
+        String identifier = requestService.findRequestPublisherUserIdentifier(email);
+        return new ResponseEntity<>(requestClient.getPublisherRequestsResponse(email, identifier, status).getRequests(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> acceptRequest(@RequestBody ReqAcceptDTO reqAcceptDTO, Principal principal) {
         String email = principal.getName();
+        String identifier = requestService.findRequestPublisherUserIdentifier(email);
         if (reqAcceptDTO.getAction() != null) {
             if (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject")) {
-                return new ResponseEntity<>(requestClient.acceptRequest(email, reqAcceptDTO.getId(), reqAcceptDTO.getAction()), HttpStatus.OK);
+                return new ResponseEntity<>(requestClient.acceptRequest(email, identifier, reqAcceptDTO.getId(), reqAcceptDTO.getAction()), HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Novi objekat", HttpStatus.OK);
             }

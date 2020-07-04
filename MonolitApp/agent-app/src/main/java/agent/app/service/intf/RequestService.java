@@ -12,6 +12,8 @@ public interface RequestService {
 
     Integer deleteById(Long id);
 
+    String findRequestPublisherUserIdentifier(String email);
+
     Integer submitRequest(List<SubmitRequestDTO> submitRequestDTOS, String email);
 
     void delete(Request request);

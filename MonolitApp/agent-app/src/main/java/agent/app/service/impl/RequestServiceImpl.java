@@ -9,6 +9,7 @@ import agent.app.model.Request;
 import agent.app.model.enumeration.RequestStatusEnum;
 import agent.app.repository.RequestRepository;
 import agent.app.service.intf.AdService;
+import agent.app.service.intf.AgentService;
 import agent.app.service.intf.EndUserService;
 import agent.app.service.intf.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private EndUserService endUserService;
 
+    @Autowired
+    private AgentService agentService;
+
     @Override
     public Request findById(Long id) {
         return requestRepository.findById(id).orElseThrow(() -> new NotFoundException("Zahtjev za iznajmljivanje vozila ne postoji"));
@@ -45,6 +49,11 @@ public class RequestServiceImpl implements RequestService {
         Request request = this.findById(id);
         this.delete(request);
         return 1;
+    }
+
+    @Override
+    public String findRequestPublisherUserIdentifier(String email) {
+        return agentService.findByEmail(email).getIdentifier();
     }
 
     @Override
