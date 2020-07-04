@@ -6,7 +6,7 @@ import { adsSelector, searchDataSelector } from '../../store/ad/selectors';
 import PaginationContainer from '../Pagination/PaginationContainer';
 import PaginationSize from '../../components/Pagination/PaginationSize';
 import OrdinarySearchContainer from '../../containers/Search/OrdinarySearchContainer'
-import { fetchAds } from '../../store/ad/actions';
+import { fetchAds, searchAd } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import { loadImage } from '../../store/ad/saga';
 import jwt_decode from 'jwt-decode';
@@ -24,22 +24,19 @@ const AdListContainer = () => {
     const [namePhoto, setNamePhoto] = useState();
     const token = localStorage.getItem('token');
 
+
     useEffect(() => {
         dispatch(
-            fetchAds({
-                nextPage,
-                size
+            searchAd({
+                'data': {
+                    'location': searchData.location,
+                    'startDate': searchData.startDate,
+                    'endDate': searchData.endDate,
+                    'nextPage': nextPage,
+                    'size': size
+                }
             })
         );
-        return () => {
-            dispatch(putAds({
-                'data': [],
-                'totalPageCnt': 0,
-                'nextPage': nextPage,
-                'size': size,
-                'isFetch': false
-            }));
-        };
     }, [nextPage, size]);
 
     const hasRole = (accessRole) => {
@@ -54,32 +51,36 @@ const AdListContainer = () => {
     };
 
     const addToCart = (ad) => {
-        let cart = new Map();
-        if (JSON.parse(localStorage.getItem('cart')) != null) {
-            cart = new Map(JSON.parse(localStorage.getItem('cart')));
-        }
-        if (cart.get(ad.publisherUserId) == null) {
-            cart.set(ad.publisherUserId, { bundle: false, startDate: searchData.startDate, endDate: searchData.endDate, ads: [{ id: ad.id, adName: ad.name }] });
-            dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
+        if (searchData.startDate === undefined || searchData.startDate === null || searchData.startDate === '' || searchData.endDate === undefined || searchData.endDate === null || searchData.endDate === '') {
+            dispatch(putWarnMsg('Niste odabrali pocetni i krajnji datum rentiranja'));
         } else {
-            var temp = cart.get(ad.publisherUserId);
-            var flag = false;
-            for (let item of temp.ads) {
-                if (item.id == ad.id) {
-                    flag = true;
-                    break;
+            let cart = new Map();
+            if (JSON.parse(localStorage.getItem('cart')) != null) {
+                cart = new Map(JSON.parse(localStorage.getItem('cart')));
+            }
+            if (cart.get(ad.publisherUserId) == null) {
+                cart.set(ad.publisherUserId, { user: ad.publisherUserFirstName + " " + ad.publisherUserLastName, bundle: false, startDate: searchData.startDate, endDate: searchData.endDate, ads: [{ id: ad.id, adName: ad.name }] });
+                dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
+            } else {
+                var temp = cart.get(ad.publisherUserId);
+                var flag = false;
+                for (let item of temp.ads) {
+                    if (item.id == ad.id) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    dispatch(putWarnMsg('Oglas ste vec dodali u korpu'));
+                } else {
+                    cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name });
+                    dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
                 }
             }
 
-            if (flag) {
-                dispatch(putWarnMsg('Oglas ste vec dodali u korpu'));
-            } else {
-                cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name });
-                dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
-            }
+            localStorage.setItem('cart', JSON.stringify(Array.from(cart.entries())));
         }
-
-        localStorage.setItem('cart', JSON.stringify(Array.from(cart.entries())));
     };
 
     const handleCoverPh = (event) => {

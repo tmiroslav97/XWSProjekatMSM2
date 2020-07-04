@@ -6,15 +6,16 @@ const CartComponent = (props) => {
     return (
         <Container fluid>
             <Row className="justify-content-center">
-                <Col md={6} xs={12}>
+                <Col md={8} xs={12}>
                     <h3 className="border-bottom mt-5">Korpa</h3>
                 </Col>
             </Row>
             <Row className="justify-content-center">
-                <Col md={6} xs={12}>
+                <Col md={8} xs={12}>
                     <Table responsive>
                         <thead>
                             <tr>
+                                <th>Oglas od</th>
                                 <th>Bundle</th>
                                 <th>Naziv oglasa</th>
                                 <th>Akcija</th>
@@ -25,6 +26,9 @@ const CartComponent = (props) => {
                                 [...props.cart.keys()].map((item, idx) => {
                                     return (
                                         <tr key={idx}>
+                                            <td>
+                                                {props.cart.get(item).user}
+                                            </td>
                                             <td>
                                                 <ListGroup variant="flush">
                                                     {
@@ -68,12 +72,12 @@ const CartComponent = (props) => {
             </Row>
             {props.cart.size == 0 ?
                 <Row className="justify-content-center mt-2">
-                    <Col md={6} xs={12}>
+                    <Col md={8} xs={12}>
                         <p>Korpa je prazna</p>
                     </Col>
                 </Row> :
                 <Row className="justify-content-center mt-2">
-                    <Col md={6} xs={12}>
+                    <Col md={8} xs={12}>
                         <Form.Row>
                             <Form.Group as={Col}>
                                 <Form.Label>Datum pocetka rentiranja {props.startDate.replace('T', " ")} </Form.Label>

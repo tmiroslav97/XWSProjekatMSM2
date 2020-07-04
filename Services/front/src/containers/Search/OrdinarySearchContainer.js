@@ -5,7 +5,7 @@ import OrdinarySearchComponent from '../../components/Search/OrdinarySearchCompo
 import { carManufacturersSelector, carTypesSelector, carModelsSelector, gearboxTypesSelector, fuelTypesSelector } from '../../store/codebook/selectors';
 import { fetchAllCarManufacturers, fetchAllCarTypes, fetchAllCarModels, fetchAllGearboxTypes, fetchAllFuelTypes, putCarManufacturers, putCarModels, putCarTypes, putFuelTypes, putGearboxTypes } from '../../store/codebook/actions';
 import { searchAd } from '../../store/ad/actions';
-import { adsSelector } from '../../store/ad/selectors';
+import { adsSelector, searchDataSelector } from '../../store/ad/selectors';
 import { putSearchData } from '../../store/ad/actions';
 
 const OrdinarySearchContainer = () => {
@@ -13,11 +13,13 @@ const OrdinarySearchContainer = () => {
     const [validated, setValidated] = useState(false);
 
     const ads = useSelector(adsSelector);
+    const searchData = useSelector(searchDataSelector);
     const [nextPage, setNextPage] = useState(ads.nextPage);
     const [size, setSize] = useState(ads.size);
 
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
+    const [location, setLocation] = useState(searchData.location);
+    const [startDate, setStartDate] = useState(searchData.startDate);
+    const [endDate, setEndDate] = useState(searchData.endDate);
     const [toggleAdvancedSearch, setToggled] = useState(false);
     const [lowValue, setLowValue] = useState(0);
     const [highValue, setHighValue] = useState(3000);
@@ -270,6 +272,7 @@ const OrdinarySearchContainer = () => {
                     <OrdinarySearchComponent
                         onSubmit={handleForm}
                         validated={validated}
+                        location={location}
                         startDate={startDate}
                         endDate={endDate}
                         toggleAdvancedSearch={toggleAdvancedSearch}

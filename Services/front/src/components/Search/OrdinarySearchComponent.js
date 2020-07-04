@@ -7,7 +7,6 @@ import 'nouislider/src/nouislider.tooltips.less';
 import 'nouislider/src/nouislider.pips.less';
 
 const OrdinarySearchComponent = (props) => {
-    // console.log(props);
 
     return (
         <Card >
@@ -17,7 +16,7 @@ const OrdinarySearchComponent = (props) => {
                         <Col>
                             <Form.Group controlId="formBasicLokacija">
                                 <Form.Label>Lokacija</Form.Label>
-                                <Form.Control type="text" required name="location" onChange={props.hanleLocation} placeholder="Unesite naziv lokacije..." />
+                                <Form.Control type="text" required name="location" defaultValue={props.location} onChange={props.hanleLocation} placeholder="Unesite naziv lokacije..." />
                                 <Form.Text className="text-muted">
                                 </Form.Text>
                             </Form.Group>
@@ -31,7 +30,7 @@ const OrdinarySearchComponent = (props) => {
                         <Col>
                             <Form.Group >
                                 <Form.Label>Izaberite datum i vrijeme preuzimanja</Form.Label>
-                                <Form.Control type="datetime-local" required name="startDateTime"
+                                <Form.Control type="datetime-local" required name="startDateTime" defaultValue={props.startDate}
                                     min={props.getCurrentDate()}
                                     onChange={props.handleChange1}
                                 />
@@ -40,7 +39,7 @@ const OrdinarySearchComponent = (props) => {
                         <Col>
                             <Form.Group>
                                 <Form.Label>Izaberite datum i vrijeme povratka</Form.Label>
-                                <Form.Control type="datetime-local" required name="endDateTime"
+                                <Form.Control type="datetime-local" required name="endDateTime" defaultValue={props.endDate}
                                     min={props.startDate}
                                     onChange={props.handleChange2}
                                 />

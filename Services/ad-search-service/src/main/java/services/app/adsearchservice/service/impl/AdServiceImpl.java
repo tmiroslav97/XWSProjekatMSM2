@@ -13,10 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import services.app.adsearchservice.config.AppConfig;
 import services.app.adsearchservice.config.RabbitMQConfiguration;
-import services.app.adsearchservice.converter.AdConverter;
-import services.app.adsearchservice.converter.CarCalendarTermsConverter;
-import services.app.adsearchservice.converter.CarConverter;
-import services.app.adsearchservice.converter.ImageConverter;
+import services.app.adsearchservice.converter.*;
 import services.app.adsearchservice.dto.ad.AdPageContentDTO;
 import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
@@ -100,9 +97,16 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate) {
+    public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<Ad> ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startDate, endDate, pageable);
+        Page<Ad> ads;
+        if (location.equals("") || startDate.equals("") || endDate.equals("")) {
+            ads = adRepository.findAllByDeleted(false, pageable);
+        } else {
+            DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+            DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
+            ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startD, endD, pageable);
+        }
         List<AdPageDTO> ret = new ArrayList<>();
         for (Ad ad : ads) {
             String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
