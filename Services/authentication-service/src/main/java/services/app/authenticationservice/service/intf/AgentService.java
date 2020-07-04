@@ -28,4 +28,5 @@ public interface AgentService {
 
     Integer verifyAgent(String msg);
 
+    Long authAgent(String msg);
 }

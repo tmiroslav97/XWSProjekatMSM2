@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import services.app.authenticationservice.config.LocalRabbitMQConfiguration;
 import services.app.authenticationservice.converter.AgentConverter;
+import services.app.authenticationservice.dto.AgentFirmIdentificationDTO;
 import services.app.authenticationservice.dto.EmailDTO;
 import services.app.authenticationservice.dto.agent.AgentDTO;
 import services.app.authenticationservice.dto.agent.AgentPageDTO;
@@ -46,6 +47,10 @@ public class AgentServiceImpl implements AgentService {
     @Autowired
     @Qualifier(value = "cloudRabbitTemplate")
     private RabbitTemplate cloudRabbitTemplate;
+
+    @Autowired
+    @Qualifier(value = "localRabbitTemplate")
+    private RabbitTemplate localRabbitTemplate;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -176,6 +181,25 @@ public class AgentServiceImpl implements AgentService {
 
         } catch (JsonProcessingException exception) {
             return 4;
+        }
+    }
+
+    @Override
+    @RabbitListener(queues = LocalRabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME)
+    public Long authAgent(String msg) {
+        try {
+            AgentFirmIdentificationDTO agentFirmIdentificationDTO = objectMapper.readValue(msg, AgentFirmIdentificationDTO.class);
+            Agent agent = agentRepository.findByEmail(agentFirmIdentificationDTO.getEmail());
+            if (agent == null) {
+                return null;
+            }
+            if (agent.getIdentifier().equals(agentFirmIdentificationDTO.getIdentifier())) {
+                return agent.getId();
+            } else {
+                return null;
+            }
+        } catch (JsonProcessingException exception) {
+            return null;
         }
     }
 }
