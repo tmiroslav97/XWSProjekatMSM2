@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,7 @@ import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adsearchservice.dto.image.ImagesSynchronizeDTO;
+import services.app.adsearchservice.dto.user.UserFLNameDTO;
 import services.app.adsearchservice.exception.ExistsException;
 import services.app.adsearchservice.exception.NotFoundException;
 import services.app.adsearchservice.model.Ad;
@@ -33,8 +35,8 @@ import services.app.adsearchservice.service.intf.CarCalendarTermService;
 import services.app.adsearchservice.service.intf.CarService;
 import services.app.adsearchservice.service.intf.ImageService;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AdServiceImpl implements AdService {
@@ -53,6 +55,9 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -98,9 +103,21 @@ public class AdServiceImpl implements AdService {
     public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startDate, endDate, pageable);
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
-//        List<AdPageDTO> ret = new ArrayList<>();
-        System.out.println(ret.size());
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads) {
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO userFLNameDTO;
+            try {
+                userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+                userFLNameDTO = new UserFLNameDTO();
+            }
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            adPageDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+            ret.add(adPageDTO);
+        }
+
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -164,10 +181,21 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
 
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads) {
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO userFLNameDTO;
+            try {
+                userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+                userFLNameDTO = new UserFLNameDTO();
+            }
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            adPageDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+            ret.add(adPageDTO);
+        }
 
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
-
-        System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
