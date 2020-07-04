@@ -29,7 +29,11 @@ const CartComponent = (props) => {
                                     return (
                                         <tr key={idx}>
                                             <td>
-                                                {props.cart.get(item).user}
+                                                <ListGroup variant="flush">
+                                                    <ListGroup.Item>
+                                                        {props.cart.get(item).user}
+                                                    </ListGroup.Item>
+                                                </ListGroup>
                                             </td>
                                             <td>
                                                 <ListGroup variant="flush">
@@ -81,9 +85,13 @@ const CartComponent = (props) => {
                                                 </ListGroup>
                                             </td>
                                             <td>
-                                                <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item); }}>
-                                                    Ukloni
-                                                </Button>
+                                                <ListGroup variant="flush">
+                                                    <ListGroup.Item>
+                                                        <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item); }}>
+                                                            Ukloni
+                                                        </Button>
+                                                    </ListGroup.Item>
+                                                </ListGroup>
                                             </td>
                                         </tr>
 

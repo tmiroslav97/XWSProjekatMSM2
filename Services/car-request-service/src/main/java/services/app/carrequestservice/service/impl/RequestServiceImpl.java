@@ -7,6 +7,7 @@ import services.app.carrequestservice.client.AdServiceClient;
 import services.app.carrequestservice.client.AuthenticationClient;
 import services.app.carrequestservice.converter.DateAPI;
 import services.app.carrequestservice.converter.RequestConverter;
+import services.app.carrequestservice.dto.ad.AdRequestDTO;
 import services.app.carrequestservice.dto.carreq.AcceptReqestCalendarTermsDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.exception.NotFoundException;
@@ -125,61 +126,27 @@ public class RequestServiceImpl implements RequestService {
     public Integer submitRequest(HashMap<Long, SubmitRequestDTO> submitRequestDTOS, Long userId) {
         for (Map.Entry<Long, SubmitRequestDTO> entry : submitRequestDTOS.entrySet()) {
             SubmitRequestDTO itemSubmitRequestDTO = entry.getValue();
-            Request request = null;
-            if (itemSubmitRequestDTO.getBundle()) {
-                List<Ad> ads = new ArrayList<>();
-                for (Ad adItem : itemSubmitRequestDTO.getAds()) {
-                    Ad ad = null;
-                    if (adService.existsById(adItem.getId())) {
-                        ad = adService.findById(adItem.getId());
-                    } else {
-                        ad = Ad.builder()
-                                .id(adItem.getId())
-                                .adName(adItem.getAdName())
-                                .build();
-                        adService.save(ad);
-                    }
-                    ads.add(ad);
-                }
-                request = Request.builder()
-                        .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getStartDate()))
-                        .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getEndDate()))
-                        .submitDate(DateAPI.DateTimeNow())
-                        .status(RequestStatusEnum.PENDING)
-                        .ads(ads)
-                        .bundle(itemSubmitRequestDTO.getBundle())
-                        .publisherUser(entry.getKey())
-                        .endUser(userId)
+            List<Ad> ads = new ArrayList<>();
+            for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+                Ad ad = Ad.builder()
+                        .mainId(adRequestDTO.getId())
+                        .adName(adRequestDTO.getAdName())
+                        .rated(false)
+                        .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
+                        .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
                         .build();
-                this.save(request);
-            } else {
-                for (Ad adItem : itemSubmitRequestDTO.getAds()) {
-                    List<Ad> ads = new ArrayList<>();
-                    Ad ad = null;
-                    if (adService.existsById(adItem.getId())) {
-                        ad = adService.findById(adItem.getId());
-                    } else {
-                        ad = Ad.builder()
-                                .id(adItem.getId())
-                                .adName(adItem.getAdName())
-                                .build();
-                        adService.save(ad);
-                    }
-                    ads.add(ad);
-                    request = Request.builder()
-                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getStartDate()))
-                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(itemSubmitRequestDTO.getEndDate()))
-                            .submitDate(DateAPI.DateTimeNow())
-                            .status(RequestStatusEnum.PENDING)
-                            .ads(ads)
-                            .bundle(itemSubmitRequestDTO.getBundle())
-                            .publisherUser(entry.getKey())
-                            .endUser(userId)
-                            .build();
-                    this.save(request);
-                }
+                ad = adService.save(ad);
+                ads.add(ad);
             }
-
+            Request request = Request.builder()
+                    .submitDate(DateAPI.DateTimeNow())
+                    .status(RequestStatusEnum.PENDING)
+                    .ads(ads)
+                    .bundle(itemSubmitRequestDTO.getBundle())
+                    .publisherUser(entry.getKey())
+                    .endUser(userId)
+                    .build();
+            this.save(request);
         }
 
         return 1;

@@ -1,6 +1,7 @@
 package services.app.carrequestservice.dto.carreq;
 
 import lombok.*;
+import services.app.carrequestservice.dto.ad.AdRequestDTO;
 import services.app.carrequestservice.model.Ad;
 
 import java.util.List;
@@ -11,8 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmitRequestDTO {
+    String user;
     Boolean bundle;
-    String startDate;
-    String endDate;
-    List<Ad> ads;
+    List<AdRequestDTO> ads;
 }

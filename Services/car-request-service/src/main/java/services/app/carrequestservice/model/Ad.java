@@ -8,25 +8,26 @@
 
 package services.app.carrequestservice.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
+import org.w3._2001.xmlschema.Adapter4;
 import org.w3._2001.xmlschema.Adapter5;
 import services.app.carrequestservice.common.db.DbColumnConstants;
 import services.app.carrequestservice.common.db.DbTableConstants;
+import services.app.carrequestservice.converter.DateAPI;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 /**
  * <p>Java class for Ad complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Ad"&gt;
  *   &lt;complexContent&gt;
@@ -39,8 +40,6 @@ import services.app.carrequestservice.common.db.DbTableConstants;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @ToString
 @AllArgsConstructor
@@ -52,15 +51,15 @@ import services.app.carrequestservice.common.db.DbTableConstants;
 @Table(name = DbTableConstants.AD)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Ad", propOrder = {
-    "id",
-    "adName"
+        "id",
+        "adName"
 })
 public class Ad {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long id;
 
@@ -68,13 +67,49 @@ public class Ad {
     @XmlElement(required = true)
     protected String adName;
 
+    @Column(name = DbColumnConstants.MAINID, nullable = false)
+    protected Long mainId;
+
+    @Column(name = DbColumnConstants.RATED, nullable = false)
+    protected Boolean rated = false;
+
+    @Temporal(TemporalType.DATE)
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
+            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
+            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
+    })
+    @Column(name = DbColumnConstants.STARTDATE, nullable = false)
+    @XmlElement(required = true, type = String.class)
+    @XmlJavaTypeAdapter(Adapter4.class)
+    @XmlSchemaType(name = "dateTime")
+    protected DateTime startDate;
+
+    @Temporal(TemporalType.DATE)
+    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
+            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
+            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
+    })
+    @Column(name = DbColumnConstants.ENDDATE, nullable = false)
+    @XmlElement(required = true, type = String.class)
+    @XmlJavaTypeAdapter(Adapter4.class)
+    @XmlSchemaType(name = "dateTime")
+    protected DateTime endDate;
+
+    @JsonProperty("startDate")
+    public String getTheStartDate() {
+        return DateAPI.DateTimeToStringDateTime(startDate);
+    }
+
+    @JsonProperty("endDate")
+    public String getTheEndDate() {
+        return DateAPI.DateTimeToStringDateTime(endDate);
+    }
+
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getId() {
         return id;
@@ -82,11 +117,9 @@ public class Ad {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setId(Long value) {
         this.id = value;
@@ -94,11 +127,9 @@ public class Ad {
 
     /**
      * Gets the value of the adName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getAdName() {
         return adName;
@@ -106,11 +137,9 @@ public class Ad {
 
     /**
      * Sets the value of the adName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setAdName(String value) {
         this.adName = value;
