@@ -233,7 +233,8 @@ const OrdinarySearchContainer = () => {
                     'startDate': startDate,
                     'endDate': endDate,
                     'nextPage': nextPage,
-                    'size': size
+                    'size': size,
+                    'advancedSearch': toggleAdvancedSearch
                 }
             } else {
                 data = {
@@ -248,7 +249,8 @@ const OrdinarySearchContainer = () => {
                     'gearboxType': form.gearboxType.value,
                     'fuelType': form.fuelType.value,
                     'childrenSeatNum': form.childrenSeatNum.value,
-                    'cdw': cdw
+                    'cdw': cdw,
+                    'advancedSearch': toggleAdvancedSearch
                 }
             }
 

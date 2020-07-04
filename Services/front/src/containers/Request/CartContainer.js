@@ -4,14 +4,12 @@ import { history } from '../../index';
 import CartComponent from '../../components/Request/CartComponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { searchDataSelector } from '../../store/ad/selectors';
-import { isEmptyObject } from 'jquery';
 import { putSuccessMsg } from '../../store/common/actions';
 import RequestService from '../../services/RequestService';
 
 const CartContainer = () => {
     const dispatch = useDispatch();
     const [cart, setCart] = useState(new Map(JSON.parse(localStorage.getItem('cart'))));
-    const searchData = useSelector(searchDataSelector);
 
     const handleCreateReq = async () => {
         const obj = {};
@@ -45,8 +43,8 @@ const CartContainer = () => {
     return (
         <Container fluid>
             <Row>
-                <Col md={{ span: 8, offset: 2 }} xs={12}>
-                    <CartComponent cart={cart} handleCreateReq={handleCreateReq} startDate={searchData.startDate} endDate={searchData.endDate} handleRemoveItem={handleRemoveItem} handleClearCart={handleClearCart} handleBundle={handleBundle} />
+                <Col md={{ span: 12, offset: 1 }} xs={12}>
+                    <CartComponent cart={cart} handleCreateReq={handleCreateReq} handleRemoveItem={handleRemoveItem} handleClearCart={handleClearCart} handleBundle={handleBundle} />
                 </Col>
             </Row>
         </Container >

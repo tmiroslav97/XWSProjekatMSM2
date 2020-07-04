@@ -59,7 +59,7 @@ const AdListContainer = () => {
                 cart = new Map(JSON.parse(localStorage.getItem('cart')));
             }
             if (cart.get(ad.publisherUserId) == null) {
-                cart.set(ad.publisherUserId, { user: ad.publisherUserFirstName + " " + ad.publisherUserLastName, bundle: false, startDate: searchData.startDate, endDate: searchData.endDate, ads: [{ id: ad.id, adName: ad.name }] });
+                cart.set(ad.publisherUserId, { user: ad.publisherUserFirstName + " " + ad.publisherUserLastName, bundle: false, ads: [{ id: ad.id, adName: ad.name, startDate: searchData.startDate, endDate: searchData.endDate }] });
                 dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
             } else {
                 var temp = cart.get(ad.publisherUserId);
@@ -74,7 +74,7 @@ const AdListContainer = () => {
                 if (flag) {
                     dispatch(putWarnMsg('Oglas ste vec dodali u korpu'));
                 } else {
-                    cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name });
+                    cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name, startDate: searchData.startDate, endDate: searchData.endDate });
                     dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
                 }
             }
