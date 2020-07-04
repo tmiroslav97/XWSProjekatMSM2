@@ -332,7 +332,10 @@ public class AdServiceImpl implements AdService {
                 Image img = imageService.findByName(imgStr);
                 images.add(img);
             }
-            ad.setCoverPhoto(imageService.saveImageBase64(adSyncDTO.getCoverPhoto()));
+            String coverPhotoStr = imageService.saveImageBase64(adSyncDTO.getCoverPhoto());
+            Image coverPhotoImg = imageService.findByName(coverPhotoStr);
+            images.add(coverPhotoImg);
+            ad.setCoverPhoto(coverPhotoStr);
             ad.setImages(images);
             ad.setCar(car);
             ad.setCarCalendarTerms(new HashSet<>(carCalendarTerms));

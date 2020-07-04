@@ -16,8 +16,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = DbTableConstants.IMAGE)
 public class Image {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = DbColumnConstants.NAME, unique = true, nullable = false)
