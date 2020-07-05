@@ -9,6 +9,7 @@ import agent.app.model.Request;
 import agent.app.model.enumeration.RequestStatusEnum;
 import agent.app.repository.RequestRepository;
 import agent.app.service.intf.AdService;
+import agent.app.service.intf.AgentService;
 import agent.app.service.intf.EndUserService;
 import agent.app.service.intf.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private EndUserService endUserService;
 
+    @Autowired
+    private AgentService agentService;
+
     @Override
     public Request findById(Long id) {
         return requestRepository.findById(id).orElseThrow(() -> new NotFoundException("Zahtjev za iznajmljivanje vozila ne postoji"));
@@ -48,6 +52,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public String findRequestPublisherUserIdentifier(String email) {
+        return agentService.findByEmail(email).getIdentifier();
+    }
+
+    @Override
     public Integer submitRequest(List<SubmitRequestDTO> submitRequestDTOS, String email) {
         EndUser endUser = endUserService.findByEmail(email);
         for (SubmitRequestDTO submitRequestDTO : submitRequestDTOS) {
@@ -55,8 +64,8 @@ public class RequestServiceImpl implements RequestService {
             if (submitRequestDTO.getBundle()) {
                 request = Request.builder()
                         .bundle(true)
-                        .startDate(DateAPI.dateStringToDateTime(submitRequestDTO.getStartDate()))
-                        .endDate(DateAPI.dateStringToDateTime(submitRequestDTO.getEndDate()))
+                        .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(submitRequestDTO.getStartDate()))
+                        .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(submitRequestDTO.getEndDate()))
                         .submitDate(DateAPI.DateTimeNow())
                         .status(RequestStatusEnum.PENDING)
                         .ads(adService.findAllByIds(submitRequestDTO.getAdIds()))
@@ -71,9 +80,9 @@ public class RequestServiceImpl implements RequestService {
                     ads.add(ad);
                     request = Request.builder()
                             .bundle(false)
-                            .startDate(DateAPI.dateStringToDateTime(submitRequestDTO.getStartDate()))
-                            .endDate(DateAPI.dateStringToDateTime(submitRequestDTO.getEndDate()))
-                            .submitDate(DateAPI.dateTimeNow())
+                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(submitRequestDTO.getStartDate()))
+                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(submitRequestDTO.getEndDate()))
+                            .submitDate(DateAPI.DateTimeNow())
                             .status(RequestStatusEnum.PENDING)
                             .ads(ads)
                             .endUser(endUser)

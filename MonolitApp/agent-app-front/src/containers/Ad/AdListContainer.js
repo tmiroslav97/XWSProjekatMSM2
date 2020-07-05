@@ -56,21 +56,21 @@ const AdListContainer = () => {
                 </Col>
             </Row>
             <Row>
-                <Col md={{ span: 12, offset: 3 }} xs={12}>
-
+                <Col md={12} xs={12}>
                     <PaginationSize size={size} setSize={setSize} />
                 </Col>
             </Row>
             <Row>
-                <Col >
-
+                <Col>
                     {
                         isFetchAds ? <AdComponent ads={ads.data} token={token} handleCoverPh={handleCoverPh} /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>
             <Row>
-                <PaginationContainer setNextPage={setNextPage} totalPageCnt={ads.totalPageCnt} nextPage={nextPage}></PaginationContainer>
+                <Col md={12} xs={12}>
+                    <PaginationContainer setNextPage={setNextPage} totalPageCnt={ads.totalPageCnt} nextPage={nextPage}></PaginationContainer>
+                </Col>
             </Row>
         </Container>
 

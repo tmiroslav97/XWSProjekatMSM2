@@ -2,6 +2,8 @@ package agent.app.dto.ad;
 
 import lombok.*;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -29,11 +31,12 @@ public class AdDetailViewDTO {
     private Integer childrenSeatNum;
     private Boolean cdw;
     private Boolean androidFlag;
-    private Float pricePerKm;
-    private Float pricePerKmCDW;
     private Long priceId;
     private Float pricePerDay;
+    private Float pricePerKm;
+    private Float pricePerKmCDW;
     private Long publisherUserId;
     private String publisherUserFirstName;
     private String publisherUserLastName;
+    private List<String> images;
 }

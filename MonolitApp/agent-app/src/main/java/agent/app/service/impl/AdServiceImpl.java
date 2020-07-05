@@ -2,24 +2,28 @@ package agent.app.service.impl;
 
 
 import agent.app.config.AppConfig;
-import agent.app.converter.AdConverter;
-import agent.app.converter.CarCalendarTermConverter;
+import agent.app.config.RabbitMQConfiguration;
+import agent.app.converter.*;
 import agent.app.dto.ad.*;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
+import agent.app.dto.sync.*;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
 import agent.app.model.*;
 import agent.app.repository.AdRepository;
 import agent.app.service.intf.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +43,9 @@ public class AdServiceImpl implements AdService {
     private PriceListService priceListService;
 
     @Autowired
+    private DiscountListService discountListService;
+
+    @Autowired
     private CarCalendarTermService carCalendarTermService;
 
     @Autowired
@@ -51,10 +58,18 @@ public class AdServiceImpl implements AdService {
     private UserService userService;
 
     @Autowired
+    private AgentService agentService;
+
+    @Autowired
     private ImageService imageService;
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Ad findById(Long id) {
@@ -270,7 +285,6 @@ public class AdServiceImpl implements AdService {
 
 
         List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
-        System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -299,6 +313,11 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public AdDetailViewDTO getAdDetailView(Long ad_id) {
+        return AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), appConfig.getPhotoDir());
+    }
+
+    @Override
     public List<Ad> findMyAds(String email) {
         return adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
     }
@@ -311,6 +330,96 @@ public class AdServiceImpl implements AdService {
             ads.add(ad);
         }
         return ads;
+    }
+
+    @Override
+    public Integer syncData(String identifier, String email) {
+        Agent agent = agentService.findByEmail(email);
+        if(agent.getIdentifier()==null){
+            agent.setIdentifier(identifier);
+            agent = agentService.save(agent);
+        }
+        try {
+            AuthSyncDTO authSyncDTO = AuthSyncDTO.builder()
+                    .email(email)
+                    .identifier(identifier)
+                    .build();
+            String authSyncDTOstr = objectMapper.writeValueAsString(authSyncDTO);
+            Integer authorization = (Integer) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AUTH_SYNC_QUEUE_NAME, authSyncDTOstr);
+            if (authorization == 2) {
+                return 2;
+            } else if (authorization == 3) {
+                return 3;
+            } else if (authorization == 4) {
+                return 4;
+            }
+        } catch (JsonProcessingException exception) {
+            return 4;
+        }
+        List<PriceList> pls = priceListService.findAllByPublisherUser(email);
+        for (PriceList pl : pls) {
+            try {
+                PriceListSyncDTO plSync = PriceListConverter.toPriceListSyncDTOFromPriceList(pl);
+                plSync.setEmail(email);
+                String plSyncStr = objectMapper.writeValueAsString(plSync);
+                Long mainId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_SYNC_QUEUE_NAME, plSyncStr);
+                if (mainId != null) {
+                    pl.setMainId(mainId);
+                    priceListService.editPriceList(pl);
+                }
+            } catch (JsonProcessingException exception) {
+                continue;
+            }
+        }
+
+        List<DiscountList> dls = discountListService.findAllByAgent(email);
+        for (DiscountList dl : dls) {
+            try {
+                DiscountListSyncDTO dlSync = DiscountListConverter.toDiscountListSyncDTOFromDiscountList(dl);
+                dlSync.setEmail(email);
+                String dlSyncStr = objectMapper.writeValueAsString(dlSync);
+                Long mainId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.DL_SYNC_QUEUE_NAME, dlSyncStr);
+                if (mainId != null) {
+                    dl.setMainId(mainId);
+                    discountListService.save(dl);
+                }
+            } catch (JsonProcessingException exception) {
+                continue;
+            }
+        }
+
+        List<Ad> ads = adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
+        for (Ad ad : ads) {
+            try {
+                AdSyncDTO adSync = AdConverter.toAdSyncDTOFromAd(ad);
+                CarSyncDTO carSyncDTO = CarConverter.toCarSyncDTOFromCar(ad.getCar());
+                List<CarCalendarTermSyncDTO> carCalendarTermSyncDTOS = CarCalendarTermConverter.fromEntityList(ad.getCarCalendarTerms().stream().collect(Collectors.toList()), CarCalendarTermConverter::toCarCalendarTermSyncDTOFromCarCalendarTerm);
+                List<Long> discountIds = ad.getDiscountLists().stream().map(discountList -> discountList.getMainId()).collect(Collectors.toList());
+                List<String> images = new ArrayList<>();
+                for (Image img : ad.getImages()) {
+                    if (!img.getName().equals(ad.getCoverPhoto())) {
+                        images.add(imageService.findImageByNameBase64(img.getName()));
+                    }
+                }
+                adSync.setPricePerDay(ad.getPriceList().getPricePerDay());
+                adSync.setCoverPhoto(imageService.findImageByNameBase64(ad.getCoverPhoto()));
+                adSync.setImages(images);
+                adSync.setEmail(email);
+                adSync.setCarSyncDTO(carSyncDTO);
+                adSync.setCarCalendarTermSyncDTOList(carCalendarTermSyncDTOS);
+                adSync.setPriceList(ad.getPriceList().getMainId());
+                adSync.setDiscountList(discountIds);
+                String adSyncStr = objectMapper.writeValueAsString(adSync);
+                Long mainId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AD_SYNC_QUEUE_NAME, adSyncStr);
+                if (mainId != null) {
+                    ad.setMainId(mainId);
+                    this.edit(ad);
+                }
+            } catch (JsonProcessingException exception) {
+                continue;
+            }
+        }
+        return 1;
     }
 
 }

@@ -17,9 +17,13 @@ public interface AdService {
 
     AdPageContentDTO findAll(Integer page, Integer size, String email);
 
+    AdDetailViewDTO getAdDetailView(Long ad_id);
+
     List<Ad> findMyAds(String email);
 
     Set<Ad> findAllByIds(List<Long> adIds);
+
+    Integer syncData(String identifier, String email);
 
     Ad save(Ad ad);
 

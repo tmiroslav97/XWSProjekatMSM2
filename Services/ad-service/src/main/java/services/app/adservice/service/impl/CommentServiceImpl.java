@@ -1,19 +1,22 @@
 package services.app.adservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import services.app.adservice.client.AuthenticationClient;
+import services.app.adservice.config.RabbitMQConfiguration;
 import services.app.adservice.converter.CommentConverter;
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.comment.CommentCreateDTO;
 import services.app.adservice.dto.comment.CommentDTO;
-import services.app.adservice.dto.user.PublisherUserDTO;
+import services.app.adservice.dto.user.UserFLNameDTO;
 import services.app.adservice.exception.ExistsException;
 import services.app.adservice.exception.NotFoundException;
 import services.app.adservice.model.Ad;
-import services.app.adservice.model.Car;
 import services.app.adservice.model.Comment;
 import services.app.adservice.model.CustomPrincipal;
 import services.app.adservice.repository.CommentRepository;
@@ -36,9 +39,14 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private AuthenticationClient authenticationClient;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public Comment finById(Long id) {
-        return commentRepository.findById(id).orElseThrow(()-> new NotFoundException("Komentar ne postoji."));
+        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Komentar ne postoji."));
     }
 
     @Override
@@ -48,8 +56,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment save(Comment comment) {
-        if(comment.getId() != null){
-            if(commentRepository.existsById(comment.getId())){
+        if (comment.getId() != null) {
+            if (commentRepository.existsById(comment.getId())) {
                 throw new ExistsException(String.format("Komentar vec postoji."));
             }
         }
@@ -113,13 +121,18 @@ public class CommentServiceImpl implements CommentService {
         Ad ad = adService.findById(id);
         List<CommentDTO> list = new ArrayList<>();
         Set<Comment> commentSet = ad.getComments();
-        for(Comment comment: commentSet){
-            if(comment.getApproved()){
+        for (Comment comment : commentSet) {
+            if (comment.getApproved()) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
-                list.add(commentDTO);
+                try {
+                    String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, comment.getPublisherUser());
+                    UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+                    commentDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+                    commentDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+                    list.add(commentDTO);
+                } catch (JsonProcessingException exception) {
+                    continue;
+                }
             }
         }
 
@@ -137,19 +150,29 @@ public class CommentServiceImpl implements CommentService {
         Long publisherUser = authenticationClient.findPublishUserByEmail(principal.getToken());
 
         Set<Comment> commentSet = ad.getComments();
-        for(Comment comment: commentSet){
-            if(comment.getApproved()){
+        for (Comment comment : commentSet) {
+            if (comment.getApproved()) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
-                list.add(commentDTO);
-            }else if(comment.getPublisherUser().equals(publisherUser)){
+                try {
+                    String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, comment.getPublisherUser());
+                    UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+                    commentDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+                    commentDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+                    list.add(commentDTO);
+                } catch (JsonProcessingException exception) {
+                    continue;
+                }
+            } else if (comment.getApproved() && comment.getPublisherUser().equals(publisherUser)) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
-                list.add(commentDTO);
+                try {
+                    String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, comment.getPublisherUser());
+                    UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+                    commentDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+                    commentDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+                    list.add(commentDTO);
+                } catch (JsonProcessingException exception) {
+                    continue;
+                }
             }
         }
         return list;
@@ -159,13 +182,18 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findAllUnapprovedCommentFromAd() {
         List<CommentDTO> list = new ArrayList<>();
         List<Comment> comments = this.findAll();
-        for(Comment comment: comments){
-            if(!comment.getApproved()){
+        for (Comment comment : comments) {
+            if (!comment.getApproved()) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
-                PublisherUserDTO publishUserDTO = authenticationClient.findPublishUserById(comment.getPublisherUser());
-                commentDTO.setPublisherUserFirstName(publishUserDTO.getPublisherUserFirstName());
-                commentDTO.setPublisherUserLastName(publishUserDTO.getPublisherUserLastName());
-                list.add(commentDTO);
+                try {
+                    String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, comment.getPublisherUser());
+                    UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+                    commentDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+                    commentDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+                    list.add(commentDTO);
+                } catch (JsonProcessingException exception) {
+                    continue;
+                }
             }
         }
 

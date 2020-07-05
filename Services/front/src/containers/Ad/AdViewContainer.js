@@ -5,9 +5,9 @@ import { Container, Row, Col,Button } from 'react-bootstrap';
 import jwt_decode from 'jwt-decode';
 import PaginationContainer from '../Pagination/PaginationContainer';
 import PaginationSize from '../../components/Pagination/PaginationSize';
-import { adSelector, searchDataSelector } from '../../store/ad/selectors';
+import { adSelector, searchDataSelector, commentsSelector } from '../../store/ad/selectors';
 import { putSuccessMsg, putWarnMsg } from '../../store/common/actions';
-import { fetchAd } from '../../store/ad/actions';
+import { fetchAd, fetchAllComments } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 
 
@@ -18,6 +18,8 @@ const AdViewContainer = (props) => {
     const isFetchAd = ad.isFetch;
     const adId = props.adId;
     const token = localStorage.getItem('token');
+    const comments = useSelector(commentsSelector);
+    const [flagComments, setFlagComments] = useState(false);
 
     useEffect(() => {
         dispatch(
@@ -37,6 +39,39 @@ const AdViewContainer = (props) => {
         }
     };
 
+    const getComments = (adId) => {
+        console.log("oglas " + adId);
+        dispatch(
+            fetchAllComments({
+                'id': adId
+            })
+        );
+        setFlagComments(true);
+    }
+
+    const getCommentsView = () => {
+        let list = [];
+        if (comments.isFetch) {
+            comments.data.map((comment) => {
+                let ss = comment.creationDate.substring(0, 10);
+                let ss2 = comment.creationDate.substring(11, 16);
+                ss = ss2 + " " + ss;
+                list.push(
+                    <tr key={comment.id}>
+                        <td>{ss}</td>
+                        <td>{comment.publisherUserFirstName + ' ' + comment.publisherUserLastName}</td>
+                        <td>{comment.content}</td>
+                    </tr>
+                );
+            })
+        }
+        return list;
+    }
+
+    const hideComments = () => {
+        setFlagComments(false);
+    }
+    
     const addToCart = (ad) => {
         let cart = new Map();
         if (JSON.parse(localStorage.getItem('cart')) != null) {
@@ -112,6 +147,10 @@ const AdViewContainer = (props) => {
                             handleDateFormat={handleDateFormat}
                             handleYear={handleYear}
                             hasRole={hasRole}
+                            getComments={getComments}
+                            flagComments={flagComments} setFlagComments={setFlagComments}
+                            getCommentsView={getCommentsView}
+                            hideComments={hideComments}
                             addToCart={addToCart}
                         /> : <SpinnerContainer />
                     }

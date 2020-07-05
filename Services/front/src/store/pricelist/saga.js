@@ -29,7 +29,10 @@ import {
 
 export function* fetchPriceLists() {
     const { payload } = yield take(FETCH_PRICE_LISTS);
-    yield put(putPriceLists({ 'isFetch': false }));
+    yield put(putPriceLists({
+        'data': [],
+        'isFetch': false
+    }));
     const data = yield call(PriceListService.fetchPriceLists, payload);
     yield put(putPriceLists({
         'data': data,
@@ -39,7 +42,10 @@ export function* fetchPriceLists() {
 
 export function* fetchPriceListsFromPublisher() {
     const { payload } = yield take(FETCH_PRICE_LISTS_FROM_PUBLISHER);
-    yield put(putPriceLists({ 'isFetch': false }));
+    yield put(putPriceLists({
+        'data': [],
+        'isFetch': false
+    }));
     const data = yield call(PriceListService.fetchPriceListsFromPublisher, payload);
     yield put(putPriceLists({
         'data': data,

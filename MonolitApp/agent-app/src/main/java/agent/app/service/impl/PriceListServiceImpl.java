@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
-    PriceListRepository priceListRepository;
+    private PriceListRepository priceListRepository;
 
     @Autowired
     private PublisherUserService publisherUserService;
@@ -35,6 +35,11 @@ public class PriceListServiceImpl implements PriceListService {
     @Override
     public List<PriceList> findAll() {
         return priceListRepository.findAll();
+    }
+
+    @Override
+    public List<PriceList> findAllByPublisherUser(String email) {
+        return priceListRepository.findAllByPublisherUser(email);
     }
 
     @Override

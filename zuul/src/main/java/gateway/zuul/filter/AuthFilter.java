@@ -51,7 +51,6 @@ public class AuthFilter extends ZuulFilter {
         }
 
         String token = request.getHeader("Authorization");
-        System.out.println(token);
         try {
             VerificationResponse vr = authClient.verify(token);
             if (vr == null) {
@@ -60,7 +59,6 @@ public class AuthFilter extends ZuulFilter {
             ctx.addZuulRequestHeader("userId", vr.getUserId());
             ctx.addZuulRequestHeader("email", vr.getEmail());
             ctx.addZuulRequestHeader("roles", vr.getRoles());
-            ctx.addZuulRequestHeader("Auth", token);
             ctx.addZuulRequestHeader("Authorization", token);
         } catch (FeignException.NotFound e) {
             setFailedRequest("Korisnik ne postoji", 403);

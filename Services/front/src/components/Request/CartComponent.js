@@ -5,18 +5,21 @@ import { Row, Col, OverlayTrigger, Tooltip, ListGroup, Table, Container, Form, B
 const CartComponent = (props) => {
     return (
         <Container fluid>
-            <Row className="justify-content-center">
-                <Col md={6} xs={12}>
+            <Row>
+                <Col md={10} xs={12}>
                     <h3 className="border-bottom mt-5">Korpa</h3>
                 </Col>
             </Row>
-            <Row className="justify-content-center">
-                <Col md={6} xs={12}>
+            <Row>
+                <Col md={10} xs={12}>
                     <Table responsive>
                         <thead>
                             <tr>
+                                <th>Objavio</th>
                                 <th>Bundle</th>
                                 <th>Naziv oglasa</th>
+                                <th>Datum pocetka rentiranja</th>
+                                <th>Datum zavrsetka rentiranja</th>
                                 <th>Akcija</th>
                             </tr>
                         </thead>
@@ -25,6 +28,13 @@ const CartComponent = (props) => {
                                 [...props.cart.keys()].map((item, idx) => {
                                     return (
                                         <tr key={idx}>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    <ListGroup.Item>
+                                                        {props.cart.get(item).user}
+                                                    </ListGroup.Item>
+                                                </ListGroup>
+                                            </td>
                                             <td>
                                                 <ListGroup variant="flush">
                                                     {
@@ -53,9 +63,35 @@ const CartComponent = (props) => {
                                                 </ListGroup>
                                             </td>
                                             <td>
-                                                <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item); }}>
-                                                    Ukloni
-                                                </Button>
+                                                <ListGroup variant="flush">
+                                                    {
+                                                        props.cart.get(item).ads.map((ad, idx) => {
+                                                            return (
+                                                                <ListGroup.Item key={idx}>{ad.startDate.replace('T', " ")}</ListGroup.Item>
+                                                            );
+                                                        })
+                                                    }
+                                                </ListGroup>
+                                            </td>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    {
+                                                        props.cart.get(item).ads.map((ad, idx) => {
+                                                            return (
+                                                                <ListGroup.Item>{ad.endDate.replace('T', " ")}</ListGroup.Item>
+                                                            );
+                                                        })
+                                                    }
+                                                </ListGroup>
+                                            </td>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    <ListGroup.Item>
+                                                        <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item); }}>
+                                                            Ukloni
+                                                        </Button>
+                                                    </ListGroup.Item>
+                                                </ListGroup>
                                             </td>
                                         </tr>
 
@@ -67,23 +103,13 @@ const CartComponent = (props) => {
                 </Col>
             </Row>
             {props.cart.size == 0 ?
-                <Row className="justify-content-center mt-2">
-                    <Col md={6} xs={12}>
+                <Row className="mt-2">
+                    <Col md={10} xs={12}>
                         <p>Korpa je prazna</p>
                     </Col>
                 </Row> :
-                <Row className="justify-content-center mt-2">
-                    <Col md={6} xs={12}>
-                        <Form.Row>
-                            <Form.Group as={Col}>
-                                <Form.Label>Datum pocetka rentiranja {props.startDate} </Form.Label>
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Row >
-                            <Form.Group as={Col}>
-                                <Form.Label>Datum zavrsetka rentiranja {props.endDate}</Form.Label>
-                            </Form.Group>
-                        </Form.Row>
+                <Row className="mt-2">
+                    <Col md={10} xs={12}>
                         <Form.Row>
                             <Form.Group as={Col} >
                                 <Button variant="primary" id="createReq" onClick={props.handleCreateReq}>

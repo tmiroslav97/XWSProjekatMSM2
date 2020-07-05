@@ -13,5 +13,5 @@ public interface DiscountListService {
     void delete(DiscountList discountList);
     Integer deleteById(Long id);
     Integer edit(Long id); //proslijediti dto
-
+    Long syncDiscountList(String msg);
 }

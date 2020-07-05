@@ -1,23 +1,25 @@
 package services.app.adsearchservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import services.app.adsearchservice.config.AppConfig;
-import services.app.adsearchservice.converter.AdConverter;
-import services.app.adsearchservice.converter.CarCalendarTermsConverter;
-import services.app.adsearchservice.converter.CarConverter;
-import services.app.adsearchservice.converter.ImageConverter;
+import services.app.adsearchservice.config.RabbitMQConfiguration;
+import services.app.adsearchservice.converter.*;
 import services.app.adsearchservice.dto.ad.AdPageContentDTO;
 import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adsearchservice.dto.image.ImagesSynchronizeDTO;
+import services.app.adsearchservice.dto.user.UserFLNameDTO;
 import services.app.adsearchservice.exception.ExistsException;
 import services.app.adsearchservice.exception.NotFoundException;
 import services.app.adsearchservice.model.Ad;
@@ -30,8 +32,8 @@ import services.app.adsearchservice.service.intf.CarCalendarTermService;
 import services.app.adsearchservice.service.intf.CarService;
 import services.app.adsearchservice.service.intf.ImageService;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class AdServiceImpl implements AdService {
@@ -50,6 +52,11 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private AppConfig appConfig;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Ad findById(Long id) {
@@ -90,18 +97,64 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate) {
+    public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
-        Page<Ad> ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startDate, endDate, pageable);
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
-//        List<AdPageDTO> ret = new ArrayList<>();
-        System.out.println(ret.size());
+        Page<Ad> ads;
+        if (location.equals("") || startDate.equals("") || endDate.equals("")) {
+            ads = adRepository.findAllByDeleted(false, pageable);
+        } else {
+            DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+            DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
+            ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startD, endD, pageable);
+        }
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads) {
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO userFLNameDTO;
+            try {
+                userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+                userFLNameDTO = new UserFLNameDTO();
+            }
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            adPageDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+            ret.add(adPageDTO);
+        }
+
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
                 .build();
 
         return adPageContentDTO;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.AD_SEARCH_SYNC_QUEUE_NAME)
+    public Integer syncData(String msg) {
+        try {
+            AdSynchronizeDTO adSynchronizeDTO = objectMapper.readValue(msg, AdSynchronizeDTO.class);
+            Ad ad = AdConverter.toCreateAdFromAdSynchronizeDTO(adSynchronizeDTO);
+            ad = adRepository.save(ad);
+            for (ImagesSynchronizeDTO dto : adSynchronizeDTO.getImagesSynchronizeDTOS()) {
+                Image im = ImageConverter.toImageFromImageSyncDTO(dto);
+                im.setAd(ad);
+                im = imageService.save(im);
+            }
+            for (CarCalendarTermSynchronizeDTO dto : adSynchronizeDTO.getCarCalendarTermSynchronizeDTOS()) {
+                CarCalendarTerm cct = CarCalendarTermsConverter.toCarCalendarTermFromSyncDTO(dto);
+                cct.setAd(ad);
+                cct = carCalendarTermService.save(cct);
+            }
+            Car car = CarConverter.toCarFromCarSyncDTO(adSynchronizeDTO.getCarSynchronizeDTO());
+            car = carService.save(car);
+            ad.setCar(car);
+            ad = adRepository.save(ad);
+            return 1;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
     }
 
     @Override
@@ -132,10 +185,21 @@ public class AdServiceImpl implements AdService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
 
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads) {
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO userFLNameDTO;
+            try {
+                userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+                userFLNameDTO = new UserFLNameDTO();
+            }
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            adPageDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+            ret.add(adPageDTO);
+        }
 
-        List<AdPageDTO> ret = ads.stream().map(ad -> AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir())).collect(Collectors.toList());
-
-        System.out.println(ret.size());
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)

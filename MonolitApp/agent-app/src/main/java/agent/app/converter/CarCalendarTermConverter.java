@@ -2,29 +2,31 @@ package agent.app.converter;
 
 import agent.app.dto.car.CarCalendarTermCreateDTO;
 import agent.app.dto.car.CarCalendarTermDTO;
+import agent.app.dto.sync.CarCalendarTermSyncDTO;
 import agent.app.model.CarCalendarTerm;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+public class CarCalendarTermConverter extends AbstractConverter {
 
-public class CarCalendarTermConverter {
-
-    public static CarCalendarTerm toCreateCarCalendarTermFromRequest(CarCalendarTermCreateDTO carCalendarTermCreateDTO){
-//
+    public static CarCalendarTerm toCreateCarCalendarTermFromRequest(CarCalendarTermCreateDTO carCalendarTermCreateDTO) {
         return CarCalendarTerm.builder()
-                .startDate(DateAPI.dateStringToDateTime(carCalendarTermCreateDTO.getStartDate()))
-                .endDate(DateAPI.dateStringToDateTime(carCalendarTermCreateDTO.getEndDate()))
+                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermCreateDTO.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermCreateDTO.getEndDate()))
                 .build();
     }
 
-    public static CarCalendarTerm toCarCalendarTermFromRequest(CarCalendarTermDTO carCalendarTermDTO){
+    public static CarCalendarTerm toCarCalendarTermFromRequest(CarCalendarTermDTO carCalendarTermDTO) {
 
         return CarCalendarTerm.builder()
-                .startDate(DateAPI.dateStringToDateTime(carCalendarTermDTO.getStartDate()))
-                .endDate(DateAPI.dateStringToDateTime(carCalendarTermDTO.getEndDate()))
+                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getEndDate()))
                 .build();
     }
 
+    public static CarCalendarTermSyncDTO toCarCalendarTermSyncDTOFromCarCalendarTerm(CarCalendarTerm carCalendarTerm) {
+        return CarCalendarTermSyncDTO.builder()
+                .startDate(DateAPI.DateTimeToStringDateTime(carCalendarTerm.getStartDate()))
+                .endDate(DateAPI.DateTimeToStringDateTime(carCalendarTerm.getEndDate()))
+                .build();
+    }
 
 }

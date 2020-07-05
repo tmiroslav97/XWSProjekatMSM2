@@ -1,6 +1,7 @@
 package services.app.authenticationservice.service.intf;
 
 
+import services.app.authenticationservice.dto.UserFLNameDTO;
 import services.app.authenticationservice.model.User;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface UserService {
     User findByEmail(String email);
 
     User save(User user);
+
+    Long findUserIdByEmail(String email);
+
+    String findUserFLNameById(Long id);
 }

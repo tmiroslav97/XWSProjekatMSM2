@@ -4,15 +4,16 @@ import agent.app.dto.ad.AdCreateDTO;
 import agent.app.dto.ad.AdDetailViewDTO;
 import agent.app.dto.ad.AdPageDTO;
 import agent.app.dto.ad.AdStatisticsDTO;
+import agent.app.dto.sync.AdSyncDTO;
 import agent.app.model.Ad;
+import agent.app.model.Image;
 import agent.app.model.enumeration.DistanceLimitEnum;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.util.Base64;
-import java.util.HashSet;
+import java.util.*;
 
-public class AdConverter {
+public class AdConverter extends AbstractConverter {
 
     public static Ad toCreateAdFromRequest(AdCreateDTO adCreateDTO) {
         return Ad.builder()
@@ -58,8 +59,15 @@ public class AdConverter {
 
     public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad, String photoDir) {
         String encodedString = "";
+        List<String> images = new ArrayList<>();
         try {
-            byte[] fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
+            byte[] fileContent = null;
+            for (Image image : ad.getImages()) {
+                fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + image.getName()));
+                encodedString = Base64.getEncoder().encodeToString(fileContent);
+                images.add(encodedString);
+            }
+            fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
@@ -92,6 +100,7 @@ public class AdConverter {
                 .publisherUserId(ad.getPublisherUser().getId())
                 .publisherUserFirstName(ad.getPublisherUser().getFirstName())
                 .publisherUserLastName(ad.getPublisherUser().getLastName())
+                .images(images)
                 .build();
     }
 
@@ -106,6 +115,16 @@ public class AdConverter {
                 .mileage(ad.getCar().getMileage())
                 .averageGrade((float) (ad.getRatingNum() * 1.0 / ad.getRatingCnt()))
                 .comment(ad.getComments().size())
+                .build();
+    }
+
+    public static AdSyncDTO toAdSyncDTOFromAd(Ad ad){
+        return AdSyncDTO.builder()
+                .name(ad.getName())
+                .location(ad.getLocation())
+                .distanceLimit(ad.getDistanceLimit())
+                .distanceLimitFlag(ad.getDistanceLimitFlag().name())
+                .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .build();
     }
 }

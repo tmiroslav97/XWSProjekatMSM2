@@ -2,16 +2,17 @@ package services.app.adservice.converter;
 
 import services.app.adservice.dto.car.CarCreateDTO;
 import services.app.adservice.dto.car.CarSynchronizeDTO;
+import services.app.adservice.dto.sync.CarSyncDTO;
 import services.app.adservice.model.Car;
 
-public class CarConverter {
+public class CarConverter extends AbstractConverter{
 
     public static Car toCreateCarFromRequest(CarCreateDTO carCreateDTO){
 
         System.out.println("android flag "+carCreateDTO.getAndroidFlag());
 //        System.out.println("android flag "+ carCreateDTO.getAndroidFlag());
         return Car.builder()
-                .year(DateAPI.dateStringToYear(carCreateDTO.getYear()))
+                .year(DateAPI.DateStringToDateTimeFromFronted(carCreateDTO.getYear()))
                 .carManufacturer(carCreateDTO.getCarManufacturer())
                 .carModel(carCreateDTO.getCarModel())
                 .gearboxType(carCreateDTO.getGearboxType())
@@ -27,7 +28,7 @@ public class CarConverter {
     public static CarSynchronizeDTO toCarSynchronizeDTOFromCar(Car car){
         return CarSynchronizeDTO.builder()
                 .id(car.getId())
-                .year(car.getYear().toString())
+                .year(DateAPI.DateTimeToStringDateTime(car.getYear()))
                 .carManufacturer(car.getCarManufacturer())
                 .carModel(car.getCarModel())
                 .gearboxType(car.getGearboxType())
@@ -39,4 +40,19 @@ public class CarConverter {
                 .build();
     }
 
+    public static Car toCarFromCarSyncDTO(CarSyncDTO carSyncDTO){
+        return Car.builder()
+                .year(DateAPI.DateTimeStringToDateTime(carSyncDTO.getYear()))
+                .carManufacturer(carSyncDTO.getCarManufacturer())
+                .childrenSeatNum(carSyncDTO.getChildrenSeatNum())
+                .carModel(carSyncDTO.getCarModel())
+                .gearboxType(carSyncDTO.getGearboxType())
+                .fuelType(carSyncDTO.getFuelType())
+                .carType(carSyncDTO.getCarType())
+                .mileage(carSyncDTO.getMileage())
+                .cdw(carSyncDTO.getCdw())
+                .androidFlag(carSyncDTO.getAndroidFlag())
+                .token(carSyncDTO.getToken())
+                .build();
+    }
 }

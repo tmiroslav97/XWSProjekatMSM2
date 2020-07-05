@@ -24,7 +24,7 @@ public interface AdService {
     Integer createAd(AdCreateDTO adCreateDTO);
     List<StatisticCarDTO> getCarsWithBestRating(Long publisherId);
     Boolean acceptCarCalendar(AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO);
-    void syncData();
+    Long syncAd(String msg);
     void setRating(AdRatingDTO ad);
     void logicalDeleteOrRevertAds(List<Ad> ads, Boolean status);
     void logicalDeleteOrRevert(Ad ad, Boolean status);

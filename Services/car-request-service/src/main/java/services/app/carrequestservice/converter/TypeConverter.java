@@ -1,6 +1,7 @@
 package services.app.carrequestservice.converter;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -47,12 +48,12 @@ public class TypeConverter {
     }
 
     public static DateTime parseDate(String date) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.YYYY HH:mm:ss");
-        return dtf.parseDateTime(date);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-YYYY");
+        return dtf.withZone(DateTimeZone.UTC).parseDateTime(date);
     }
 
     public static String printDate(DateTime dateTime) {
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd.MM.YYYY HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm dd-MM-YYYY");
         return dtf.print(dateTime);
     }
 }

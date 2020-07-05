@@ -6,6 +6,7 @@ import agent.app.exception.NotFoundException;
 import agent.app.model.Image;
 import agent.app.repository.ImageRepository;
 import agent.app.service.intf.ImageService;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -84,6 +86,19 @@ public class ImageServiceImpl implements ImageService {
         return i;
     }
 
+    @Override
+    public String findImageByNameBase64(String name) {
+        byte[] fileContent = null;
+        String encodedString = "";
+        try {
+            fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + name));
+            encodedString = Base64.getEncoder().encodeToString(fileContent);
+        } catch (Exception e) {
+            encodedString = "Nije uspjelo";
+        }
+        return encodedString;
+    }
+
 
     @Override
     public ImageDTO findImageLocationByName(String name, Long ad_id) {
@@ -146,13 +161,14 @@ public class ImageServiceImpl implements ImageService {
             fout.write(photo.getBytes());
             fout.close();
 
-            Integer rez = this.addImage(name);
+            Integer rez = this.addImage(name + "." + ext[1]);
+
             if (rez != 1) {
                 System.out.println("desila se greska prilikom dodavanja slike");
                 return null;
             }
             System.out.println("dodata slika");
-            return name;
+            return name + "." + ext[1];
         } catch (Exception e) {
             return null;
         }

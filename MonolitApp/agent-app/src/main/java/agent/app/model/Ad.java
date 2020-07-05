@@ -3,6 +3,7 @@ package agent.app.model;
 import agent.app.common.db.DbColumnConstants;
 import agent.app.common.db.DbTableConstants;
 import agent.app.model.enumeration.DistanceLimitEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
@@ -11,7 +12,6 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -47,6 +47,9 @@ public class Ad {
     })
     @Column(name = DbColumnConstants.PUBLISHDATE, nullable = false)
     private DateTime publishedDate;
+
+    @Column(name = DbColumnConstants.MAINID, unique = true)
+    private Long mainId;
 
     @Column(name = DbColumnConstants.RATINGNUM, nullable = false)
     private Long ratingNum = 0L;
@@ -84,6 +87,7 @@ public class Ad {
     @ManyToOne(fetch = FetchType.LAZY)
     private PublisherUser publisherUser;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private PriceList priceList;
 
@@ -93,14 +97,4 @@ public class Ad {
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Request> requests = new HashSet<>();
 
-    @Override
-    public String toString() {
-        return "Ad{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", location='" + location + '\'' +
-                ", deleted=" + deleted +
-                ", carCalendarTerms=" + carCalendarTerms +
-                '}';
-    }
 }

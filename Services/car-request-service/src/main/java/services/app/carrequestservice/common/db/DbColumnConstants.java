@@ -12,4 +12,6 @@ public class DbColumnConstants {
     public static final String ENDUSER = "endUser";
     public static final String ADNAME = "adName";
     public static final String ADID = "adId";
+    public static final String RATED = "rated";
+    public static final String MAINID = "mainId";
 }

@@ -4,7 +4,10 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import services.app.carrequestservice.model.*;
+import services.app.carrequestservice.model.AcceptRequest;
+import services.app.carrequestservice.model.GetPublisherRequestsByStatusRequest;
+import services.app.carrequestservice.model.GetPublisherRequestsRequest;
+import services.app.carrequestservice.model.GetPublisherRequestsResponse;
 import services.app.carrequestservice.service.intf.RequestService;
 
 @Endpoint
@@ -21,7 +24,7 @@ public class RequestEndpoint {
     @ResponsePayload
     public GetPublisherRequestsResponse getAllRequestsByPublisherEmail(@RequestPayload GetPublisherRequestsRequest request) {
         GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
-        response.getRequests().addAll(requestService.findAllByPublisherUserEmail(request.getPublisherUser()));
+        response.getRequests().addAll(requestService.findAllByPublisherUserEmail(request.getPublisherUserEmail(), request.getIdentifier()));
         return response;
     }
 
@@ -29,15 +32,13 @@ public class RequestEndpoint {
     @ResponsePayload
     public GetPublisherRequestsResponse getAllRequestsByPublisherEmailAndStatus(@RequestPayload GetPublisherRequestsByStatusRequest request) {
         GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
-        response.getRequests().addAll(requestService.findAllByPublisherUserEmailAndStatus(request.getPublisherUser(), request.getStatus()));
+        response.getRequests().addAll(requestService.findAllByPublisherUserEmailAndStatus(request.getPublisherUserEmail(), request.getIdentifier(), request.getStatus()));
         return response;
     }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "acceptRequest")
     @ResponsePayload
-    public SubmitResponse acceptRequest(@RequestPayload AcceptRequest request) {
-        SubmitResponse response = new SubmitResponse();
-        response.setMsg(requestService.acceptRequest(request));
-        return response;
+    public String acceptRequest(@RequestPayload AcceptRequest request) {
+        return requestService.acceptRequest(request);
     }
 }

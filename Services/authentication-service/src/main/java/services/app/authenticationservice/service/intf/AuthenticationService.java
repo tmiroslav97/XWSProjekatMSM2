@@ -10,6 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface AuthenticationService {
     String login(JwtAuthenticationRequest jwtAuthenticationRequest);
     Integer signUp(SignUpDTO signUpDTO);
-    UserTokenState refreshAuthenticationToken(HttpServletRequest request);
+    String refreshAuthenticationToken(HttpServletRequest request);
     VerificationResponse verify(String email);
 }

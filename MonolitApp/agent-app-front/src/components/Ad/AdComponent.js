@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { history } from '../../index';
+import { LocalGasStation, AirlineSeatReclineNormal, MyLocation, LocalOffer, ConfirmationNumber } from '@material-ui/icons';
 
 
 const AdComponent = (props) => {
@@ -18,7 +19,7 @@ const AdComponent = (props) => {
             <Card
                 key={idx}
                 border="secondary"
-                className="mt-5"
+                className="mt-5 mb-2"
             >
                 <Card.Body>
                     <Card.Title>{variant.name}</Card.Title>
@@ -27,53 +28,66 @@ const AdComponent = (props) => {
                         <Col md={4}>
                             <Card.Img src={`data:image/jpeg;base64,${variant.coverPhoto}`} />
                         </Col>
-                        <Col >
-                            <br />
-                            <Row>
+                        <Col>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/seat-num.png" />
+                                    <AirlineSeatReclineNormal />
                                 </Col>
-                                <Card.Text>
-                                    {variant.childrenSeatNum}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.childrenSeatNum}
+                                    </Card.Text>
+                                </Col>
                             </Row>
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/location.png" />
+                                    <MyLocation />
                                 </Col>
-                                <Card.Text>
-                                    {variant.location}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.location}
+                                    </Card.Text>
+                                </Col>
                             </Row>
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/price-tag.png" />
+                                    <LocalOffer />
                                 </Col>
-                                <Card.Text>
-                                    {variant.price} $
-                                        </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.price} $
+                                    </Card.Text>
+                                </Col>
                             </Row>
-
                         </Col>
                         <Col>
-                            <br />
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/fuel24.png" />
+                                    <LocalGasStation />
                                 </Col>
-                                <Card.Text>
-                                    {variant.fuelType}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.fuelType}
+                                    </Card.Text>
+                                </Col>
+                            </Row>
+                            <Row className="mb-2">
+                                <Col sm={2}>
+                                    <ConfirmationNumber />
+                                </Col>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.mileage}
+                                    </Card.Text>
+                                </Col>
                             </Row>
                             <Row>
-                                <Col sm={2}>
-                                    <Card.Img src="/img-icon/km.png" />
+                                <Col >
+                                    <Card.Text>
+                                        <Button variant="link" onClick={() => { history.push('/agent-firm/ad-detail-view/' + variant.id); }}>Vise detalja</Button>
+                                    </Card.Text>
                                 </Col>
-                                <Card.Text>
-                                    {variant.mileage}
-                                </Card.Text>
                             </Row>
-                            <Button variant="link" onClick={() => { history.push('/agent-firm/ad-detail-view/' + variant.id); }}>Vise detalja</Button>
                         </Col>
 
                         <Col>

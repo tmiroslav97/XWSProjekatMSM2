@@ -1,6 +1,7 @@
 package services.app.authenticationservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,7 +16,6 @@ import services.app.authenticationservice.exception.NotFoundException;
 import services.app.authenticationservice.model.Authority;
 import services.app.authenticationservice.model.EndUser;
 import services.app.authenticationservice.model.User;
-import services.app.authenticationservice.model.UserTokenState;
 import services.app.authenticationservice.security.TokenUtils;
 import services.app.authenticationservice.service.intf.AuthenticationService;
 import services.app.authenticationservice.service.intf.AuthorityService;
@@ -43,6 +43,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private UserService userService;
 
+    @Qualifier("userServiceImpl")
+    @Autowired
     private UserDetailsService userDetailsService;
 
     @Override
@@ -51,10 +53,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .authenticate(new UsernamePasswordAuthenticationToken(jwtAuthenticationRequest.getUsername(),
                         jwtAuthenticationRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User user = (User) authentication.getPrincipal();
         List<String> roles = user.getAuthorities().stream().map(authority -> authority.getName()).collect(Collectors.toList());
+
+        if (!user.getLocal()) {
+            throw new NotFoundException("Korisnik ne postoji u sistemu!");
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
         String jwt = tokenUtils.generateToken(user.getEmail(), roles);
         return jwt;
     }
@@ -85,16 +93,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public UserTokenState refreshAuthenticationToken(HttpServletRequest request) {
+    public String refreshAuthenticationToken(HttpServletRequest request) {
         String token = tokenUtils.getToken(request);
         String username = tokenUtils.getUsernameFromToken(token);
         User user = (User) userDetailsService.loadUserByUsername(username);
 
         if (this.tokenUtils.canTokenBeRefreshed(token, user.getLastPasswordResetDate())) {
             String refreshedToken = tokenUtils.refreshToken(token);
-            int expiresIn = tokenUtils.getExpiredIn();
 
-            return new UserTokenState(refreshedToken, Long.valueOf(expiresIn));
+            return refreshedToken;
         } else {
             return null;
         }
@@ -121,4 +128,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return null;
         }
     }
+
+
 }

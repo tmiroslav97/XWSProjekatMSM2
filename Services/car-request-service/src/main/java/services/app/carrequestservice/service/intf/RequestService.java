@@ -20,10 +20,11 @@ public interface RequestService {
 
     List<Request> findAllByPublisherUserId(Long id);
 
-    List<Request> findAllByPublisherUserEmail(String email);
+    List<Request> findAllByPublisherUserEmail(String email, String identifier);
 
-    List<Request> findAllByPublisherUserEmailAndStatus(String email, String status);
+    List<Request> findAllByPublisherUserEmailAndStatus(String email,String identifier, String status);
 
+    Long authAgent(String email, String identifier);
 
     void deleteAllWithSameAdId(List<Ad> ads);
 

@@ -11,12 +11,12 @@ const EndUserRequestsPaidComponent = (props) => {
         <div>
             <FormModalContainer show={props.flagComment} setShow={props.setFlagComment} name={'Komentar'} footer={false} data={props.adId} onSubmit={props.handleCommentForm} validated={props.validated} component={CommentComponent} />
             <Row>
-                <Col md={10} xs={12}>
+                <Col md={12} xs={12}>
                     <h3 className="border-bottom mt-5">Zahtjevi sa statusom {props.status}</h3>
                 </Col>
             </Row>
             <Row>
-                <Col md={10} xs={12}>
+                <Col md={12} xs={12}>
                     <Table responsive>
                         <thead>
                             <tr>

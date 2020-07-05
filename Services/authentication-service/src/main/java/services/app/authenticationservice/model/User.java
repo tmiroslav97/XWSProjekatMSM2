@@ -46,6 +46,9 @@ public class User implements UserDetails {
     })
     private DateTime lastPasswordResetDate;
 
+    @Column(name = DbColumnConstants.LOCAL, nullable = false)
+    private Boolean local = true;
+
     @Column(name = DbColumnConstants.DELETED, nullable = false)
     private Boolean deleted;
 
