@@ -126,6 +126,8 @@ public class AdController {
             return new ResponseEntity<>("Niste registrovani na rent-a-car sistem.", HttpStatus.BAD_REQUEST);
         } else if (flag == 3) {
             return new ResponseEntity<>("Los identifikacioni kod za ret-a-car sistem.", HttpStatus.BAD_REQUEST);
+        } else if (flag == 5) {
+            return new ResponseEntity<>("Vec ste odradili prvobitnu sinhronizaciju sa rent-a-car sistemom.", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }

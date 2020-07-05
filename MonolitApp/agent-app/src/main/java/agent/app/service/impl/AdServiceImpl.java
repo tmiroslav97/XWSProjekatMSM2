@@ -338,6 +338,8 @@ public class AdServiceImpl implements AdService {
         if(agent.getIdentifier()==null){
             agent.setIdentifier(identifier);
             agent = agentService.save(agent);
+        }else{
+            return 5;
         }
         try {
             AuthSyncDTO authSyncDTO = AuthSyncDTO.builder()
@@ -351,7 +353,7 @@ public class AdServiceImpl implements AdService {
             } else if (authorization == 3) {
                 return 3;
             } else if (authorization == 4) {
-                return 4;
+                return 5;
             }
         } catch (JsonProcessingException exception) {
             return 4;
