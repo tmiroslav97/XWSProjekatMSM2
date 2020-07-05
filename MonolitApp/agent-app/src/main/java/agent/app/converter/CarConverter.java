@@ -3,6 +3,7 @@ package agent.app.converter;
 import agent.app.dto.car.CarCreateDTO;
 import agent.app.dto.sync.CarSyncDTO;
 import agent.app.model.Car;
+import agent.app.model.enumeration.DistanceLimitEnum;
 
 public class CarConverter extends AbstractConverter {
     public static Car toCreateCarFromRequest(CarCreateDTO carCreateDTO) {
@@ -15,6 +16,8 @@ public class CarConverter extends AbstractConverter {
                 .carType(carCreateDTO.getCarType())
                 .mileage(carCreateDTO.getMileage())
                 .childrenSeatNum(carCreateDTO.getChildrenSeatNum())
+                .distanceLimit(carCreateDTO.getDistanceLimit())
+                .distanceLimitFlag(DistanceLimitEnum.valueOf(carCreateDTO.getDistanceLimitFlag()))
                 .cdw(carCreateDTO.getCdw())
                 .androidFlag(carCreateDTO.getAndroidFlag())
                 .build();
@@ -31,6 +34,8 @@ public class CarConverter extends AbstractConverter {
                 .mileage(car.getMileage())
                 .childrenSeatNum(car.getChildrenSeatNum())
                 .cdw(car.getCdw())
+                .distanceLimit(car.getDistanceLimit())
+                .distanceLimitFlag(car.getDistanceLimitFlag().toString())
                 .androidFlag(car.getAndroidFlag())
                 .token(car.getToken())
                 .build();

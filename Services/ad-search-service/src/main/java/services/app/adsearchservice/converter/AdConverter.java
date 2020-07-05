@@ -37,14 +37,11 @@ public class AdConverter {
     }
 
     public static Ad toCreateAdFromAdSynchronizeDTO(AdSynchronizeDTO dto) {
-        System.out.println("publish date: " + dto.getPublishedDate());
         return Ad.builder()
                 .id(dto.getId())
                 .name(dto.getName())
                 .location(dto.getLocation())
                 .coverPhoto(dto.getCoverPhoto())
-                .distanceLimitFlag(DistanceLimitEnum.valueOf(dto.getDistanceLimitFlag()))
-                .distanceLimit(dto.getDistanceLimit())
                 .publishedDate(DateAPI.DateTimeStringToDateTime(dto.getPublishedDate()))
                 .ratingNum(dto.getRatingNum())
                 .ratingCnt(dto.getRatingCnt())

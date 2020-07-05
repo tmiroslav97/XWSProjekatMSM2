@@ -33,13 +33,6 @@ public class Ad {
     @Column(name = DbColumnConstants.COVERPHOTO, nullable = false)
     private String coverPhoto;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = DbColumnConstants.DISTANCELIMITFLAG, nullable = false)
-    private DistanceLimitEnum distanceLimitFlag;
-
-    @Column(name = DbColumnConstants.DISTANCELIMIT)
-    private Float distanceLimit;
-
     @Temporal(TemporalType.DATE)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
             @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
@@ -92,9 +85,15 @@ public class Ad {
     private PriceList priceList;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = DbTableConstants.ADDISCOUNTLIST,
+            joinColumns = @JoinColumn(name = "ad_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "discount_list_id", referencedColumnName = "id"))
     private Set<DiscountList> discountLists = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = DbTableConstants.ADREQUEST,
+            joinColumns = @JoinColumn(name = "ad_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "request_id", referencedColumnName = "id"))
     private Set<Request> requests = new HashSet<>();
 
 }

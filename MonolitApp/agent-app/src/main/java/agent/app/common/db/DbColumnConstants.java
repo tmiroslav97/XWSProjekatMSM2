@@ -51,4 +51,5 @@ public class DbColumnConstants {
     public static final String COVERPHOTO = "coverPhoto";
     public static final String MAINID = "mainId";
     public static final String IDENTIFIER = "identifier";
+    public static final String DAYNUM = "dayNum";
 }

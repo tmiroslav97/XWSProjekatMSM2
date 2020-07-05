@@ -79,8 +79,6 @@ const CreateAdContainer = () => {
             "coverPhoto": coverPhoto,
             "imagesDTO": imagesDTO,
             "location": location,
-            "distanceLimitFlag": distanceLimitFlag,
-            "distanceLimit": distanceLimit,
             "carCreateDTO": {
                 "year": year,
                 "carManufacturer": carManufacturer,
@@ -90,6 +88,8 @@ const CreateAdContainer = () => {
                 "carType": carType,
                 "mileage": mileage,
                 "childrenSeatNum": childrenSeatNum,
+                "distanceLimitFlag": distanceLimitFlag,
+                "distanceLimit": distanceLimit,
                 "cdw": cdw,
                 "androidFlag": androidFlag
             },

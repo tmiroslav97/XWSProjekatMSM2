@@ -59,7 +59,7 @@ public class Request {
     @Column(name = DbColumnConstants.BUNDLE, nullable = false)
     private Boolean bundle;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "requests", fetch = FetchType.LAZY)
     private Set<Ad> ads = new HashSet<>();
 
     @OneToMany(mappedBy = "request",fetch = FetchType.LAZY)

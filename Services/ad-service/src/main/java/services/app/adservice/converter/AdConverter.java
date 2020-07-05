@@ -19,27 +19,14 @@ import java.util.List;
 public class AdConverter extends AbstractConverter {
 
     public static Ad toCreateAdFromRequest(AdCreateDTO adCreateDTO) {
-        DistanceLimitEnum distanceLimitEnum = null;
-        if (adCreateDTO.getDistanceLimitFlag().equals("false")) {
-            System.out.println("izabrano je unlimited");
-            distanceLimitEnum = DistanceLimitEnum.UNLIMITED;
-        } else if (adCreateDTO.getDistanceLimitFlag().equals("true")) {
-            System.out.println("izabrano je limited");
-            distanceLimitEnum = DistanceLimitEnum.LIMITED;
-        } else {
-            System.out.println("Nije nista");
-        }
         return Ad.builder()
                 .name(adCreateDTO.getName())
                 .location(adCreateDTO.getLocation())
                 .coverPhoto(adCreateDTO.getCoverPhoto())
-                .distanceLimitFlag(distanceLimitEnum)
-                .distanceLimit(adCreateDTO.getDistanceLimit())
                 .publishedDate(DateAPI.DateTimeNow())
                 .deleted(false)
                 .enabled(true)
                 .discountLists(new HashSet<>())
-//                .requests(new HashSet<>())
                 .comments(new HashSet<>())
                 .carCalendarTerms(new HashSet<>())
                 .rentCnt(0L)
@@ -95,9 +82,9 @@ public class AdConverter extends AbstractConverter {
                 .ratingCnt(ad.getRatingCnt())
                 .rentCnt(ad.getRentCnt())
                 .priceId(ad.getPriceList())
-                .distanceLimitFlag(ad.getDistanceLimitFlag().toString())
+                .distanceLimitFlag(ad.getCar().getDistanceLimitFlag().toString())
                 .year(ad.getCar().getYear().toString())
-                .distanceLimit(ad.getDistanceLimit())
+                .distanceLimit(ad.getCar().getDistanceLimit())
                 .carManufacturer(ad.getCar().getCarManufacturer())
                 .carModel(ad.getCar().getCarModel())
                 .gearboxType(ad.getCar().getGearboxType())
@@ -119,16 +106,12 @@ public class AdConverter extends AbstractConverter {
                 .name(ad.getName())
                 .location(ad.getLocation())
                 .coverPhoto(ad.getCoverPhoto())
-//                .imagesSynchronizeDTOS(ImageConverter.toImagesSynchronizeDTOFromImages(ad.getImages()))
-                .distanceLimitFlag(ad.getDistanceLimitFlag().toString())
-                .distanceLimit(ad.getDistanceLimit())
                 .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .ratingNum(ad.getRatingNum())
                 .ratingCnt(ad.getRatingCnt())
                 .deleted(ad.getDeleted())
                 .enabled(ad.getEnabled())
                 .rentCnt(ad.getRentCnt())
-//                .pricePerDay()
                 .publisherUser(ad.getPublisherUser())
                 .carSynchronizeDTO(CarConverter.toCarSynchronizeDTOFromCar(ad.getCar()))
                 .carCalendarTermSynchronizeDTOS(CarCalendarTermConverter.toListCarCalendarTermSyncDTOFromListCarCalendarTerm(ad.getCarCalendarTerms()))
@@ -140,8 +123,6 @@ public class AdConverter extends AbstractConverter {
         return Ad.builder()
                 .name(adSyncDTO.getName())
                 .location(adSyncDTO.getLocation())
-                .distanceLimitFlag(DistanceLimitEnum.valueOf(adSyncDTO.getDistanceLimitFlag()))
-                .distanceLimit(adSyncDTO.getDistanceLimit())
                 .publishedDate(DateAPI.DateTimeStringToDateTime(adSyncDTO.getPublishedDate()))
                 .priceList(adSyncDTO.getPriceList())
                 .deleted(false)
