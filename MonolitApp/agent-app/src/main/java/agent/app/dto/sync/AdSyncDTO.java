@@ -13,9 +13,7 @@ public class AdSyncDTO {
     private String email;
     private String name;
     private String location;
-    private String distanceLimitFlag;
     private String coverPhoto;
-    private Float distanceLimit;
     private Float pricePerDay;
     private String publishedDate;
     private CarSyncDTO carSyncDTO;
