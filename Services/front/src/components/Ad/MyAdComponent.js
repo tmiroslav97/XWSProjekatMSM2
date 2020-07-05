@@ -83,15 +83,11 @@ const MyAdComponent = (props) => {
 
                         <Col>
                             {
-                                disable ? null : <Button className="mb-2" variant="outline-success"
-                                    onClick={() => { props.viewAd(variant.id); }}
-                                >Pregled oglasa</Button>
+                                disable ? null : <Button className="mb-2" variant="outline-success" onClick={() => { props.viewAd(variant.id); }}>Pregled oglasa</Button>
                             }
                             {
                                 disable ? null :
-                                    <Button variant="outline-success"
-                                        onClick={() => { props.definingAvailability(variant.id); }}
-                                    >Definisi dostupnost</Button>
+                                    <Button variant="outline-success" onClick={() => { props.definingAvailability(variant.id); }}>Definisi dostupnost</Button>
                             }
                         </Col>
 

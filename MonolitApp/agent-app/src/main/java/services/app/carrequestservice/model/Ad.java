@@ -14,6 +14,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import agent.app.converter.DateAPI;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 import org.w3._2001.xmlschema.Adapter1;
 import org.w3._2001.xmlschema.Adapter4;
@@ -77,6 +80,16 @@ public class Ad {
     @XmlJavaTypeAdapter(Adapter4 .class)
     @XmlSchemaType(name = "dateTime")
     protected DateTime endDate;
+
+    @JsonProperty("startDate")
+    public String getTheStartDate() {
+        return DateAPI.DateTimeToStringDateTime(startDate);
+    }
+
+    @JsonProperty("endDate")
+    public String getTheEndDate() {
+        return DateAPI.DateTimeToStringDateTime(endDate);
+    }
 
     /**
      * Gets the value of the id property.

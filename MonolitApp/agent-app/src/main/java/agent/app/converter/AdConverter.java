@@ -6,13 +6,12 @@ import agent.app.dto.ad.AdPageDTO;
 import agent.app.dto.ad.AdStatisticsDTO;
 import agent.app.dto.sync.AdSyncDTO;
 import agent.app.model.Ad;
+import agent.app.model.Image;
 import agent.app.model.enumeration.DistanceLimitEnum;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
 
 public class AdConverter extends AbstractConverter {
 
@@ -60,8 +59,15 @@ public class AdConverter extends AbstractConverter {
 
     public static AdDetailViewDTO toAdDetailViewDTOFromAd(Ad ad, String photoDir) {
         String encodedString = "";
+        List<String> images = new ArrayList<>();
         try {
-            byte[] fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
+            byte[] fileContent = null;
+            for (Image image : ad.getImages()) {
+                fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + image.getName()));
+                encodedString = Base64.getEncoder().encodeToString(fileContent);
+                images.add(encodedString);
+            }
+            fileContent = fileContent = FileUtils.readFileToByteArray(new File(photoDir + File.separator + ad.getCoverPhoto()));
             encodedString = Base64.getEncoder().encodeToString(fileContent);
         } catch (Exception e) {
             encodedString = "Nije uspjelo";
@@ -94,6 +100,7 @@ public class AdConverter extends AbstractConverter {
                 .publisherUserId(ad.getPublisherUser().getId())
                 .publisherUserFirstName(ad.getPublisherUser().getFirstName())
                 .publisherUserLastName(ad.getPublisherUser().getLastName())
+                .images(images)
                 .build();
     }
 

@@ -16,4 +16,9 @@ public class AgentServiceImpl  implements AgentService {
     public Agent findByEmail(String email) {
         return agentRepository.findByEmail(email);
     }
+
+    @Override
+    public Agent save(Agent agent) {
+        return agentRepository.save(agent);
+    }
 }

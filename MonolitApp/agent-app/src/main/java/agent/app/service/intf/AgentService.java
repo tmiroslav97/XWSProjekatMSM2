@@ -4,4 +4,6 @@ import agent.app.model.Agent;
 
 public interface AgentService {
     Agent findByEmail(String email);
+
+    Agent save(Agent agent);
 }

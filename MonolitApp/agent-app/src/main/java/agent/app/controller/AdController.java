@@ -21,16 +21,14 @@ import java.security.Principal;
 public class AdController {
 
     private final AdService adService;
-    private final AppConfig appConfig;
 
-    public AdController(AdService adService, AppConfig appConfig) {
+    public AdController(AdService adService) {
         this.adService = adService;
-        this.appConfig = appConfig;
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id), appConfig.getPhotoDir()), HttpStatus.OK);
+        return new ResponseEntity<>(adService.getAdDetailView(id), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")

@@ -4,10 +4,7 @@ package agent.app.service.impl;
 import agent.app.config.AppConfig;
 import agent.app.config.RabbitMQConfiguration;
 import agent.app.converter.*;
-import agent.app.dto.ad.AdCreateDTO;
-import agent.app.dto.ad.AdPageContentDTO;
-import agent.app.dto.ad.AdPageDTO;
-import agent.app.dto.ad.AdRatingDTO;
+import agent.app.dto.ad.*;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
 import agent.app.dto.sync.*;
 import agent.app.exception.ExistsException;
@@ -59,6 +56,9 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AgentService agentService;
 
     @Autowired
     private ImageService imageService;
@@ -313,6 +313,11 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public AdDetailViewDTO getAdDetailView(Long ad_id) {
+        return AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), appConfig.getPhotoDir());
+    }
+
+    @Override
     public List<Ad> findMyAds(String email) {
         return adRepository.findAllByDeletedAndPublisherUserEmail(false, email);
     }
@@ -329,6 +334,11 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Integer syncData(String identifier, String email) {
+        Agent agent = agentService.findByEmail(email);
+        if(agent.getIdentifier()==null){
+            agent.setIdentifier(identifier);
+            agent = agentService.save(agent);
+        }
         try {
             AuthSyncDTO authSyncDTO = AuthSyncDTO.builder()
                     .email(email)

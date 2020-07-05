@@ -70,24 +70,9 @@ const AdDetailViewComponent = (props) => {
                     <Col>
                         {
                             props.flagComments === false ?
-                                <div>
-                                    {
-                                        props.hasRole(['ROLE_USER']) ?
-                                            <Button variant="outline-success" onClick={() => { props.getCommentsFromUser(props.ad.id); }} >Komentari</Button>
-                                            : <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button>
-                                    }
-                                </div>
-                                :
-                                null
+                                <Button variant="outline-success" onClick={() => { props.getComments(props.ad.id); }} >Komentari</Button> :
+                                <Button variant="outline-success" onClick={props.hideComments}>Sakrij komentare</Button>
                         }
-                        {props.flagComments === true ?
-                            <Button
-                                variant="outline-success"
-                                onClick={props.hideComments}
-                            >Sakrij komentare</Button>
-                            : null
-                        }
-
                     </Col>
                     <Col>
                         {
