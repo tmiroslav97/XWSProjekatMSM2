@@ -14,4 +14,8 @@ public class DbColumnConstants {
     public static final String ADID = "adId";
     public static final String RATED = "rated";
     public static final String MAINID = "mainId";
+    public static final String PRICEPERDAY = "pricePerDay";
+    public static final String PRICEPERKM = "pricePerKm";
+    public static final String PRICEPERCWD = "pricePerCdw";
+
 }

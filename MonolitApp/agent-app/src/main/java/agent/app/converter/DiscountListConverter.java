@@ -7,8 +7,7 @@ public class DiscountListConverter extends AbstractConverter {
 
     public static DiscountListSyncDTO toDiscountListSyncDTOFromDiscountList(DiscountList discountList) {
         return DiscountListSyncDTO.builder()
-                .startDate(DateAPI.DateTimeToStringDateTime(discountList.getStartDate()))
-                .endDate(DateAPI.DateTimeToStringDateTime(discountList.getEndDate()))
+                .dayNum(discountList.getDayNum())
                 .discount(discountList.getDiscount())
                 .build();
     }

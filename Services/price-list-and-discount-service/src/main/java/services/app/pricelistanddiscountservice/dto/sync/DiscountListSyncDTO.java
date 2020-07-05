@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 public class DiscountListSyncDTO {
     private String email;
-    private String startDate;
-    private String endDate;
+    private Integer dayNum;
     private Float discount;
 }

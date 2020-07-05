@@ -58,8 +58,8 @@ VALUES (2, STR_TO_DATE('25-05-2020', '%d-%m-%Y'), 20, 10, 0, 2);
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
 VALUES (3, STR_TO_DATE('24-04-2020', '%d-%m-%Y'), 20, 10, 0, 4);
 
-INSERT INTO discount_list(id, discount, start_date, end_date, agent_id)
-VALUES (1, 22, STR_TO_DATE('09:00 06-03-2020', '%H:%i %d-%m-%Y'), STR_TO_DATE('09:00 06-08-2020', '%H:%i %d-%m-%Y'), 2);
+INSERT INTO discount_list(id, discount, day_num, agent_id)
+VALUES (1, 22, 30, 2);
 
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
 VALUES (1, false, 'Fiat', '500', 'Limuzina', false, 2, 'Dizel', 'Automatski', 120, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));

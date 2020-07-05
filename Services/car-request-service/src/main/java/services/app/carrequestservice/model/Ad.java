@@ -116,6 +116,15 @@ public class Ad {
     @XmlSchemaType(name = "dateTime")
     protected DateTime endDate;
 
+    @Column(name = DbColumnConstants.PRICEPERDAY, nullable = false)
+    private Float pricePerDay;
+
+    @Column(name = DbColumnConstants.PRICEPERKM)
+    private Float pricePerKm;
+
+    @Column(name = DbColumnConstants.PRICEPERCWD)
+    private Float pricePerKmCDW;
+
     @JsonProperty("startDate")
     public String getTheStartDate() {
         return DateAPI.DateTimeToStringDateTime(startDate);

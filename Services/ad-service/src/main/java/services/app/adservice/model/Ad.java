@@ -79,13 +79,16 @@ public class Ad {
     @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
     private Set<CarCalendarTerm> carCalendarTerms = new HashSet<>();
 
-    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY )
+    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = DbTableConstants.ADDISCOUNTLIST,
+            joinColumns = @JoinColumn(name = "ad_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "discount_list_id", referencedColumnName = "id"))
     private Set<DiscountList> discountLists = new HashSet<>();
 
-    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY )
+    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
     private Set<Image> images = new HashSet<>();
 
 }
