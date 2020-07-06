@@ -5,7 +5,7 @@ import PaginationContainer from '../Pagination/PaginationContainer';
 import PricelistComponent from '../../components/Pricelists/PricelistComponent';
 import EndUsersComponent from '../../components/Users/EndUsersComponent';
 import { pricelistsSelector } from '../../store/pricelist/selectors';
-import { fetchPriceListsFromPublisher } from '../../store/pricelist/actions';
+import { fetchPriceListsFromPublisher, addPriceList, editPriceList, deletePriceList } from '../../store/pricelist/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 
 const PricelistContainer = () => {
@@ -38,10 +38,11 @@ const PricelistContainer = () => {
             console.log(form.pricePerDay.value);
             console.log(form.pricePerKm.value);
             console.log(form.pricePerKmCDW.value);
-            // dispatch(addCommentForAd({
-            //     "adId": adId,
-            //     "content": form.content.value
-            // }))
+            dispatch(addPriceList({
+                "pricePerKm": form.pricePerKm.value,
+                "pricePerKmCDW": form.pricePerKmCDW.value,
+                "pricePerDay": form.pricePerDay.value
+            }))
         }
     };
 
@@ -71,11 +72,13 @@ const PricelistContainer = () => {
         } else {
             setValidated(false);
             setEditFlag(false);
-            console.log(form.pricePerDay.value);
-            // dispatch(addCommentForAd({
-            //     "adId": adId,
-            //     "content": form.content.value
-            // }))
+
+            dispatch(editPriceList({
+                "id": pricelistData.id,
+                "pricePerKm": form.pricePerKm.value,
+                "pricePerKmCDW": form.pricePerKmCDW.value,
+                "pricePerDay": form.pricePerDay.value
+            }))
             
         }
     };
@@ -84,7 +87,8 @@ const PricelistContainer = () => {
     const deletePricelist = (id) => {
         console.log("cenovnik ");
         console.log(id);
-        
+        dispatch(deletePriceList(id));
+
     };
 
     const getPricelists = () =>{

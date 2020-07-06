@@ -55,7 +55,7 @@ public class PriceListController {
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping( method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editPriceList(@RequestBody PriceListCreateDTO priceListCreateDTO) {
-        Integer flag = priceListService.editPriceList(PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO));
+        Integer flag = priceListService.editPriceList(PriceListConverter.toEditPriceListFromRequest(priceListCreateDTO));
         if (flag == 1) {
             return new ResponseEntity<>("Cenovnik uspesno izmenjen.", HttpStatus.CREATED);
         } else {
@@ -69,6 +69,8 @@ public class PriceListController {
         Integer flag = priceListService.deleteById(id);
         if (flag == 1) {
             return new ResponseEntity<>("Cenovnik uspesno obrisan.", HttpStatus.CREATED);
+        }else if (flag == 2) {
+            return new ResponseEntity<>("Cenovnik se koristi. Ne moze se obrisati.", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }

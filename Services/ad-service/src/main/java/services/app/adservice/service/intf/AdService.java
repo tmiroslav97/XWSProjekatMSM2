@@ -33,6 +33,8 @@ public interface AdService {
     Integer addRatingToAd(AdRatingDTO adRatingDTO);
 
     AdDetailViewDTO getAdDetailView(Long ad_id);
+    List<Long> findPricelistsFromAds();
+    List<Ad> findAllFromPublisher(Long publisherId);
 
 
 

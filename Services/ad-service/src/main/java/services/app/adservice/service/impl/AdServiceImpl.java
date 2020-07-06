@@ -456,4 +456,31 @@ public class AdServiceImpl implements AdService {
 
     }
 
+    @Override
+    public List<Long> findPricelistsFromAds() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        List<Long> pricelists = new ArrayList<>();
+        List<Ad> ads = this.findAllFromPublisher(Long.parseLong(principal.getUserId()));
+        for(Ad ad : ads){
+            if(!pricelists.contains(ad.getPriceList())){
+                pricelists.add(ad.getPriceList());
+                System.out.println("cenovnik:    "+ad.getPriceList());
+            }
+        }
+        return pricelists;
+    }
+
+    @Override
+    public List<Ad> findAllFromPublisher(Long publisherId) {
+        List<Ad> ret = new ArrayList<>();
+        List<Ad> ads = adRepository.findAll();
+        for(Ad ad : ads){
+            if(ad.getPublisherUser() == publisherId){
+                ret.add(ad);
+            }
+        }
+        return ret;
+    }
+
 }

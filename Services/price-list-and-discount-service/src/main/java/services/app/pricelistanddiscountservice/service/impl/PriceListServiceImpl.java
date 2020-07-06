@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import services.app.pricelistanddiscountservice.client.AdClient;
 import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.PriceListConverter;
@@ -33,6 +34,9 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
     private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private AdClient adClient;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -113,16 +117,29 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Override
     public Integer editPriceList(PriceList priceList) {
-        this.findById(priceList.getId());
-        PriceList priceList1 = priceListRepository.save(priceList);
+        PriceList priceList1 = this.findById(priceList.getId());
+        priceList1.setPricePerDay(priceList.getPricePerDay());
+        priceList1.setPricePerKm(priceList.getPricePerKm());
+        priceList1.setPricePerKmCDW(priceList.getPricePerKmCDW());
+        priceList1 = priceListRepository.save(priceList1);
         return 1;
     }
 
     @Override
     public Integer deleteById(Long id) {
         PriceList priceList = this.findById(id);
-        this.delete(priceList);
-        return 1;
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        List<Long> usedPricelists = adClient.getPricelistFromAds(principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+        if(!usedPricelists.contains(id)){
+            System.out.println("ne sadrzi cenovnik mozes obrisati.");
+            this.delete(priceList);
+            return 1;
+        }
+        System.out.println("sadrzi cenovnik ne  mozes obrisati.");
+        return 2;
+
     }
 
     @Override

@@ -87,4 +87,10 @@ public class AdController {
         return adService.acceptCarCalendar(acceptReqestCalendarTermsDTO);
     }
 
+
+    @RequestMapping(value = "/pricelists", method = RequestMethod.GET)
+    public ResponseEntity<?> getPricelistsFromAds() {
+        return new ResponseEntity<>(adService.findPricelistsFromAds(), HttpStatus.OK);
+    }
+
 }

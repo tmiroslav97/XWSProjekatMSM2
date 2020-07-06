@@ -69,7 +69,7 @@ export function* addPriceList() {
     yield put(putSuccessMsg(msg));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceLists, temp);
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
         'data': data,
         'isFetch': true
@@ -83,7 +83,7 @@ export function* editPriceList() {
     yield put(putSuccessMsg(null));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceLists, temp);
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
         'data': data,
         'isFetch': true
@@ -96,7 +96,7 @@ export function* deletePriceList() {
     yield put(putSuccessMsg(msg));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceLists, temp);
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
         'data': data,
         'isFetch': true
