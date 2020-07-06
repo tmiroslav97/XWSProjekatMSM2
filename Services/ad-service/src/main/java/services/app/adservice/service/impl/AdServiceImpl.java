@@ -483,4 +483,12 @@ public class AdServiceImpl implements AdService {
         return ret;
     }
 
+    @Override
+    public Integer reversePricelist(ReversePricelistDTO reversePricelistDTO) {
+        Ad ad = this.findById(reversePricelistDTO.getAdId());
+        ad.setPriceList(reversePricelistDTO.getPricelistId());
+        ad = this.edit(ad);
+        return 1;
+    }
+
 }

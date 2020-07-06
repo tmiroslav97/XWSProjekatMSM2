@@ -236,6 +236,14 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    reversePricelist = async payload =>{
+        console.log("REVERSE PRICELIST") 
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/reverse-pricelist",
+            payload
+        );
+        return response.data;
+    };
 }
 
 

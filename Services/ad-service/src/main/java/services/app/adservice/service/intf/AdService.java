@@ -1,12 +1,9 @@
 package services.app.adservice.service.intf;
 
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
-import services.app.adservice.dto.ad.AdCreateDTO;
-import services.app.adservice.dto.ad.AdDetailViewDTO;
-import services.app.adservice.dto.ad.AdPageContentDTO;
+import services.app.adservice.dto.ad.*;
 
 import services.app.adservice.dto.car.StatisticCarDTO;
-import services.app.adservice.dto.ad.AdRatingDTO;
 import services.app.adservice.model.Ad;
 
 import java.util.List;
@@ -35,7 +32,6 @@ public interface AdService {
     AdDetailViewDTO getAdDetailView(Long ad_id);
     List<Long> findPricelistsFromAds();
     List<Ad> findAllFromPublisher(Long publisherId);
-
-
+    Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdRatingDTO;
+import services.app.adservice.dto.ad.ReversePricelistDTO;
 import services.app.adservice.model.CustomPrincipal;
 import services.app.adservice.service.intf.AdService;
 
@@ -91,6 +92,17 @@ public class AdController {
     @RequestMapping(value = "/pricelists", method = RequestMethod.GET)
     public ResponseEntity<?> getPricelistsFromAds() {
         return new ResponseEntity<>(adService.findPricelistsFromAds(), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/reverse-pricelist", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> reversePricelist(@RequestBody ReversePricelistDTO reversePricelistDTO) {
+
+        Integer rez = adService.reversePricelist(reversePricelistDTO);
+        if (rez == 1) {
+            return new ResponseEntity<>("Izmenili ste cenovnik oglasa.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
 }
