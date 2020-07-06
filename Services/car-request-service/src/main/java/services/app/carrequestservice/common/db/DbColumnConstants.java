@@ -20,4 +20,5 @@ public class DbColumnConstants {
     public static final String DISTANCELIMITFLAG = "distanceLimitFlag";
     public static final String DISTANCELIMIT = "distanceLimit";
     public static final String CDW = "cdw";
+    public static final String TOKEN = "token";
 }

@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdCarInfoDTO {
+    private String token;
     private String distanceLimitFlag;
     private Float distanceLimit;
     private Boolean cdw;

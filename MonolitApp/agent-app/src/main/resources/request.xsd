@@ -85,6 +85,12 @@
             <xs:enumeration value="PAID"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="DistanceLimitEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UNLIMITED"/>
+            <xs:enumeration value="LIMITED"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="Ad">
         <xs:sequence>
             <xs:element name="id" type="xs:long" maxOccurs="1"/>
@@ -93,6 +99,13 @@
             <xs:element name="rated" type="xs:boolean"/>
             <xs:element name="startDate" type="xs:dateTime"/>
             <xs:element name="endDate" type="xs:dateTime"/>
+            <xs:element name="distanceLimitFlag" type="tns:DistanceLimitEnum"/>
+            <xs:element name="distanceLimit" type="xs:float"/>
+            <xs:element name="cdw" type="xs:boolean"/>
+            <xs:element name="pricePerDay" type="xs:float"/>
+            <xs:element name="pricePerKm" type="xs:float"/>
+            <xs:element name="pricePerKmCDW" type="xs:float"/>
+            <xs:element name="token" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Report">

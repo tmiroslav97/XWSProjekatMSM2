@@ -465,6 +465,7 @@ public class AdServiceImpl implements AdService {
         try {
             String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
             PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            adCarInfoDTO.setToken(car.getToken());
             adCarInfoDTO.setCdw(car.getCdw());
             adCarInfoDTO.setDistanceLimit(car.getDistanceLimit());
             adCarInfoDTO.setDistanceLimitFlag(car.getDistanceLimitFlag().toString());
