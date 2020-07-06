@@ -86,7 +86,7 @@ public class AdServiceImpl implements AdService {
         Page<Ad> ads = adRepository.findAllByDeletedAndPublisherUser(false, Long.valueOf(userId), pageable);
 
         List<AdPageDTO> ret = new ArrayList<>();
-        for (Ad ad : ads){
+        for (Ad ad : ads) {
             AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
             try {
                 String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
@@ -453,6 +453,29 @@ public class AdServiceImpl implements AdService {
 
 
         return adDV;
+
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.AD_CAR_INFO_QUEUE_NAME)
+    public String findAdCarInfoById(Long id) {
+        Ad ad = this.findById(id);
+        Car car = ad.getCar();
+        AdCarInfoDTO adCarInfoDTO = new AdCarInfoDTO();
+        try {
+            String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
+            PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            adCarInfoDTO.setCdw(car.getCdw());
+            adCarInfoDTO.setDistanceLimit(car.getDistanceLimit());
+            adCarInfoDTO.setDistanceLimitFlag(car.getDistanceLimitFlag().toString());
+            adCarInfoDTO.setPricePerDay(priceListDTO.getPricePerDay());
+            adCarInfoDTO.setPricePerKm(priceListDTO.getPricePerKm());
+            adCarInfoDTO.setPricePerKmCDW(priceListDTO.getPricePerKmCDW());
+            String adCarInfoDTOStr = objectMapper.writeValueAsString(adCarInfoDTO);
+            return adCarInfoDTOStr;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
 
     }
 
