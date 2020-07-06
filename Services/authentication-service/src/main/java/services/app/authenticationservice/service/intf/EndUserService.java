@@ -33,4 +33,7 @@ public interface EndUserService {
 
     Integer reduceAdLimitNum(String email);
 
+    Boolean isBlockedById(Long id);
+
+    Boolean isObligedById(Long id);
 }

@@ -78,7 +78,7 @@ const CartComponent = (props) => {
                                                     {
                                                         props.cart.get(item).ads.map((ad, idx) => {
                                                             return (
-                                                                <ListGroup.Item>{ad.endDate.replace('T', " ")}</ListGroup.Item>
+                                                                <ListGroup.Item key={idx}>{ad.endDate.replace('T', " ")}</ListGroup.Item>
                                                             );
                                                         })
                                                     }

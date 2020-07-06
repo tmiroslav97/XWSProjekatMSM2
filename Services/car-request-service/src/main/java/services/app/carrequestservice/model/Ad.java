@@ -116,6 +116,16 @@ public class Ad {
     @XmlSchemaType(name = "dateTime")
     protected DateTime endDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = DbColumnConstants.DISTANCELIMITFLAG, nullable = false)
+    private DistanceLimitEnum distanceLimitFlag;
+
+    @Column(name = DbColumnConstants.DISTANCELIMIT)
+    private Float distanceLimit;
+
+    @Column(name = DbColumnConstants.CDW, nullable = false)
+    private Boolean cdw;
+
     @Column(name = DbColumnConstants.PRICEPERDAY, nullable = false)
     private Float pricePerDay;
 

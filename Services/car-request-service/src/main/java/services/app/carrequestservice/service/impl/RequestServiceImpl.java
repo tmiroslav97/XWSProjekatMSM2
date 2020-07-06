@@ -162,41 +162,24 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Integer submitRequest(HashMap<Long, SubmitRequestDTO> submitRequestDTOS, Long userId) {
-        for (Map.Entry<Long, SubmitRequestDTO> entry : submitRequestDTOS.entrySet()) {
-            SubmitRequestDTO itemSubmitRequestDTO = entry.getValue();
-            if (itemSubmitRequestDTO.getBundle()) {
-                List<Ad> ads = new ArrayList<>();
-                for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
-                    Ad ad = Ad.builder()
-                            .mainId(adRequestDTO.getId())
-                            .adName(adRequestDTO.getAdName())
-                            .rated(false)
-                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
-                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
-                            .build();
-                    ad = adService.save(ad);
-                }
-                Request request = Request.builder()
-                        .submitDate(DateAPI.DateTimeNow())
-                        .status(RequestStatusEnum.PENDING)
-                        .ads(ads)
-                        .bundle(itemSubmitRequestDTO.getBundle())
-                        .publisherUser(entry.getKey())
-                        .endUser(userId)
-                        .build();
-                this.save(request);
-            } else {
-                for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+        Boolean blocked = (Boolean) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.END_USER_IS_BLOCKED_ID_QUEUE_NAME, userId);
+        if (blocked) {
+            return 2;
+        } else {
+            for (Map.Entry<Long, SubmitRequestDTO> entry : submitRequestDTOS.entrySet()) {
+                SubmitRequestDTO itemSubmitRequestDTO = entry.getValue();
+                if (itemSubmitRequestDTO.getBundle()) {
                     List<Ad> ads = new ArrayList<>();
-                    Ad ad = Ad.builder()
-                            .mainId(adRequestDTO.getId())
-                            .adName(adRequestDTO.getAdName())
-                            .rated(false)
-                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
-                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
-                            .build();
-                    ad = adService.save(ad);
-                    ads.add(ad);
+                    for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+                        Ad ad = Ad.builder()
+                                .mainId(adRequestDTO.getId())
+                                .adName(adRequestDTO.getAdName())
+                                .rated(false)
+                                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
+                                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
+                                .build();
+                        ad = adService.save(ad);
+                    }
                     Request request = Request.builder()
                             .submitDate(DateAPI.DateTimeNow())
                             .status(RequestStatusEnum.PENDING)
@@ -206,12 +189,34 @@ public class RequestServiceImpl implements RequestService {
                             .endUser(userId)
                             .build();
                     this.save(request);
+                } else {
+                    for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+                        List<Ad> ads = new ArrayList<>();
+                        Ad ad = Ad.builder()
+                                .mainId(adRequestDTO.getId())
+                                .adName(adRequestDTO.getAdName())
+                                .rated(false)
+                                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
+                                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
+                                .build();
+                        ad = adService.save(ad);
+                        ads.add(ad);
+                        Request request = Request.builder()
+                                .submitDate(DateAPI.DateTimeNow())
+                                .status(RequestStatusEnum.PENDING)
+                                .ads(ads)
+                                .bundle(itemSubmitRequestDTO.getBundle())
+                                .publisherUser(entry.getKey())
+                                .endUser(userId)
+                                .build();
+                        this.save(request);
+                    }
                 }
+
             }
 
+            return 1;
         }
-
-        return 1;
     }
 
     @Override
