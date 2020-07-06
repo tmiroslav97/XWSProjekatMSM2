@@ -17,5 +17,8 @@ public class DbColumnConstants {
     public static final String PRICEPERDAY = "pricePerDay";
     public static final String PRICEPERKM = "pricePerKm";
     public static final String PRICEPERCWD = "pricePerCdw";
-
+    public static final String DISTANCELIMITFLAG = "distanceLimitFlag";
+    public static final String DISTANCELIMIT = "distanceLimit";
+    public static final String CDW = "cdw";
+    public static final String TOKEN = "token";
 }
