@@ -15,7 +15,7 @@ import services.app.pricelistanddiscountservice.service.intf.PriceListService;
 
 
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/pricelist", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PriceListController {
 
     private final PriceListService priceListService;
@@ -25,13 +25,13 @@ public class PriceListController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/pricelist", method = RequestMethod.GET)
+    @RequestMapping( method = RequestMethod.GET)
     public ResponseEntity<?> findAllPriceList() {
         return new ResponseEntity<>(priceListService.findAllListDTO(), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/publisher/pricelist", method = RequestMethod.GET)
+    @RequestMapping(value = "/publisher", method = RequestMethod.GET)
     public ResponseEntity<?> getPriceListsFromPublishUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
@@ -39,21 +39,21 @@ public class PriceListController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/pricelist/{id:[\\d]+}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id:[\\d]+}", method = RequestMethod.GET)
     public ResponseEntity<?> getPriceList(@PathVariable("id") Long id) {
         return new ResponseEntity<>(PriceListConverter.toCreatePriceListCreateDTOFromPriceList(priceListService.findById(id)),
                 HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/pricelist", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping( method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createPriceList(@RequestBody PriceListCreateDTO priceListCreateDTO) {
         PriceList priceList = priceListService.createPriceList(priceListCreateDTO);
         return new ResponseEntity<>("Cenovnik uspesno kreiran.", HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/pricelist", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping( method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editPriceList(@RequestBody PriceListCreateDTO priceListCreateDTO) {
         Integer flag = priceListService.editPriceList(PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO));
         if (flag == 1) {
@@ -64,7 +64,7 @@ public class PriceListController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/pricelist", method = RequestMethod.DELETE)
+    @RequestMapping( method = RequestMethod.DELETE)
     public ResponseEntity<?> deletePriceList(@RequestParam(value = "id") Long id) {
         Integer flag = priceListService.deleteById(id);
         if (flag == 1) {

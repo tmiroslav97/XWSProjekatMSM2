@@ -19,7 +19,7 @@ class PriceListService extends HttpBaseClient {
 
     fetchPriceListsFromPublisher = async () => {
         const response = await this.getApiClient().get(
-            "/pad/publisher/pricelist"
+            FINALPOINTS.PRICE_LIST_BASE + '/publisher'
         );
 
         return response.data;
