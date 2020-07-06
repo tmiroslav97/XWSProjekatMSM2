@@ -12,17 +12,79 @@ const PricelistContainer = () => {
 
     const dispatch = useDispatch();
     const pricelists = useSelector(pricelistsSelector);
+    const [editFlag, setEditFlag] = useState(false);
+    const [pricelistData, setPricelistData] = useState(false);
+    const [validated, setValidated] = useState(false);
+    const [addFlag, setAddFlag] = useState(false);
 
     useEffect(() => {
         dispatch(fetchPriceListsFromPublisher());   
     }, []);
 
-    const editPricelist = (id) => {
-        
+    const addPricelist = (event) => {
+        setAddFlag(true);
     };
 
-    const deletePricelist = (id) => {
+    const handleAddPricelist = (event)=> {
+        event.preventDefault();
+        const form = event.target;
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+            setValidated(true);
+            alert("Obavezna polja su oznacena sa *");
+        } else {
+            setValidated(false);
+            setAddFlag(false);
+            console.log(form.pricePerDay.value);
+            console.log(form.pricePerKm.value);
+            console.log(form.pricePerKmCDW.value);
+            // dispatch(addCommentForAd({
+            //     "adId": adId,
+            //     "content": form.content.value
+            // }))
+        }
+    };
 
+    const editPricelist = (id) => {
+        setEditFlag(true);
+        console.log("cenovnik ");
+        console.log(id);
+        if(pricelists.data !== ""){
+            pricelists.data.map((pricelist) => {
+                if(pricelist.id === id){
+                    console.log("cenovnik");
+                    console.log(pricelist)
+                    setPricelistData(pricelist);
+                }
+            });
+
+        };   
+    };
+
+    const handleEditPricelist = (event)=> {
+        event.preventDefault();
+        const form = event.target;
+        console.log("cenovnik");
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+            setValidated(true);
+        } else {
+            setValidated(false);
+            setEditFlag(false);
+            console.log(form.pricePerDay.value);
+            // dispatch(addCommentForAd({
+            //     "adId": adId,
+            //     "content": form.content.value
+            // }))
+            
+        }
+    };
+
+
+    const deletePricelist = (id) => {
+        console.log("cenovnik ");
+        console.log(id);
+        
     };
 
     const getPricelists = () =>{
@@ -68,7 +130,16 @@ const PricelistContainer = () => {
                 <Col md={12} xs={12}>
                     {
                         pricelists.isFetch ? 
-                        <PricelistComponent getPricelists={getPricelists} /> 
+                        <PricelistComponent 
+                            getPricelists={getPricelists} 
+                            editFlag={editFlag} setEditFlag={setEditFlag}
+                            pricelistData={pricelistData} setPricelistData={setPricelistData}
+                            addFlag={addFlag} setAddFlag={setAddFlag}
+                            addPricelist={addPricelist}
+                            handleAddPricelist={handleAddPricelist}
+                            handleEditPricelist={handleEditPricelist}
+
+                        /> 
                         : <SpinnerContainer />
                     }
                 </Col>
