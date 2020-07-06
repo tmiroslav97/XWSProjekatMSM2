@@ -65,7 +65,13 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="acceptResponse" type="xs:string"> </xs:element>
+    <xs:element name="acceptResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="msg" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
     <xs:complexType name="Request">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>

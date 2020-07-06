@@ -4,10 +4,7 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import services.app.carrequestservice.model.AcceptRequest;
-import services.app.carrequestservice.model.GetPublisherRequestsByStatusRequest;
-import services.app.carrequestservice.model.GetPublisherRequestsRequest;
-import services.app.carrequestservice.model.GetPublisherRequestsResponse;
+import services.app.carrequestservice.model.*;
 import services.app.carrequestservice.service.intf.RequestService;
 
 @Endpoint
@@ -38,7 +35,9 @@ public class RequestEndpoint {
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "acceptRequest")
     @ResponsePayload
-    public String acceptRequest(@RequestPayload AcceptRequest request) {
-        return requestService.acceptRequest(request);
+    public AcceptResponse acceptRequest(@RequestPayload AcceptRequest request) {
+        AcceptResponse acceptResponse = new AcceptResponse();
+        acceptResponse.setMsg(requestService.acceptRequest(request));
+        return acceptResponse;
     }
 }
