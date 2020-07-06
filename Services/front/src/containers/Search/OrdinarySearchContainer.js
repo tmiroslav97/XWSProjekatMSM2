@@ -250,11 +250,13 @@ const OrdinarySearchContainer = () => {
                     'fuelType': form.fuelType.value,
                     'childrenSeatNum': form.childrenSeatNum.value,
                     'cdw': cdw,
+                    'startPrice': lowValue,
+                    'endPrice': highValue,
                     'advancedSearch': toggleAdvancedSearch
                 }
             }
 
-            //console.log(data)
+            console.log(data)
             dispatch(searchAd({
                 data
             }));

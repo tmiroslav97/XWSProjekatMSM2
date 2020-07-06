@@ -5,6 +5,8 @@ import Nouislider from 'react-nouislider';
 import 'nouislider/distribute/nouislider.css';
 import 'nouislider/src/nouislider.tooltips.less';
 import 'nouislider/src/nouislider.pips.less';
+import Slider from '@material-ui/core/Slider';
+
 
 const OrdinarySearchComponent = (props) => {
 
@@ -115,6 +117,15 @@ const OrdinarySearchComponent = (props) => {
                                             connect={true}
                                             onChange={props.handleChangePrice}
                                             tooltips />
+
+                                    {/* <Slider
+                                    value={[props.lowValue, props.highValue]}
+                                    onChange={props.handleChangePrice}
+                                    defaultValue={{ min: 0, max: 10000 }}
+                                    valueLabelDisplay="auto"
+                                    aria-labelledby="range-slider"
+                                    getAriaValueText={valuetext}
+                                    /> */}
 
                                     </Form.Group>
 

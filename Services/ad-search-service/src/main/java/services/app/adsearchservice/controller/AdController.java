@@ -1,11 +1,13 @@
 package services.app.adsearchservice.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import services.app.adsearchservice.converter.DateAPI;
+import services.app.adsearchservice.dto.ad.AdPageContentDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.service.intf.AdService;
 
@@ -37,9 +39,29 @@ public class AdController {
                                            @RequestParam(value = "size", required = false) Integer size,
                                            @RequestParam(value = "location") String location,
                                            @RequestParam(value = "startDate") String startDate,
-                                           @RequestParam(value = "endDate") String endDate) {
+                                           @RequestParam(value = "endDate") String endDate,
+                                           @RequestParam(value = "carManufacturer") String carManufacturer,
+                                           @RequestParam(value = "carModel") String carModel,
+                                           @RequestParam(value = "carType") String carType,
+                                           @RequestParam(value = "mileage") String mileage,
+                                           @RequestParam(value = "mileageKM") Float mileageKM,
+                                           @RequestParam(value = "gearboxType") Float gearboxType,
+                                           @RequestParam(value = "fuelType") String fuelType,
+                                           @RequestParam(value = "childrenSeatNum") Integer childrenSeatNum,
+                                           @RequestParam(value = "cdw") Boolean cdw,
+                                           @RequestParam(value = "startPrice") Float startPrice,
+                                           @RequestParam(value = "endPrice") Float endPrice,
+                                           @RequestParam(value = "advancedSearch") Boolean advancedSearch
+                                           ) {
 
-        return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate), HttpStatus.OK);
+        AdPageContentDTO ret = null;
+
+        if(advancedSearch)
+            ret = adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate);
+        else
+            ret = adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate);
+
+        return new ResponseEntity<>(ret, HttpStatus.OK);
     }
 
 
