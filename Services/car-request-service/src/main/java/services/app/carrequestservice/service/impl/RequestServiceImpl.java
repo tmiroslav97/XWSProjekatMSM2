@@ -12,14 +12,12 @@ import services.app.carrequestservice.config.RabbitMQConfiguration;
 import services.app.carrequestservice.converter.DateAPI;
 import services.app.carrequestservice.converter.RequestConverter;
 import services.app.carrequestservice.dto.AgentFirmIdentificationDTO;
+import services.app.carrequestservice.dto.ad.AdCarInfoDTO;
 import services.app.carrequestservice.dto.ad.AdRequestDTO;
 import services.app.carrequestservice.dto.carreq.AcceptReqestCalendarTermsDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.exception.NotFoundException;
-import services.app.carrequestservice.model.AcceptRequest;
-import services.app.carrequestservice.model.Ad;
-import services.app.carrequestservice.model.Request;
-import services.app.carrequestservice.model.RequestStatusEnum;
+import services.app.carrequestservice.model.*;
 import services.app.carrequestservice.repository.RequestRepository;
 import services.app.carrequestservice.service.intf.AdService;
 import services.app.carrequestservice.service.intf.RequestService;
@@ -162,41 +160,37 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Integer submitRequest(HashMap<Long, SubmitRequestDTO> submitRequestDTOS, Long userId) {
-        for (Map.Entry<Long, SubmitRequestDTO> entry : submitRequestDTOS.entrySet()) {
-            SubmitRequestDTO itemSubmitRequestDTO = entry.getValue();
-            if (itemSubmitRequestDTO.getBundle()) {
-                List<Ad> ads = new ArrayList<>();
-                for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
-                    Ad ad = Ad.builder()
-                            .mainId(adRequestDTO.getId())
-                            .adName(adRequestDTO.getAdName())
-                            .rated(false)
-                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
-                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
-                            .build();
-                    ad = adService.save(ad);
-                }
-                Request request = Request.builder()
-                        .submitDate(DateAPI.DateTimeNow())
-                        .status(RequestStatusEnum.PENDING)
-                        .ads(ads)
-                        .bundle(itemSubmitRequestDTO.getBundle())
-                        .publisherUser(entry.getKey())
-                        .endUser(userId)
-                        .build();
-                this.save(request);
-            } else {
-                for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+        Boolean blocked = (Boolean) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.END_USER_IS_BLOCKED_ID_QUEUE_NAME, userId);
+        if (blocked) {
+            return 2;
+        } else {
+            for (Map.Entry<Long, SubmitRequestDTO> entry : submitRequestDTOS.entrySet()) {
+                SubmitRequestDTO itemSubmitRequestDTO = entry.getValue();
+                if (itemSubmitRequestDTO.getBundle()) {
                     List<Ad> ads = new ArrayList<>();
-                    Ad ad = Ad.builder()
-                            .mainId(adRequestDTO.getId())
-                            .adName(adRequestDTO.getAdName())
-                            .rated(false)
-                            .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
-                            .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
-                            .build();
-                    ad = adService.save(ad);
-                    ads.add(ad);
+                    for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+                        String adCarInfoDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AD_CAR_INFO_QUEUE_NAME, adRequestDTO.getId());
+                        AdCarInfoDTO adCarInfoDTO = new AdCarInfoDTO();
+                        try {
+                            adCarInfoDTO = objectMapper.readValue(adCarInfoDTOStr, AdCarInfoDTO.class);
+                        } catch (JsonProcessingException exception) {
+                        }
+                        Ad ad = Ad.builder()
+                                .mainId(adRequestDTO.getId())
+                                .adName(adRequestDTO.getAdName())
+                                .token(adCarInfoDTO.getToken())
+                                .distanceLimit(adCarInfoDTO.getDistanceLimit())
+                                .distanceLimitFlag(DistanceLimitEnum.valueOf(adCarInfoDTO.getDistanceLimitFlag()))
+                                .pricePerDay(adCarInfoDTO.getPricePerDay())
+                                .pricePerKm(adCarInfoDTO.getPricePerKm())
+                                .pricePerKmCDW(adCarInfoDTO.getPricePerKmCDW())
+                                .cdw(adCarInfoDTO.getCdw())
+                                .rated(false)
+                                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
+                                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
+                                .build();
+                        ad = adService.save(ad);
+                    }
                     Request request = Request.builder()
                             .submitDate(DateAPI.DateTimeNow())
                             .status(RequestStatusEnum.PENDING)
@@ -206,12 +200,47 @@ public class RequestServiceImpl implements RequestService {
                             .endUser(userId)
                             .build();
                     this.save(request);
+                } else {
+                    for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
+                        List<Ad> ads = new ArrayList<>();
+                        String adCarInfoDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AD_CAR_INFO_QUEUE_NAME, adRequestDTO.getId());
+                        AdCarInfoDTO adCarInfoDTO = new AdCarInfoDTO();
+                        try {
+                            adCarInfoDTO = objectMapper.readValue(adCarInfoDTOStr, AdCarInfoDTO.class);
+                        } catch (JsonProcessingException exception) {
+                        }
+                        Ad ad = Ad.builder()
+                                .mainId(adRequestDTO.getId())
+                                .adName(adRequestDTO.getAdName())
+                                .token(adCarInfoDTO.getToken())
+                                .distanceLimit(adCarInfoDTO.getDistanceLimit())
+                                .distanceLimitFlag(DistanceLimitEnum.valueOf(adCarInfoDTO.getDistanceLimitFlag()))
+                                .pricePerDay(adCarInfoDTO.getPricePerDay())
+                                .pricePerKm(adCarInfoDTO.getPricePerKm())
+                                .pricePerKmCDW(adCarInfoDTO.getPricePerKmCDW())
+                                .cdw(adCarInfoDTO.getCdw())
+                                .rated(false)
+                                .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
+                                .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
+                                .build();
+                        ad = adService.save(ad);
+                        ads.add(ad);
+                        Request request = Request.builder()
+                                .submitDate(DateAPI.DateTimeNow())
+                                .status(RequestStatusEnum.PENDING)
+                                .ads(ads)
+                                .bundle(itemSubmitRequestDTO.getBundle())
+                                .publisherUser(entry.getKey())
+                                .endUser(userId)
+                                .build();
+                        this.save(request);
+                    }
                 }
+
             }
 
+            return 1;
         }
-
-        return 1;
     }
 
     @Override

@@ -23,21 +23,8 @@ public class DiscountList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.STARTDATE, nullable = false)
-    private DateTime startDate;
-
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.ENDDATE, nullable = false)
-    private DateTime endDate;
+    @Column(name = DbColumnConstants.DAYNUM, nullable = false)
+    private Integer dayNum;
 
     @Column(name = DbColumnConstants.DISCOUNT, nullable = false)
     private Float discount;

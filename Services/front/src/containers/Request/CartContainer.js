@@ -4,7 +4,7 @@ import { history } from '../../index';
 import CartComponent from '../../components/Request/CartComponent';
 import { useSelector, useDispatch } from 'react-redux';
 import { searchDataSelector } from '../../store/ad/selectors';
-import { putSuccessMsg } from '../../store/common/actions';
+import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 import RequestService from '../../services/RequestService';
 
 const CartContainer = () => {
@@ -17,7 +17,12 @@ const CartContainer = () => {
             obj[item] = cart.get(item);
         });
         const result = await RequestService.submitReq(obj);
-        dispatch(putSuccessMsg(result));
+        console.log(result);
+        if(result === 'Zahtjev uspjesno kreiran.'){
+            dispatch(putSuccessMsg(result));
+        }else{
+            dispatch(putErrorMsg(result));
+        }
         handleClearCart();
     };
 

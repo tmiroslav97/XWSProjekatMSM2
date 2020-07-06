@@ -13,36 +13,32 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for RequestStatusEnum.
+ * <p>Java class for DistanceLimitEnum.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
- * &lt;simpleType name="RequestStatusEnum"&gt;
+ * &lt;simpleType name="DistanceLimitEnum"&gt;
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string"&gt;
- *     &lt;enumeration value="PENDING"/&gt;
- *     &lt;enumeration value="RESERVED"/&gt;
- *     &lt;enumeration value="CANCELED"/&gt;
- *     &lt;enumeration value="PAID"/&gt;
+ *     &lt;enumeration value="UNLIMITED"/&gt;
+ *     &lt;enumeration value="LIMITED"/&gt;
  *   &lt;/restriction&gt;
  * &lt;/simpleType&gt;
  * </pre>
  * 
  */
-@XmlType(name = "RequestStatusEnum")
+@XmlType(name = "DistanceLimitEnum")
 @XmlEnum
-public enum RequestStatusEnum {
+public enum DistanceLimitEnum {
 
-    PENDING,
-    RESERVED,
-    CANCELED,
-    PAID;
+    UNLIMITED,
+    LIMITED;
 
     public String value() {
         return name();
     }
 
-    public static RequestStatusEnum fromValue(String v) {
+    public static DistanceLimitEnum fromValue(String v) {
         return valueOf(v);
     }
 

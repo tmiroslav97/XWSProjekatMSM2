@@ -14,6 +14,12 @@ public class RabbitMQConfiguration {
     public static final String PL_GET_QUEUE_NAME = "pl_get_queue";
     public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
     public static final String AD_ACCEPT_REQ_QUEUE_NAME = "ad_accept_req";
+    public static final String AD_CAR_INFO_QUEUE_NAME = "ad_car_info";
+
+    @Bean
+    public Queue adCarInfo() {
+        return new Queue(AD_CAR_INFO_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue adAcceptReq() {

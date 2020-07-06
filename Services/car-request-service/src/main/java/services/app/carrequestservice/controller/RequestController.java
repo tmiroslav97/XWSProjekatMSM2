@@ -53,7 +53,9 @@ public class RequestController {
         Integer flag = requestService.submitRequest(submitRequestDTOS, Long.valueOf(cp.getUserId()));
         if (flag == 1) {
             return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
-        } else {
+        } else if (flag==2){
+            return new ResponseEntity<>("Vas nalog je blokiran, imate zabranu rentiranja vozila.", HttpStatus.BAD_REQUEST);
+        }else {
             return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
         }
     }

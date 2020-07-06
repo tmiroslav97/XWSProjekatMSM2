@@ -33,5 +33,7 @@ public interface AdService {
     List<Long> findPricelistsFromAds();
     List<Ad> findAllFromPublisher(Long publisherId);
     Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
+    String findAdCarInfoById(Long id);
+
 
 }
