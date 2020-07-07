@@ -188,6 +188,7 @@ const OrdinarySearchContainer = () => {
 
     const handleCDW = (e) => {
         console.log(e.target.checked)
+        setCDW(e.target.checked);
 
     }
 
@@ -227,7 +228,6 @@ const OrdinarySearchContainer = () => {
             event.stopPropagation();
             setValidated(true);
         } else {
-            console.log("Toggle " + toggleAdvancedSearch);
             if (toggleAdvancedSearch === false) {
                 data = {
                     'location': form.location.value,

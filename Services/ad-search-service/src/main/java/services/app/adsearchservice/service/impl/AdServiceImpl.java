@@ -140,7 +140,7 @@ public class AdServiceImpl implements AdService {
 
         DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
         DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
-        ads = adRepository.findByDeletedAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfterAndCarCarModel(false, location, startD, endD, carManufacturer, carModel,
+        ads = adRepository.findByDeletedAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startD, endD, carManufacturer, carModel,
                 carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum, cdw, startPrice, endPrice, pageable);
 
         List<AdPageDTO> ret = new ArrayList<>();

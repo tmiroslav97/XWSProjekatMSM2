@@ -1,7 +1,7 @@
 INSERT INTO car (id, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
-VALUES (1, 'Fiat', '500', 'Limuzina', 2000, 'LIMITED', true, 2, 'Dizel', 'Automatski', 12000, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+VALUES (1, 'Fiat', '500', 'Limuzina', 2000, 'LIMITED', true, 2, 'Dizel', 'Automatik', 12000, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
 INSERT INTO car (id, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
-VALUES (3, 'Audi', 'A3', 'Limuzina', null, 'UNLIMITED', false, 3, 'Dizel', 'Automatski', 12500, STR_TO_DATE('20-05-2017', '%d-%m-%Y'));
+VALUES (3, 'Audi', 'A3', 'Limuzina', null, 'UNLIMITED', false, 3, 'Dizel', 'Automatik', 12500, STR_TO_DATE('20-05-2017', '%d-%m-%Y'));
 INSERT INTO car (id, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, year)
 VALUES (4, 'BMW', '320d', 'Limuzina', null, 'UNLIMITED', false, 3, 'Benzin', 'Manuelni', 20000, STR_TO_DATE('20-05-2019', '%d-%m-%Y'));
 
