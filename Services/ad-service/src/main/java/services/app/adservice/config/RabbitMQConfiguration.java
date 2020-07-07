@@ -16,6 +16,13 @@ public class RabbitMQConfiguration {
     public static final String AD_ACCEPT_REQ_QUEUE_NAME = "ad_accept_req";
     public static final String AD_CAR_INFO_QUEUE_NAME = "ad_car_info";
     public static final String ACCEPT_REQUEST_QUEUE_NAME = "accept_request";
+    public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
+
+
+    @Bean
+    public Queue ccySync() {
+        return new Queue(CCT_SYNC_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue acceptRequest() {

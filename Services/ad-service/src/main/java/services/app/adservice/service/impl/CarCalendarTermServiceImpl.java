@@ -38,6 +38,11 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
     }
 
     @Override
+    public List<CarCalendarTerm> findAllByAdId(Long adId) {
+        return carCalendarTermRepository.findAllByAdId(adId);
+    }
+
+    @Override
     public CarCalendarTerm save(CarCalendarTerm carCalendarTerm) {
         if (carCalendarTerm.getId() != null) {
             if (carCalendarTermRepository.existsById(carCalendarTerm.getId())) {

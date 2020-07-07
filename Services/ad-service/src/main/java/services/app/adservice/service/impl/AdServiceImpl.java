@@ -19,6 +19,7 @@ import services.app.adservice.converter.*;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
+import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
 import services.app.adservice.dto.pricelist.PriceListDTO;
@@ -289,29 +290,28 @@ public class AdServiceImpl implements AdService {
         } catch (JsonProcessingException exception) {
             return false;
         }
-        if (acceptReqestCalendarTermsDTO.getBundle()) {
-            int sumAds = acceptReqestCalendarTermsDTO.getAdRequestDTOS().size();
-            int cnt = 0;
+        int cnt = 0;
+        for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
+            Boolean flag = carCalendarTermService.canSplitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
+            if (flag) {
+                cnt++;
+            }
+        }
+        if (cnt == acceptReqestCalendarTermsDTO.getAdRequestDTOS().size()) {
             for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
-                Boolean flag = carCalendarTermService.canSplitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
-                if (flag) {
-                    cnt++;
+                carCalendarTermService.splitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
+                List<CarCalendarTerm> carCalendarTerms = carCalendarTermService.findAllByAdId(adRequestDTO.getId());
+                List<CarCalendarTermSynchronizeDTO> carCalendarTermSynchronizeDTOS = CarCalendarTermConverter.toListCarCalendarTermSyncDTOFromListCarCalendarTerm(new HashSet<>(carCalendarTerms));
+                try {
+                    String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
+                    rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
+                } catch (JsonProcessingException exception) {
+                    continue;
                 }
             }
-            if (cnt == acceptReqestCalendarTermsDTO.getAdRequestDTOS().size()) {
-                for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
-                    carCalendarTermService.splitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
-                }
-                return true;
-            } else {
-                return false;
-            }
+            return true;
         } else {
-            Boolean flag = false;
-            for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
-                flag = carCalendarTermService.splitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
-            }
-            return flag;
+            return false;
         }
     }
 

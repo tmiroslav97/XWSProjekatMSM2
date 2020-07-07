@@ -12,6 +12,9 @@ public interface CarCalendarTermService {
 
     List<CarCalendarTerm> findAll();
 
+
+    List<CarCalendarTerm> findAllByAdId(Long adId);
+
     CarCalendarTerm save(CarCalendarTerm carCalendarTerm);
 
     void delete(CarCalendarTerm carCalendarTerm);
