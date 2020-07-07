@@ -83,6 +83,8 @@ public class DiscountListServiceImpl implements DiscountListService {
     @Override
     public Integer edit(DiscountList discountList) {
         DiscountList discountList1 = this.findById(discountList.getId());
+        discountList1.setDayNum(discountList.getDayNum());
+        discountList1.setDiscount(discountList.getDiscount());
         discountList1 = discountListRepository.save(discountList1);
         return 1;
     }

@@ -29,4 +29,12 @@ public class DiscountListConverter extends AbstractConverter {
                 .discount(discountListCreateDTO.getDiscount())
                 .build();
     }
+
+    public static DiscountList toDiscountListFromDiscountListDTO(DiscountListDTO discountListDTO) {
+        return DiscountList.builder()
+                .id(discountListDTO.getId())
+                .dayNum(discountListDTO.getDayNum())
+                .discount(discountListDTO.getDiscount())
+                .build();
+    }
 }

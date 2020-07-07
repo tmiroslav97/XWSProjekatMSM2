@@ -218,9 +218,6 @@ export function* fetchComments() {
     console.log(data);
     yield put(putComments({
         'data': data,
-        // 'totalPageCnt': data.totalPageCnt,
-        // 'nextPage': payload.nextPage,
-        // 'size': payload.size,
         'isFetch': true
     }));
 }
@@ -317,21 +314,20 @@ export function* fetchDiscounts(){
 export function* fetchDiscountsFromAgent(){
     const { payload } = yield take(FETCH_DISCOUNTS_FROM_AGENT);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchDiscountsFromAgent, payload);
-    console.log(data);
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, payload);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
     }));
 }
+
 export function* addDiscount(){
     const { payload } = yield take(ADD_DISCOUNT);
     const msg = yield call(AdServices.addDiscount, payload);
     yield put(putSuccessMsg(msg));
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchDiscountsFromAgent, temp);
-    console.log(data);
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -344,8 +340,7 @@ export function* editDiscount(){
     yield put(putSuccessMsg(msg));
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchDiscountsFromAgent, temp);
-    console.log(data);
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -356,10 +351,10 @@ export function* deleteDiscount(){
     const { payload } = yield take(DELETE_DISCOUNT);
     const msg = yield call(AdServices.deleteDiscount, payload);
     yield put(putSuccessMsg(msg));
+    
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchDiscountsFromAgent, temp);
-    console.log(data);
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true

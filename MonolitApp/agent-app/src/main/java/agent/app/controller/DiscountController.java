@@ -2,6 +2,7 @@ package agent.app.controller;
 
 import agent.app.converter.DiscountListConverter;
 import agent.app.dto.discount.DiscountListCreateDTO;
+import agent.app.dto.discount.DiscountListDTO;
 import agent.app.service.intf.DiscountListService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -51,8 +52,8 @@ public class DiscountController {
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> editDiscountList(@RequestBody DiscountListCreateDTO discountListCreateDTO) {
-        Integer flag = discountListService.edit(DiscountListConverter.toDiscountListFromDiscountListCreateDTO(discountListCreateDTO));
+    public ResponseEntity<?> editDiscountList(@RequestBody DiscountListDTO discountListDTO) {
+        Integer flag = discountListService.edit(DiscountListConverter.toDiscountListFromDiscountListDTO(discountListDTO));
         if (flag == 1) {
             return new ResponseEntity<>("Popust uspesno izmenjen.", HttpStatus.CREATED);
         } else {
