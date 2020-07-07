@@ -115,18 +115,14 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public String acceptRequest(AcceptRequest acceptRequest) {
-        Long publisherUser = this.authAgent(acceptRequest.getPublisherUserEmail(), acceptRequest.getIdentifier());
-        if (publisherUser == null) {
-            return "Agent nije registrovan u sistemu";
-        }
-        Request request = this.findById(acceptRequest.getId());
-        if (acceptRequest.getAction().equals("reject")) {
+    public String acceptRequest(Long requestId, String action) {
+        Request request = this.findById(requestId);
+        if (action.equals("reject")) {
             request.setStatus(RequestStatusEnum.CANCELED);
             this.save(request);
             return "Uspjesno odbijen zahtjev";
         }
-        if (!acceptRequest.getAction().equals("accept")) {
+        if (!action.equals("accept")) {
             return "Nepoznata akcija";
         }
         AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO = RequestConverter.toCreateAcceptRequestCalendarTermsDTO(request);

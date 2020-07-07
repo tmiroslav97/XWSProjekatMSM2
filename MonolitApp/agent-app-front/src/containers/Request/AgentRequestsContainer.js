@@ -38,7 +38,6 @@ const AgentRequestsContainer = () => {
     }
 
     const handleAccept = async (id, action) => {
-        setIsFetchCanceledRequests(false);
         const result = await RequestService.acceptRequest({ "id": id, "action": action });
         if (result === "Uspjesno prihvacen zahtjev" || result === "Uspjesno odbijen zahtjev") {
             dispatch(putSuccessMsg(result));

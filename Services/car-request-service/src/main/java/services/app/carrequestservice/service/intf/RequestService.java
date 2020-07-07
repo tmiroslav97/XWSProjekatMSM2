@@ -28,7 +28,7 @@ public interface RequestService {
 
     void deleteAllWithSameAdId(List<Ad> ads);
 
-    String acceptRequest(AcceptRequest acceptRequest);
+    String acceptRequest(Long requestId, String action);
 
     List<Request> findAllByPublisherUserIdAndByStatus(Long id, String status);
 

@@ -50,12 +50,11 @@ class RequestService extends HttpBaseClient {
     };
 
     acceptRequest = async payload => {
-        const response = await this.getApiClient().post(
+        const response = await this.getApiClient().put(
             FINALPOINTS.REQUEST_BASE,
             payload,
             {
                 headers: {
-                    'action': 'accept',
                     'Content-Type': 'application/json;charset=UTF-8'
                 }
             }

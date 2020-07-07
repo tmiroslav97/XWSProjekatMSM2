@@ -8,7 +8,7 @@ import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 import { useDispatch } from 'react-redux';
 
 const AgentRequestsContainer = () => {
-    const dispatch = useDispatch
+    const dispatch = useDispatch();
     const [pendingRequests, setPendingRequests] = useState([]);
     const [isFetchPendingRequests, setIsFetchPendingRequests] = useState(false);
     const [paidRequests, setPaidRequests] = useState([]);
@@ -37,15 +37,17 @@ const AgentRequestsContainer = () => {
         setIsFetchCanceledRequests(true);
     }
 
-    const handleAccept = async (id) => {
-        setIsFetchCanceledRequests(false);
-        const result = await RequestService.acceptRequest({ "id": id });
-        if (result = "Uspjesno prihvacen zahjtev") {
+    const handleAccept = async (id, action) => {
+        const result = await RequestService.acceptRequest({ "id": id, "action": action });
+        console.log(result);
+        if (result === "Uspjesno prihvacen zahtjev" || result === "Uspjesno odbijen zahtjev") {
             dispatch(putSuccessMsg(result));
         } else {
             dispatch(putErrorMsg(result));
         }
         fetchPendingRequests();
+        fetchPaidRequests();
+        fetchCanceledRequests();
     }
 
     useEffect(() => {

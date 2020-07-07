@@ -37,7 +37,13 @@ public class RequestEndpoint {
     @ResponsePayload
     public AcceptResponse acceptRequest(@RequestPayload AcceptRequest request) {
         AcceptResponse acceptResponse = new AcceptResponse();
-        acceptResponse.setMsg(requestService.acceptRequest(request));
-        return acceptResponse;
+        Long publisherUser = requestService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
+        if (publisherUser == null) {
+            acceptResponse.setMsg("Agent nije registrovan u sistemu");
+            return acceptResponse;
+        }else{
+            acceptResponse.setMsg(requestService.acceptRequest(request.getId(), request.getAction()));
+            return acceptResponse;
+        }
     }
 }

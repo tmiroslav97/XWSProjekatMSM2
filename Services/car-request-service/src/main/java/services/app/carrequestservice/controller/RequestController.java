@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import services.app.carrequestservice.dto.carreq.ReqAcceptDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.CustomPrincipal;
 import services.app.carrequestservice.service.intf.RequestService;
@@ -53,10 +54,26 @@ public class RequestController {
         Integer flag = requestService.submitRequest(submitRequestDTOS, Long.valueOf(cp.getUserId()));
         if (flag == 1) {
             return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
-        } else if (flag==2){
+        } else if (flag == 2) {
             return new ResponseEntity<>("Vas nalog je blokiran, imate zabranu rentiranja vozila.", HttpStatus.BAD_REQUEST);
-        }else {
+        } else {
             return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<?> acceptRequest(@RequestBody ReqAcceptDTO reqAcceptDTO) {
+        if (reqAcceptDTO.getAction() != null && (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject"))) {
+            String response = requestService.acceptRequest(reqAcceptDTO.getId(), reqAcceptDTO.getAction());
+            if (response.equals("Uspjesno odbijen zahtjev") || response.equals("Uspjesno prihvacen zahtjev")) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Nepoznata akcija", HttpStatus.BAD_REQUEST);
+
         }
     }
 }
