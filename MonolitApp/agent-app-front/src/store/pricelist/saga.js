@@ -107,20 +107,19 @@ export function* deletePriceList() {
 
 export function* reversePricelist() {
     const { payload } = yield take(REVERSE_PRICE_LIST);
-    console.log(payload)
-    const msg = yield call(AdServices.reversePricelist, payload);
+    const msg = yield call(PriceListService.reversePricelist, payload);
     yield put(putSuccessMsg(msg));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
+    const data1 = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
-        'data': data,
+        'data': data1,
         'isFetch': true
     }));
     yield put(putAd({ 'isFetch': false }));
-    const data1 = yield call(AdServices.fetchAd, payload.adId);
+    const data2 = yield call(AdServices.fetchAd, payload.adId);
     yield put(putAd({
-        'data': data1,
+        'data': data2,
         'isFetch': true
     }));
 }

@@ -25,7 +25,7 @@ const MyAdComponent = (props) => {
                         <Col md={4}>
                             <Card.Img src={`data:image/jpeg;base64,${variant.coverPhoto}`} />
                         </Col>
-                        <Col>
+                        <Col >
                             <Row className="mb-2">
                                 <Col sm={2}>
                                     <AirlineSeatReclineNormal />
@@ -52,7 +52,7 @@ const MyAdComponent = (props) => {
                                 </Col>
                                 <Col>
                                     <Card.Text>
-                                        {variant.price} $
+                                        {variant.price} RSD
                                     </Card.Text>
                                 </Col>
                             </Row>
@@ -74,7 +74,7 @@ const MyAdComponent = (props) => {
                                 </Col>
                                 <Col>
                                     <Card.Text>
-                                        {variant.mileage}
+                                        {variant.mileage} Km
                                     </Card.Text>
                                 </Col>
                             </Row>
@@ -83,15 +83,15 @@ const MyAdComponent = (props) => {
 
                         <Col>
                             {
-                                disable ? null : <Button className="mb-2" variant="outline-success"
-                                    onClick={() => { props.viewAd(variant.id); }}
-                                >Pregled oglasa</Button>
+                                disable ? null : <Button className="mb-2" variant="outline-success" onClick={() => { props.viewAd(variant.id); }}>Pregled oglasa</Button>
                             }
                             {
                                 disable ? null :
-                                    <Button variant="outline-success"
-                                        onClick={() => { props.definingAvailability(variant.id); }}
-                                    >Definisi dostupnost</Button>
+                                    <Button className="mb-2" variant="outline-success" onClick={() => { props.definingAvailability(variant.id); }}>Definisi dostupnost</Button>
+                            }
+                            {
+                                disable ? null :
+                                    <Button variant="outline-success" onClick={() => { props.editPricelist(variant.id); }}>Izmeni cenovnik</Button>
                             }
                         </Col>
 

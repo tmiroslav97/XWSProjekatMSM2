@@ -103,9 +103,9 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public Integer deleteById(Long id) {
+    public Integer deleteById(Long id, String publisher) {
         PriceList priceList = this.findById(id);
-        List<Long> usedPricelists = this.findPricelistsFromAds();
+        List<Long> usedPricelists = this.findPricelistsFromAds(publisher);
         if(!usedPricelists.contains(id)){
             System.out.println("ne sadrzi cenovnik mozes obrisati.");
             this.delete(priceList);
@@ -116,11 +116,9 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public List<Long> findPricelistsFromAds() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Principal principal = (Principal) auth.getPrincipal();
+    public List<Long> findPricelistsFromAds(String publisher) {
         List<Long> pricelists = new ArrayList<>();
-        List<Ad> ads = adService.findAllFromPublisher(principal.getName());
+        List<Ad> ads = adService.findAllFromPublisher(publisher);
         for(Ad ad : ads){
             if(!pricelists.contains(ad.getPriceList())){
                 pricelists.add(ad.getPriceList().getId());

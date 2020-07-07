@@ -10,6 +10,7 @@ import OrdinarySearchContainer from '../../containers/Search/OrdinarySearchConta
 import { fetchAdsFromPublisher } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import AdViewContainer from '../Ad/AdViewContainer';
+import PricelistFromAdContainer from "../Pricelists/PricelistFromAdContainer"
 
 const MyAdsContainer = () => {
     const dispatch = useDispatch();
@@ -22,6 +23,8 @@ const MyAdsContainer = () => {
     const [flagAvailability, setFlagAvailability] = useState(false);
     const [adId, setAdId] = useState(null);
     const [flagAdView, setFlagAdView] = useState(false);
+    const [flagEditPricelist, setFlagEditPricelist] = useState(false);
+    
 
     useEffect(() => {
         dispatch(
@@ -42,6 +45,7 @@ const MyAdsContainer = () => {
     const handleBack = () => {
         setFlagAvailability(false);
         setFlagAdView(false);
+        setFlagEditPricelist(false);
     }
     const viewAd = (event) => {
         console.log(event);
@@ -49,9 +53,24 @@ const MyAdsContainer = () => {
         console.log("definisanje dostupnosti");
         setFlagAdView(true);
     }
+    const editPricelist = (event) => {
+        console.log(event);
+        setAdId(event);
+        console.log("IZMENA CENOVNIKA");
+        setFlagEditPricelist(true);
+    }
 
     return (
         <Container>
+             {flagEditPricelist ?
+                <PricelistFromAdContainer
+                    adId={adId} setAdId={setAdId}
+                    flagEditPricelist={flagEditPricelist} setFlagEditPricelist={setFlagEditPricelist}
+                    handleBack={handleBack}
+                />
+                :
+                null
+            }
             {flagAvailability ?
                 <AvailabilityContainer
                     adId={adId} setAdId={setAdId}
@@ -72,7 +91,7 @@ const MyAdsContainer = () => {
                 null
 
             }
-            {flagAdView === false && flagAvailability === false ?
+            {flagAdView === false && flagAvailability === false && flagEditPricelist === false ?
                 <Container>
                     <Row>
                         <Col md={12} xs={12}>
@@ -89,6 +108,7 @@ const MyAdsContainer = () => {
                                         token={token}
                                         definingAvailability={definingAvailability}
                                         viewAd={viewAd}
+                                        editPricelist={editPricelist}
                                     />
                                     : <SpinnerContainer />
                             }

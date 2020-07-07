@@ -66,10 +66,13 @@ public class PriceListController {
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.DELETE)
-    public ResponseEntity<?> deletePriceList(@RequestParam(value = "id") Long id) {
-        Integer flag = priceListService.deleteById(id);
+    public ResponseEntity<?> deletePriceList(@RequestParam(value = "id") Long id, Principal p) {
+
+        Integer flag = priceListService.deleteById(id, p.getName());
         if (flag == 1) {
             return new ResponseEntity<>("Cenovnik uspesno obrisan.", HttpStatus.CREATED);
+        }else if(flag == 2){
+            return new ResponseEntity<>("Cenovnik se koristi. Ne moze se obrisati.", HttpStatus.BAD_REQUEST);
         } else {
             return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }

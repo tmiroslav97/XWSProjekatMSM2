@@ -27,9 +27,9 @@ public interface PriceListService {
 
     Integer editPriceList(PriceList priceList);
 
-    Integer deleteById(Long id);
+    Integer deleteById(Long id, String publisher);
 
-    List<Long> findPricelistsFromAds();
+    List<Long> findPricelistsFromAds(String publisher);
 
     Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
 

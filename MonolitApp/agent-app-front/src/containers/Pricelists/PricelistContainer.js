@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import PricelistComponent from '../../components/Pricelists/PricelistComponent';
-import EndUsersComponent from '../../components/Users/EndUsersComponent';
 import { pricelistsSelector } from '../../store/pricelist/selectors';
 import { fetchPriceListsFromPublisher, addPriceList, editPriceList, deletePriceList } from '../../store/pricelist/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
