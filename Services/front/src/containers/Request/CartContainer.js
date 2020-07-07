@@ -18,9 +18,9 @@ const CartContainer = () => {
         });
         const result = await RequestService.submitReq(obj);
         console.log(result);
-        if(result === 'Zahtjev uspjesno kreiran.'){
+        if (result === 'Zahtjev uspjesno kreiran.') {
             dispatch(putSuccessMsg(result));
-        }else{
+        } else {
             dispatch(putErrorMsg(result));
         }
         handleClearCart();
@@ -38,8 +38,11 @@ const CartContainer = () => {
         setCart(temp);
     };
 
-    const handleRemoveItem = (item) => {
-        cart.delete(item);
+    const handleRemoveItem = (item, adId) => {
+        cart.get(item).ads = cart.get(item).ads.filter(ad => ad.id != adId);
+        if (cart.get(item).ads.length == 1) {
+            cart.get(item).bundle = false;
+        }
         const temp = new Map(cart);
         localStorage.setItem('cart', JSON.stringify(Array.from(temp.entries())));
         setCart(temp);

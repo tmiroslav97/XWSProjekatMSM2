@@ -29,7 +29,7 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
     @Override
     public CarCalendarTerm findById(Long id) {
-        return carCalendarTermRepository.findById(id).orElseThrow(()-> new NotFoundException("Termin u kalendaru ne postoji."));
+        return carCalendarTermRepository.findById(id).orElseThrow(() -> new NotFoundException("Termin u kalendaru ne postoji."));
     }
 
     @Override
@@ -39,8 +39,8 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
     @Override
     public CarCalendarTerm save(CarCalendarTerm carCalendarTerm) {
-        if(carCalendarTerm.getId() != null){
-            if(carCalendarTermRepository.existsById(carCalendarTerm.getId())){
+        if (carCalendarTerm.getId() != null) {
+            if (carCalendarTermRepository.existsById(carCalendarTerm.getId())) {
                 throw new ExistsException(String.format("Termin u kalendaru vec postoji."));
             }
         }
@@ -74,11 +74,11 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
     @Override
     public Integer addCarCalendarTerm(CarCalendarTermDTO carCalendarTermDTO) {
-        CarCalendarTerm carCalendarTerm =  CarCalendarTermConverter.toCarCalendarTermFromRequest(carCalendarTermDTO);
+        CarCalendarTerm carCalendarTerm = CarCalendarTermConverter.toCarCalendarTermFromRequest(carCalendarTermDTO);
 
-        if(carCalendarTerm != null){
+        if (carCalendarTerm != null) {
             Ad ad = adService.findById(carCalendarTermDTO.getAdId());
-            if(ad != null){
+            if (ad != null) {
                 carCalendarTerm.setAd(ad);
                 carCalendarTerm = this.save(carCalendarTerm);
 
@@ -104,15 +104,15 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
     public List<CarCalendarTermCreateDTO> findByAdId(Long id) {
         List<CarCalendarTermCreateDTO> list = new ArrayList<>();
         Ad ad = adService.findById(id);
-        if(ad != null){
-            System.out.println("naziv oglasa: "+ad.getName());
+        if (ad != null) {
+            System.out.println("naziv oglasa: " + ad.getName());
             Set<CarCalendarTerm> carCalendarTerms = ad.getCarCalendarTerms();
-            for(CarCalendarTerm carCalendarTerm: carCalendarTerms){
+            for (CarCalendarTerm carCalendarTerm : carCalendarTerms) {
                 CarCalendarTermCreateDTO dto = new CarCalendarTermCreateDTO();
                 dto.setEndDate(carCalendarTerm.getEndDate().toString());
                 dto.setStartDate(carCalendarTerm.getStartDate().toString());
                 list.add(dto);
-                System.out.println("termin: " + carCalendarTerm.getStartDate() + carCalendarTerm.getEndDate() );
+                System.out.println("termin: " + carCalendarTerm.getStartDate() + carCalendarTerm.getEndDate());
             }
         }
 
@@ -120,8 +120,31 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
     }
 
     @Override
-    public CarCalendarTerm findByAdAndDate(Long adId, DateTime startDate, DateTime endDate) {
-        return carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+    public Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate) {
+        CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+        if (carCalendarTerm == null) {
+            return false;
+        } else {
+            CarCalendarTerm newCarCalendarTerm = CarCalendarTerm.builder()
+                    .startDate(endDate)
+                    .endDate(carCalendarTerm.getEndDate())
+                    .ad(carCalendarTerm.getAd())
+                    .build();
+            carCalendarTerm.setEndDate(startDate);
+            this.edit(carCalendarTerm);
+            this.save(newCarCalendarTerm);
+            return true;
+        }
+    }
+
+    @Override
+    public Boolean canSplitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate) {
+        CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+        if (carCalendarTerm == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }

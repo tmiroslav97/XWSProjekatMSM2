@@ -12,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import services.app.adservice.client.AdSearchClient;
 import services.app.adservice.client.AuthenticationClient;
 import services.app.adservice.config.AppConfig;
 import services.app.adservice.config.RabbitMQConfiguration;
@@ -57,9 +56,6 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private AdSearchClient adSearchClient;
 
     @Autowired
     private AppConfig appConfig;
@@ -285,31 +281,37 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Boolean acceptCarCalendar(AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO) {
+    @RabbitListener(queues = RabbitMQConfiguration.ACCEPT_REQUEST_QUEUE_NAME)
+    public Boolean acceptCarCalendar(String msg) {
+        AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO;
+        try {
+            acceptReqestCalendarTermsDTO = objectMapper.readValue(msg, AcceptReqestCalendarTermsDTO.class);
+        } catch (JsonProcessingException exception) {
+            return false;
+        }
         if (acceptReqestCalendarTermsDTO.getBundle()) {
-            int sumAds = acceptReqestCalendarTermsDTO.getAds().size();
+            int sumAds = acceptReqestCalendarTermsDTO.getAdRequestDTOS().size();
             int cnt = 0;
-            for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
-                Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getEndDate()));
-                if (carCalendarTerm != null) {
-                    return true;
-                } else {
-                    return false;
+            for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
+                Boolean flag = carCalendarTermService.canSplitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
+                if (flag) {
+                    cnt++;
                 }
             }
-            return true;
+            if (cnt == acceptReqestCalendarTermsDTO.getAdRequestDTOS().size()) {
+                for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
+                    carCalendarTermService.splitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
+                }
+                return true;
+            } else {
+                return false;
+            }
         } else {
-            for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
-                Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getEndDate()));
-                if (carCalendarTerm != null) {
-                    return true;
-                } else {
-                    return false;
-                }
+            Boolean flag = false;
+            for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
+                flag = carCalendarTermService.splitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
             }
-            return true;
+            return flag;
         }
     }
 

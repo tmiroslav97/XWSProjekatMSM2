@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import services.app.carrequestservice.client.AdServiceClient;
 import services.app.carrequestservice.client.AuthenticationClient;
 import services.app.carrequestservice.config.RabbitMQConfiguration;
 import services.app.carrequestservice.converter.DateAPI;
@@ -39,9 +38,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private AdServiceClient adServiceClient;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -130,20 +126,24 @@ public class RequestServiceImpl implements RequestService {
             this.save(request);
             return "Uspjesno odbijen zahtjev";
         }
+        if (!acceptRequest.getAction().equals("accept")) {
+            return "Nepoznata akcija";
+        }
         AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO = RequestConverter.toCreateAcceptRequestCalendarTermsDTO(request);
-        Boolean flag = adServiceClient.acceptCarCalendar(acceptReqestCalendarTermsDTO);
-        if (flag) {
-            if (acceptRequest.getAction().equals("accept")) {
+        try {
+            String acceptReqestCalendarTermsDTOStr = objectMapper.writeValueAsString(acceptReqestCalendarTermsDTO);
+            Boolean flag = (Boolean) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.ACCEPT_REQUEST_QUEUE_NAME, acceptReqestCalendarTermsDTOStr);
+            if (flag) {
                 request.setStatus(RequestStatusEnum.PAID);
                 this.save(request);
-                //this.deleteAllWithSameAdId(request.getAds());
                 return "Uspjesno prihvacen zahtjev";
             } else {
-                return "Nepoznata akcija";
+                return "Nije moguce prihvatiti zahtjev";
             }
-        } else {
+        } catch (JsonProcessingException exception) {
             return "Nije moguce prihvatiti zahtjev";
         }
+
     }
 
     @Override
