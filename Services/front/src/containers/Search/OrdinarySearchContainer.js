@@ -227,6 +227,7 @@ const OrdinarySearchContainer = () => {
             event.stopPropagation();
             setValidated(true);
         } else {
+            console.log("Toggle " + toggleAdvancedSearch);
             if (toggleAdvancedSearch === false) {
                 data = {
                     'location': form.location.value,
@@ -234,13 +235,26 @@ const OrdinarySearchContainer = () => {
                     'endDate': endDate,
                     'nextPage': nextPage,
                     'size': size,
-                    'advancedSearch': toggleAdvancedSearch
+                    'carManufacturer': '',
+                    'carModel': '',
+                    'carType': '',
+                    'mileage': 0,
+                    'mileageKM': 0,
+                    'gearboxType': '',
+                    'fuelType': '',
+                    'childrenSeatNum': 0,
+                    'cdw': false,
+                    'startPrice': 0,
+                    'endPrice': 0,
+                    'advancedSearch': false
                 }
             } else {
                 data = {
                     'location': form.location.value,
                     'startDate': startDate,
                     'endDate': endDate,
+                    'nextPage': nextPage,
+                    'size': size,
                     'carManufacturer': form.carManufacturer.value,
                     'carModel': form.carModel.value,
                     'carType': form.carType.value,

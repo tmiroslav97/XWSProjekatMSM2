@@ -111,7 +111,9 @@ export function* uploadImage() {
 }
 
 export function* searchAd() {
+    console.log('PRETRAGA SAGA')
     const { payload } = yield take(SEARCH_AD);
+    console.log(payload)
     yield put(putAds({ 'isFetch': false }));
     const data = yield call(AdServices.fetchAdsPaginatedSearch, payload.data);
     yield put(putAds({

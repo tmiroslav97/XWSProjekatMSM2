@@ -131,6 +131,42 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public AdPageContentDTO findAllAdvancedSearch(Integer page, Integer size, String location, String startDate, String endDate,
+                                                  String carManufacturer, String carModel, String carType, Float mileage,
+                                                  Float mileageKM, String gearboxType, String fuelType, Integer childrenSeatNum,
+                                                  Boolean cdw, Float startPrice, Float endPrice) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        Page<Ad> ads;
+
+        DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+        DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
+        ads = adRepository.findByDeletedAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfterAndCarCarModel(false, location, startD, endD, carManufacturer, carModel,
+                carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum, cdw, startPrice, endPrice, pageable);
+
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads) {
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO userFLNameDTO;
+            try {
+                userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+                userFLNameDTO = new UserFLNameDTO();
+            }
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            adPageDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+            ret.add(adPageDTO);
+        }
+
+        AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
+                .totalPageCnt(ads.getTotalPages())
+                .ads(ret)
+                .build();
+
+        return adPageContentDTO;
+    }
+
+    @Override
     @RabbitListener(queues = RabbitMQConfiguration.AD_SEARCH_SYNC_QUEUE_NAME)
     public Integer syncData(String msg) {
         try {
@@ -155,11 +191,6 @@ public class AdServiceImpl implements AdService {
         } catch (JsonProcessingException exception) {
             return null;
         }
-    }
-
-    @Override
-    public AdPageDTO advancedSearch() {
-        return null;
     }
 
     @Override

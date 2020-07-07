@@ -35,17 +35,17 @@ public class AdController {
     }
 
     @RequestMapping(path = "/search", method = RequestMethod.GET)
-    public ResponseEntity<?> findAllSearch(@RequestParam(value = "nextPage", required = false) Integer nextPage,
-                                           @RequestParam(value = "size", required = false) Integer size,
+    public ResponseEntity<?> findAllSearch(@RequestParam(value = "nextPage") Integer nextPage,
+                                           @RequestParam(value = "size") Integer size,
                                            @RequestParam(value = "location") String location,
                                            @RequestParam(value = "startDate") String startDate,
                                            @RequestParam(value = "endDate") String endDate,
                                            @RequestParam(value = "carManufacturer") String carManufacturer,
                                            @RequestParam(value = "carModel") String carModel,
                                            @RequestParam(value = "carType") String carType,
-                                           @RequestParam(value = "mileage") String mileage,
+                                           @RequestParam(value = "mileage") Float mileage,
                                            @RequestParam(value = "mileageKM") Float mileageKM,
-                                           @RequestParam(value = "gearboxType") Float gearboxType,
+                                           @RequestParam(value = "gearboxType") String gearboxType,
                                            @RequestParam(value = "fuelType") String fuelType,
                                            @RequestParam(value = "childrenSeatNum") Integer childrenSeatNum,
                                            @RequestParam(value = "cdw") Boolean cdw,
@@ -54,14 +54,14 @@ public class AdController {
                                            @RequestParam(value = "advancedSearch") Boolean advancedSearch
                                            ) {
 
-        AdPageContentDTO ret = null;
-
+        System.out.println(childrenSeatNum);
         if(advancedSearch)
-            ret = adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate);
+            return new ResponseEntity<>(adService.findAllAdvancedSearch(nextPage, size, location, startDate, endDate, carManufacturer, carModel,
+                    carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum, cdw, startPrice, endPrice), HttpStatus.OK);
         else
-            ret = adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate);
+            return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate), HttpStatus.OK);
 
-        return new ResponseEntity<>(ret, HttpStatus.OK);
+
     }
 
 

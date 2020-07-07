@@ -3,6 +3,7 @@ package services.app.adsearchservice.service.intf;
 
 
 import org.joda.time.DateTime;
+import org.springframework.web.bind.annotation.RequestParam;
 import services.app.adsearchservice.dto.ad.AdPageContentDTO;
 import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
@@ -17,9 +18,12 @@ public interface AdService {
     AdPageContentDTO findAll(Integer page, Integer size);
     Integer syncData(AdSynchronizeDTO adSynchronizeDTO);
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate);
+    AdPageContentDTO findAllAdvancedSearch(Integer page, Integer size, String location, String startDate, String endDate,
+                                           String carManufacturer, String carModel, String carType, Float mileage,
+                                           Float mileageKM, String gearboxType, String fuelType, Integer childrenSeatNum,
+                                           Boolean cdw, Float startPrice, Float endPrice);
+
     Integer syncData(String msg);
-    //moguce slati sort parametre
-    AdPageDTO advancedSearch();
 
     void addAd(Ad ad);
 }

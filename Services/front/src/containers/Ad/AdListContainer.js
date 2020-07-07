@@ -32,6 +32,18 @@ const AdListContainer = () => {
                     'location': searchData.location,
                     'startDate': searchData.startDate,
                     'endDate': searchData.endDate,
+                    'carManufacturer': searchData.carManufacturer,
+                    'carModel': searchData.carModel,
+                    'carType': searchData.carType,
+                    'mileage': searchData.mileage,
+                    'mileageKM': searchData.mileageKM,
+                    'gearboxType': searchData.gearboxType,
+                    'fuelType': searchData.fuelType,
+                    'childrenSeatNum': searchData.childrenSeatNum,
+                    'cdw': searchData.cdw,
+                    'startPrice': searchData.startPrice,
+                    'endPrice': searchData.endPrice,
+                    'advancedSearch': searchData.advancedSearch,
                     'nextPage': nextPage,
                     'size': size
                 }
