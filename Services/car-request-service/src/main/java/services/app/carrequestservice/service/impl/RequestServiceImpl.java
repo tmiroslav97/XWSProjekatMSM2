@@ -219,6 +219,7 @@ public class RequestServiceImpl implements RequestService {
                                 .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
                                 .build();
                         ad = adService.save(ad);
+                        ads.add(ad);
                     }
                     Request request = Request.builder()
                             .submitDate(DateAPI.DateTimeNow())
