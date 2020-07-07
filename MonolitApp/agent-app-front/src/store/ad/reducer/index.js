@@ -7,7 +7,8 @@ import {
     PUT_IMAGE_SRC,
     PUT_CALENDAR,
     PUT_SEARCH_DATA,
-    PUT_COMMENTS
+    PUT_COMMENTS,
+    PUT_DISCOUNTS
 } from '../constants';
 
 const initialState = {
@@ -50,6 +51,10 @@ const initialState = {
         // nextPage: 0,
         // size: 10,
         isFetch: false
+    },
+    discounts:{
+        data: [],
+        isFetch:false
     }
 
 };
@@ -68,7 +73,8 @@ const actionHandler = {
     [PUT_IMAGE_SRC]: computationFunctions.putImageSrc,
     [PUT_CALENDAR]: computationFunctions.putCalendar,
     [PUT_SEARCH_DATA]: computationFunctions.putSearchData,
-    [PUT_COMMENTS]: computationFunctions.putComments
+    [PUT_COMMENTS]: computationFunctions.putComments,
+    [PUT_DISCOUNTS]: computationFunctions.putDiscounts
 
 
 };

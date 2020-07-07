@@ -11,9 +11,11 @@ public interface DiscountListService {
 
     List<DiscountListDTO> findAll();
 
-    List<DiscountListDTO> findAllByAgent(String email);
+    List<DiscountList> findAllByAgent(String email);
 
     List<DiscountListDTO> findAllDiscountFromAd(Long id);
+
+    List<DiscountListDTO> findAllByAgentDTO(String email);
 
     DiscountList save(DiscountList discountList);
 

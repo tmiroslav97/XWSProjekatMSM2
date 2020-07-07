@@ -43,9 +43,8 @@ public class DiscountListServiceImpl implements DiscountListService {
     }
 
     @Override
-    public List<DiscountListDTO> findAllByAgent(String email) {
-        List<DiscountList> discountLists = discountListRepository.findAllByAgent(email);
-        return DiscountListConverter.fromEntityList(discountLists, DiscountListConverter::toDiscountListDTOFromDiscountList);
+    public List<DiscountList> findAllByAgent(String email) {
+        return discountListRepository.findAllByAgent(email);
     }
 
     @Override
@@ -55,6 +54,12 @@ public class DiscountListServiceImpl implements DiscountListService {
         for(DiscountList dl : ad.getDiscountLists()){
             discountLists.add(dl);
         }
+        return DiscountListConverter.fromEntityList(discountLists, DiscountListConverter::toDiscountListDTOFromDiscountList);
+    }
+
+    @Override
+    public List<DiscountListDTO> findAllByAgentDTO(String email) {
+        List<DiscountList> discountLists = this.findAllByAgent(email);
         return DiscountListConverter.fromEntityList(discountLists, DiscountListConverter::toDiscountListDTOFromDiscountList);
     }
 

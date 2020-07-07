@@ -30,7 +30,7 @@ public class DiscountController {
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value="/agent", method = RequestMethod.GET)
     public ResponseEntity<?> findAllDiscountListFromAgent(Principal p) {
-        return new ResponseEntity<>(discountListService.findAllByAgent(p.getName()), HttpStatus.OK);
+        return new ResponseEntity<>(discountListService.findAllByAgentDTO(p.getName()), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")

@@ -23,7 +23,10 @@ export const FETCH_ALL_COMMENTS = 'fetch_all_comments';
 export const FETCH_BEST_GRADE = 'fetch_best_grade';
 export const FETCH_MAX_MILEAGE = 'fetch_max_mileage';
 export const FETCH_MAX_COMMENTS = 'fetch_max_comments';
-
-
-
-
+//discount list
+export const PUT_DISCOUNTS ='put_discounts';
+export const FETCH_DISCOUNTS = 'fetch_discounts';
+export const FETCH_DISCOUNTS_FROM_AGENT = 'fetch_discounts_from_agent';
+export const ADD_DISCOUNT = 'add_discount';
+export const EDIT_DISCOUNT = 'edit_discount';
+export const DELETE_DISCOUNT = 'delete_discount';

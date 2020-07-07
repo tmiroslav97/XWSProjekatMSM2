@@ -5,7 +5,8 @@ const FINALPOINTS = {
     IMAGE_BASE: 'image',
     CALENDAR_BASE: '/calendar',
     PUBLISHER_BASE: '/publisher',
-    COMMENT_BASE: '/comment'
+    COMMENT_BASE: '/comment',
+    DISCOUNT_BASE: '/discount-list'
 
 };
 
@@ -289,6 +290,22 @@ class AdServices extends HttpBaseClient {
         }
         );
         console.log(response);
+        return response.data;
+    };
+
+    fetchAllDicounts = async payload => {
+        console.log("FETCH DISCOUNTS")
+        const response = await this.getApiClient().get(
+            FINALPOINTS.DISCOUNT_BASE 
+        );
+        return response.data;
+    };
+
+    fetchAllDicountsFromAgent = async payload => {
+        console.log("FETCH DISCOUNTS")
+        const response = await this.getApiClient().get(
+            FINALPOINTS.DISCOUNT_BASE + "/agent"
+        );
         return response.data;
     };
 }

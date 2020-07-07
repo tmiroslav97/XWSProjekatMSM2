@@ -44,3 +44,10 @@ export function putComments(state, payload) {
     };
 }
 
+export function putDiscounts(state, payload){
+    return {
+        ...state,
+        discounts: payload
+    };
+}
+
