@@ -34,11 +34,6 @@ public class DiscountController {
         return new ResponseEntity<>(discountListService.findAllByAgentDTO(p.getName()), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value="/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> findAllDiscountListFromAd(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(discountListService.findAllDiscountFromAd(id), HttpStatus.OK);
-    }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)

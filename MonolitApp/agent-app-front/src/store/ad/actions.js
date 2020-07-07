@@ -27,6 +27,7 @@ import{
     PUT_DISCOUNTS,
     FETCH_DISCOUNTS,
     FETCH_DISCOUNTS_FROM_AGENT,
+    FETCH_DISCOUNTS_FROM_AD,
     ADD_DISCOUNT,
     EDIT_DISCOUNT,
     DELETE_DISCOUNT
@@ -167,10 +168,12 @@ export const fetchDiscounts = payload => ({
     type: FETCH_DISCOUNTS,
     payload
 });
+
 export const fetchDiscountsFromAgent = payload => ({
     type: FETCH_DISCOUNTS_FROM_AGENT,
     payload
 });
+
 
 export const addDiscount = payload => ({
     type: ADD_DISCOUNT,

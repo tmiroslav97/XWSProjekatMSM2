@@ -91,7 +91,11 @@ const MyAdComponent = (props) => {
                             }
                             {
                                 disable ? null :
-                                    <Button variant="outline-success" onClick={() => { props.editPricelist(variant.id); }}>Izmeni cenovnik</Button>
+                                    <Button  className="mb-2" variant="outline-success" onClick={() => { props.editPricelist(variant.id); }}>Izmeni cenovnik</Button>
+                            }
+                            {
+                                disable ? null :
+                                    <Button variant="outline-success" onClick={() => { props.definedDiscountList(variant.id); }}>Dodaj popust</Button>
                             }
                         </Col>
 

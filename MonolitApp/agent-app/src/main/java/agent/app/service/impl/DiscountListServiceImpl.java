@@ -7,7 +7,6 @@ import agent.app.exception.NotFoundException;
 import agent.app.model.Ad;
 import agent.app.model.Agent;
 import agent.app.model.DiscountList;
-import agent.app.model.PriceList;
 import agent.app.repository.DiscountListRepository;
 import agent.app.service.intf.AdService;
 import agent.app.service.intf.AgentService;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DiscountListServiceImpl implements DiscountListService {
@@ -48,19 +46,22 @@ public class DiscountListServiceImpl implements DiscountListService {
     }
 
     @Override
-    public List<DiscountListDTO> findAllDiscountFromAd(Long id) {
-        Ad ad =  adService.findById(id);
-        List<DiscountList> discountLists = new ArrayList<>();
-        for(DiscountList dl : ad.getDiscountLists()){
-            discountLists.add(dl);
-        }
-        return DiscountListConverter.fromEntityList(discountLists, DiscountListConverter::toDiscountListDTOFromDiscountList);
-    }
-
-    @Override
     public List<DiscountListDTO> findAllByAgentDTO(String email) {
+
         List<DiscountList> discountLists = this.findAllByAgent(email);
-        return DiscountListConverter.fromEntityList(discountLists, DiscountListConverter::toDiscountListDTOFromDiscountList);
+        List<DiscountListDTO> discountListDTOS = new ArrayList<>();
+
+        for(DiscountList dl : discountLists){
+            DiscountListDTO discountListDTO = DiscountListConverter.toDiscountListDTOFromDiscountList(dl);
+
+            List<Long> adsId = new ArrayList<>();
+            for(Ad ad : dl.getAds()){
+                adsId.add(ad.getId());
+            }
+            discountListDTO.setAdsId(adsId);
+            discountListDTOS.add(discountListDTO);
+        }
+        return discountListDTOS;
     }
 
     @Override

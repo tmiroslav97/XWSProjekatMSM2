@@ -51,9 +51,6 @@ const DiscountsContainer = () => {
         if(discounts.data !== ""){
             discounts.data.map((discount) => {
                 if(discount.id === id){
-                    console.log("popust");
-                    console.log(discount.id);
-
                     setDiscountData(discount);
                 }
             });
