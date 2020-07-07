@@ -12,6 +12,12 @@ public class RabbitMQConfiguration {
     public static final String END_USER_IS_BLOCKED_ID_QUEUE_NAME = "end_user_is_blocked_id";
     public static final String AD_CAR_INFO_QUEUE_NAME = "ad_car_info";
     public static final String ACCEPT_REQUEST_QUEUE_NAME = "accept_request";
+    public static final String END_USER_CANCELED_RENT_CNT_QUEUE_NAME = "user_submit_rent_cnt";
+
+    @Bean
+    public Queue endUserCanceledRentCnt() {
+        return new Queue(END_USER_CANCELED_RENT_CNT_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue acceptRequest() {

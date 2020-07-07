@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import services.app.carrequestservice.client.AuthenticationClient;
 import services.app.carrequestservice.config.RabbitMQConfiguration;
@@ -105,6 +107,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public Boolean quitRequest(Long id) {
+        Request request = this.findById(id);
+        request.setStatus(RequestStatusEnum.CANCELED);
+        this.save(request);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME,Long.valueOf(cp.getUserId()));
+        return true;
+    }
+
+    @Override
     public void deleteAllWithSameAdId(List<Ad> ads) {
         List<Request> requests = requestRepository.findRequestByAds(ads);
         for (Request req : requests) {
@@ -132,6 +145,7 @@ public class RequestServiceImpl implements RequestService {
             if (flag) {
                 request.setStatus(RequestStatusEnum.PAID);
                 this.save(request);
+                this.rejectOtherRequests(request);
                 return "Uspjesno prihvacen zahtjev";
             } else {
                 return "Nije moguce prihvatiti zahtjev";
@@ -140,6 +154,16 @@ public class RequestServiceImpl implements RequestService {
             return "Nije moguce prihvatiti zahtjev";
         }
 
+    }
+
+    @Override
+    public Boolean rejectOtherRequests(Request request) {
+        for (Ad ad : request.getAds()) {
+            List<Request> requests = requestRepository.findAllRequestContainsAdAndOverlapDate(request.getId(), ad.getMainId(), ad.getStartDate(), ad.getEndDate());
+            requests.stream().forEach(request1 -> request1.setStatus(RequestStatusEnum.CANCELED));
+            requestRepository.saveAll(requests);
+        }
+        return true;
     }
 
     @Override

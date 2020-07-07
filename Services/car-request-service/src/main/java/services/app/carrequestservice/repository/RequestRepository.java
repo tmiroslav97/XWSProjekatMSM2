@@ -1,5 +1,6 @@
 package services.app.carrequestservice.repository;
 
+import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,4 +24,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     @Query("SELECT req FROM Request req where req.ads in (?1)")
     List<Request> findRequestByAds(List<Ad> ads);
+
+    @Query("SELECT req FROM Request req join req.ads ad where req.id<>(?1) and ad.mainId=(?2) and ad.startDate<=(?4) and ad.endDate>=(?3)")
+    List<Request> findAllRequestContainsAdAndOverlapDate(Long requestId, Long mainId, DateTime startDate, DateTime endDate);
 }

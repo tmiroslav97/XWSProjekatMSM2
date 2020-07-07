@@ -34,6 +34,21 @@ public class RequestController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value = "/end-user", method = RequestMethod.PUT)
+    public ResponseEntity<?> quitRequest(@RequestBody ReqAcceptDTO reqAcceptDTO) {
+        if (reqAcceptDTO.getAction().equals("quit")) {
+            Boolean flag = requestService.quitRequest(reqAcceptDTO.getId());
+            if (flag) {
+                return new ResponseEntity<>("Uspjesno odustajanje od zahtjeva", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Nepoznata akcija", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status) {

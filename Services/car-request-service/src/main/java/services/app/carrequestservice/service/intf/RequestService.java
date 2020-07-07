@@ -2,6 +2,7 @@ package services.app.carrequestservice.service.intf;
 
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.AcceptRequest;
+import services.app.carrequestservice.model.AcceptResponse;
 import services.app.carrequestservice.model.Ad;
 import services.app.carrequestservice.model.Request;
 
@@ -26,9 +27,13 @@ public interface RequestService {
 
     Long authAgent(String email, String identifier);
 
+    Boolean quitRequest(Long id);
+
     void deleteAllWithSameAdId(List<Ad> ads);
 
     String acceptRequest(Long requestId, String action);
+
+    Boolean rejectOtherRequests(Request request);
 
     List<Request> findAllByPublisherUserIdAndByStatus(Long id, String status);
 
