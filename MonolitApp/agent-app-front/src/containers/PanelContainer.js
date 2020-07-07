@@ -18,6 +18,7 @@ import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
 import StatisticsContainer from '../containers/AgentFirm/StatisticsContainer';
 import SynchronizeContainer from '../containers/AgentFirm/SynchronizeContainer';
+import PricelistContainer from '../containers/Pricelists/PricelistContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -122,6 +123,13 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="pricelist" onClick={() => { history.push("/panel/pricelist"); }}>
+                                    Moji cenovnici
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
                     </Nav>
                 </Col>
                 <Col sm={10} md={10} xs={12}>
@@ -137,6 +145,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/statistics`} component={StatisticsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/sync`} component={SynchronizeContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/pricelist`} component={PricelistContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                 </Col>
             </Row>
         </Container >

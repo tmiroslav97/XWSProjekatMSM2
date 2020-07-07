@@ -266,6 +266,19 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public List<Ad> findAllFromPublisher(String publisherEmail) {
+        PublisherUser publisherUser = publisherUserService.findByEmail(publisherEmail);
+        List<Ad> ret = new ArrayList<>();
+        List<Ad> ads = adRepository.findAll();
+        for(Ad ad : ads){
+            if(ad.getPublisherUser().getId() == publisherUser.getId()){
+                ret.add(ad);
+            }
+        }
+        return ret;
+    }
+
+    @Override
     public AdPageContentDTO findAll(Integer page, Integer size) {
 
 //        Pageable pageable;

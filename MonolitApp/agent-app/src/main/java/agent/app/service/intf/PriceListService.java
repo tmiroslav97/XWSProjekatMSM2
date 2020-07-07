@@ -1,5 +1,6 @@
 package agent.app.service.intf;
 
+import agent.app.dto.ad.ReversePricelistDTO;
 import agent.app.dto.pricelist.PriceListCreateDTO;
 import agent.app.model.PriceList;
 
@@ -27,5 +28,9 @@ public interface PriceListService {
     Integer editPriceList(PriceList priceList);
 
     Integer deleteById(Long id);
+
+    List<Long> findPricelistsFromAds();
+
+    Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
 
 }

@@ -62,6 +62,15 @@ class PriceListService extends HttpBaseClient {
         return response.data;
     };
 
+    reversePricelist = async payload =>{
+        console.log("REVERSE PRICELIST") 
+        const response = await this.getApiClient().post(
+            FINALPOINTS.PRICE_LIST_BASE + "/reverse-pricelist",
+            payload
+        );
+        return response.data;
+    };
+
 }
 
 export default new PriceListService();

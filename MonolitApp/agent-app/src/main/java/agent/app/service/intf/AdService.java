@@ -49,4 +49,5 @@ public interface AdService {
 
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);
 
+    List<Ad> findAllFromPublisher(String publisherEmail);
 }

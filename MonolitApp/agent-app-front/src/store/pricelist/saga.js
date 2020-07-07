@@ -3,6 +3,7 @@ import { take, put, call, select } from 'redux-saga/effects';
 import { history } from '../../index';
 
 import PriceListService from '../../services/PriceListService';
+import AdServices from '../../services/AdServices';
 
 import {
     FETCH_PRICE_LISTS,
@@ -10,7 +11,8 @@ import {
     FETCH_PRICE_LIST,
     ADD_PRICE_LIST,
     EDIT_PRICE_LIST,
-    DELETE_PRICE_LIST
+    DELETE_PRICE_LIST,
+    REVERSE_PRICE_LIST
 } from './constants';
 
 import {
@@ -23,9 +25,15 @@ import {
 } from '../common/actions';
 
 import {
+    putAd
+} from '../ad/actions';
+
+import {
     pricelistsSelector,
     pricelistSelector
 } from './selectors';
+
+import {adSelector} from '../ad/selectors';
 
 export function* fetchPriceLists() {
     const { payload } = yield take(FETCH_PRICE_LISTS);
@@ -63,7 +71,7 @@ export function* addPriceList() {
     yield put(putSuccessMsg(msg));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceLists, temp);
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
         'data': data,
         'isFetch': true
@@ -77,7 +85,7 @@ export function* editPriceList() {
     yield put(putSuccessMsg(null));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceLists, temp);
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
         'data': data,
         'isFetch': true
@@ -90,9 +98,29 @@ export function* deletePriceList() {
     yield put(putSuccessMsg(msg));
     const temp = yield select(pricelistSelector);
     yield put(putPriceLists({ 'isFetch': false }));
-    const data = yield call(PriceListService.fetchPriceLists, temp);
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
     yield put(putPriceLists({
         'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* reversePricelist() {
+    const { payload } = yield take(REVERSE_PRICE_LIST);
+    console.log(payload)
+    const msg = yield call(AdServices.reversePricelist, payload);
+    yield put(putSuccessMsg(msg));
+    const temp = yield select(pricelistSelector);
+    yield put(putPriceLists({ 'isFetch': false }));
+    const data = yield call(PriceListService.fetchPriceListsFromPublisher, temp);
+    yield put(putPriceLists({
+        'data': data,
+        'isFetch': true
+    }));
+    yield put(putAd({ 'isFetch': false }));
+    const data1 = yield call(AdServices.fetchAd, payload.adId);
+    yield put(putAd({
+        'data': data1,
         'isFetch': true
     }));
 }

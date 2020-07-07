@@ -1,6 +1,7 @@
 package agent.app.controller;
 
 import agent.app.converter.PriceListConverter;
+import agent.app.dto.ad.ReversePricelistDTO;
 import agent.app.dto.pricelist.PriceListCreateDTO;
 import agent.app.model.CarManufacturer;
 import agent.app.model.PriceList;
@@ -55,7 +56,7 @@ public class PriceListController {
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> editPriceList(@RequestBody PriceListCreateDTO priceListCreateDTO) {
-        Integer flag = priceListService.editPriceList(PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO));
+        Integer flag = priceListService.editPriceList(PriceListConverter.toEditPriceListFromRequest(priceListCreateDTO));
         if (flag == 1) {
             return new ResponseEntity<>("Cenovnik uspesno izmenjen.", HttpStatus.CREATED);
         } else {
@@ -72,6 +73,17 @@ public class PriceListController {
         } else {
             return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/reverse-pricelist", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> reversePricelist(@RequestBody ReversePricelistDTO reversePricelistDTO) {
+
+        Integer rez = priceListService.reversePricelist(reversePricelistDTO);
+        if (rez == 1) {
+            return new ResponseEntity<>("Izmenili ste cenovnik oglasa.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
 
