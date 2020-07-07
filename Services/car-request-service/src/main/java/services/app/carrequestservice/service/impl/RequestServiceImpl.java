@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -113,8 +114,16 @@ public class RequestServiceImpl implements RequestService {
         this.save(request);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
-        rabbitTemplate.convertAndSend(RabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME,Long.valueOf(cp.getUserId()));
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME, Long.valueOf(cp.getUserId()));
         return true;
+    }
+
+    @Override
+    @Scheduled(cron = "${reject.cron}")
+    public void autoRejectRequests() {
+        List<Request> requests = requestRepository.findAllByStatusAndSubmitDate(RequestStatusEnum.PENDING, DateAPI.DateTimeNow().minusDays(1));
+        requests.stream().forEach(request -> request.setStatus(RequestStatusEnum.CANCELED));
+        requestRepository.saveAll(requests);
     }
 
     @Override

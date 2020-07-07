@@ -29,6 +29,8 @@ public interface RequestService {
 
     Boolean quitRequest(Long id);
 
+    void autoRejectRequests();
+
     void deleteAllWithSameAdId(List<Ad> ads);
 
     String acceptRequest(Long requestId, String action);
