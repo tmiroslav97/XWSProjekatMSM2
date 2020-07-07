@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AcceptReqestCalendarTermsDTO {
+    Long publisherUserId;
     Boolean bundle;
     List<AdRequestDTO> adRequestDTOS;
 }

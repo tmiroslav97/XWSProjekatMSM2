@@ -2,6 +2,10 @@ package services.app.adservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +67,9 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private AmqpAdmin amqpAdmin;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -285,8 +292,13 @@ public class AdServiceImpl implements AdService {
     @RabbitListener(queues = RabbitMQConfiguration.ACCEPT_REQUEST_QUEUE_NAME)
     public Boolean acceptCarCalendar(String msg) {
         AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO;
+        UserFLNameDTO userFLNameDTO;
+        String routingKey;
         try {
             acceptReqestCalendarTermsDTO = objectMapper.readValue(msg, AcceptReqestCalendarTermsDTO.class);
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, acceptReqestCalendarTermsDTO.getPublisherUserId());
+            userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            routingKey = userFLNameDTO.getUserEmail().replace("@", ".")+".cct";
         } catch (JsonProcessingException exception) {
             return false;
         }
@@ -305,6 +317,9 @@ public class AdServiceImpl implements AdService {
                 try {
                     String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
                     rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
+                    if (!userFLNameDTO.getLocal()) {
+                        rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, carCalendarTermSynchronizeDTOSStr);
+                    }
                 } catch (JsonProcessingException exception) {
                     continue;
                 }

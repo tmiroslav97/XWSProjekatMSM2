@@ -18,6 +18,7 @@ public class RequestConverter extends AbstractConverter {
                 .build()).collect(Collectors.toList()));
         return AcceptReqestCalendarTermsDTO.builder()
                 .bundle(request.getBundle())
+                .publisherUserId(request.getPublisherUser())
                 .adRequestDTOS(adRequestDTOS)
                 .build();
     }
