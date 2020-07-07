@@ -56,8 +56,9 @@ public class AdController {
 
         System.out.println(childrenSeatNum);
         if(advancedSearch)
-            return new ResponseEntity<>(adService.findAllAdvancedSearch(nextPage, size, location, startDate, endDate, carManufacturer, carModel,
-                    carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum, cdw, startPrice, endPrice), HttpStatus.OK);
+            return new ResponseEntity<>(adService.findAllAdvancedSearch(nextPage, size, location, startDate, endDate,
+                    carManufacturer, carModel, carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum,
+                    cdw, startPrice, endPrice), HttpStatus.OK);
         else
             return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate), HttpStatus.OK);
 

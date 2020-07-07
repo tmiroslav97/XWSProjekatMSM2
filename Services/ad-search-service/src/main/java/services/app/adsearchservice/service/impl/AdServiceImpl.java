@@ -137,7 +137,6 @@ public class AdServiceImpl implements AdService {
                                                   Boolean cdw, Float startPrice, Float endPrice) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads;
-
         DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
         DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
         ads = adRepository.findByDeletedAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startD, endD, carManufacturer, carModel,
