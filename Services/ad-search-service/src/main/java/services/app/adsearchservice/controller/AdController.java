@@ -37,6 +37,7 @@ public class AdController {
     @RequestMapping(path = "/search", method = RequestMethod.GET)
     public ResponseEntity<?> findAllSearch(@RequestParam(value = "nextPage") Integer nextPage,
                                            @RequestParam(value = "size") Integer size,
+                                           @RequestParam(value = "sort") String sort,
                                            @RequestParam(value = "location") String location,
                                            @RequestParam(value = "startDate") String startDate,
                                            @RequestParam(value = "endDate") String endDate,
@@ -54,13 +55,14 @@ public class AdController {
                                            @RequestParam(value = "advancedSearch") Boolean advancedSearch
                                            ) {
 
-        System.out.println(childrenSeatNum);
+
+        System.out.println(sort);
         if(advancedSearch)
             return new ResponseEntity<>(adService.findAllAdvancedSearch(nextPage, size, location, startDate, endDate,
                     carManufacturer, carModel, carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum,
-                    cdw, startPrice, endPrice), HttpStatus.OK);
+                    cdw, startPrice, endPrice, sort), HttpStatus.OK);
         else
-            return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate), HttpStatus.OK);
+            return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startDate, endDate, sort), HttpStatus.OK);
 
 
     }

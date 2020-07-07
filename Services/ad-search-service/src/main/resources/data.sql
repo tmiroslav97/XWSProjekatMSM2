@@ -10,7 +10,7 @@ VALUES (1, 'slika1.jpg', false, true, 'Beograd', 'Oglas za autic fiat', STR_TO_D
 INSERT INTO ad_search_db.ad(id, cover_photo, deleted, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_per_day, publisher_user)
 VALUES (3, 'slika9.jpg', false, true, 'Beograd', 'Oglas za audi', STR_TO_DATE('20-05-2020', '%d-%m-%Y'), 8, 40, 10, 3500.0, 4);
 INSERT INTO ad_search_db.ad(id, cover_photo, deleted, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_per_day, publisher_user)
-VALUES (4, 'slika16.jpg', false, true, 'Novi Sad', 'Oglas za automobil BMW', STR_TO_DATE('29-03-2020', '%d-%m-%Y'), 5, 21, 4, 3500.0, 4);
+VALUES (4, 'slika16.jpg', false, true, 'Novi Sad', 'Oglas za automobil BMW', STR_TO_DATE('29-03-2020', '%d-%m-%Y'), 5, 21, 4, 1500.0, 4);
 
 INSERT INTO ad_car(ad_id, car_id)
 VALUES (1, 1);

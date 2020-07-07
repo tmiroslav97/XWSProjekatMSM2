@@ -11,7 +11,7 @@ import Slider from '@material-ui/core/Slider';
 const OrdinarySearchComponent = (props) => {
 
     return (
-        <Card >
+        <Card >            
             <Card.Body>
                 <Form id="search" onSubmit={props.onSubmit} noValidate validated={props.validated}>
                     <Row>
@@ -107,7 +107,7 @@ const OrdinarySearchComponent = (props) => {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group >
-                                        <Form.Label>Unesi opseg cijene</Form.Label>
+                                        <Form.Label>Unesi opseg cijene (RSD)</Form.Label>
                                         <br />
                                         <br />
                                         <br />

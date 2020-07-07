@@ -81,7 +81,8 @@ class AdServices extends HttpBaseClient {
             FINALPOINTS.AD_SEARCH_BASE + '/ad', {
             params: {
                 nextPage: payload.nextPage,
-                size: payload.size
+                size: payload.size,
+                sort: payload.sort
             }
         }
         );
@@ -133,7 +134,8 @@ class AdServices extends HttpBaseClient {
                 endPrice: payload.endPrice,
                 advancedSearch: payload.advancedSearch,
                 nextPage: payload.nextPage,
-                size: payload.size
+                size: payload.size,
+                sort: payload.sort
             }
         }
         );

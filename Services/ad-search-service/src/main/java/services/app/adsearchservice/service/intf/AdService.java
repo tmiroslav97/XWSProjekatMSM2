@@ -17,11 +17,11 @@ public interface AdService {
     Ad save(Ad ad);
     AdPageContentDTO findAll(Integer page, Integer size);
     Integer syncData(AdSynchronizeDTO adSynchronizeDTO);
-    AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate);
+    AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate, String sort);
     AdPageContentDTO findAllAdvancedSearch(Integer page, Integer size, String location, String startDate, String endDate,
                                            String carManufacturer, String carModel, String carType, Float mileage,
                                            Float mileageKM, String gearboxType, String fuelType, Integer childrenSeatNum,
-                                           Boolean cdw, Float startPrice, Float endPrice);
+                                           Boolean cdw, Float startPrice, Float endPrice, String sort);
 
     Integer syncData(String msg);
 

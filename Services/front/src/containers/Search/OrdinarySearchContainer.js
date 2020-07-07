@@ -8,7 +8,8 @@ import { searchAd } from '../../store/ad/actions';
 import { adsSelector, searchDataSelector } from '../../store/ad/selectors';
 import { putSearchData } from '../../store/ad/actions';
 
-const OrdinarySearchContainer = () => {
+
+const OrdinarySearchContainer = (props) => {
     const dispatch = useDispatch();
     const [validated, setValidated] = useState(false);
 
@@ -16,6 +17,7 @@ const OrdinarySearchContainer = () => {
     const searchData = useSelector(searchDataSelector);
     const [nextPage, setNextPage] = useState(ads.nextPage);
     const [size, setSize] = useState(ads.size);
+    const [sort, setSort] = useState(ads.sort);
 
     const [location, setLocation] = useState(searchData.location);
     const [startDate, setStartDate] = useState(searchData.startDate);
@@ -222,7 +224,8 @@ const OrdinarySearchContainer = () => {
                     'cdw': false,
                     'startPrice': 0,
                     'endPrice': 0,
-                    'advancedSearch': false
+                    'advancedSearch': false,
+                    'sort': sort
                 }
             } else {
                 data = {
@@ -242,7 +245,8 @@ const OrdinarySearchContainer = () => {
                     'cdw': cdw,
                     'startPrice': lowValue,
                     'endPrice': highValue,
-                    'advancedSearch': toggleAdvancedSearch
+                    'advancedSearch': toggleAdvancedSearch,
+                    'sort': sort
                 }
             }
 
@@ -291,6 +295,8 @@ const OrdinarySearchContainer = () => {
                 </Col>
             </Row>
             <br />
+            
+            
         </Container>
 
 

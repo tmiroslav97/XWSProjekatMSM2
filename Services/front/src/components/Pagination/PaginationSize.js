@@ -9,7 +9,7 @@ const PaginationSize = (props) => {
                 <Col md={{ span: 4 }} xs={12}>
                     <Form.Row>
                         <Form.Label >Stavki po stranici:</Form.Label>
-                        <Form.Group as={Col} md={3} xs={3} >
+                        <Form.Group as={Col} md={4} xs={3} >
                             <Form.Control as="select" id="selPageSize" value={props.size} onChange={({ currentTarget }) => {
                                 props.setSize(currentTarget.value);
                             }}>

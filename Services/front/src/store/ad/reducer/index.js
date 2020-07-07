@@ -17,6 +17,7 @@ const initialState = {
         totalPageCnt: 0,
         nextPage: 0,
         size: 10,
+        sort:  'name asc',
         isFetch: false
     },
     imageName: {
@@ -54,7 +55,8 @@ const initialState = {
         endPrice: 0,
         advancedSearch: false,
         nextPage: 0,
-        size : 10
+        size : 10,
+        sort: 'name asc'
     },
     comments:{
         data: [],
