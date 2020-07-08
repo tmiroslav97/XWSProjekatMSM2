@@ -23,6 +23,8 @@ public interface EndUserService {
 
     void delete(EndUser endUser);
 
+    void submitRentCnt(Long id);
+
     EndUser save(EndUser endUser);
 
     Boolean existsByEmail(String email);

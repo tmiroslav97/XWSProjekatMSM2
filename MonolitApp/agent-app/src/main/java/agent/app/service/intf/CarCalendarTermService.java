@@ -19,5 +19,5 @@ public interface CarCalendarTermService {
     CarCalendarTerm editCarCalendarTerm(CarCalendarTerm carCalendarTerm);
     List<CarCalendarTermCreateDTO> findByAdId(Long id);
     CarCalendarTerm findByAdAndDate(Long adId, DateTime startDate, DateTime endDate);
-
+    void carCalendarTermSync(String msg);
 }

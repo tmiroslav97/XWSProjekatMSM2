@@ -1,6 +1,6 @@
 package agent.app.config;
 
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,6 +11,25 @@ public class RabbitMQConfiguration {
     public static final String AD_SYNC_QUEUE_NAME = "ad_sync_rpc";
     public static final String PL_SYNC_QUEUE_NAME = "pl_sync_rpc";
     public static final String DL_SYNC_QUEUE_NAME = "dl_sync_rpc";
+    public static final String AGENT_SYNC_QUEUE_NAME = "agent_sync";
+
+    @Bean
+    public TopicExchange topic() {
+        return new TopicExchange(AGENT_SYNC_QUEUE_NAME);
+    }
+
+    @Bean
+    public Queue autoDeleteQueueCarCalendarTerm() {
+        return new AnonymousQueue();
+    }
+
+    @Bean
+    public Binding bindingCarCalendarTerm(TopicExchange topic,
+                             Queue autoDeleteQueueCarCalendarTerm) {
+        return BindingBuilder.bind(autoDeleteQueueCarCalendarTerm)
+                .to(topic)
+                .with("tomic.miroslav97.gmail.com.cct");
+    }
 
     @Bean
     public Queue authQueue() {

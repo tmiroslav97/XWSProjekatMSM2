@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import AgentRequestsComponent from '../../components/Request/AgentRequestsComponent';
 import AgentRequestsPendingComponent from '../../components/Request/AgentRequestsPendingComponent';
+import AgentRequestsPaidComponent from '../../components/Request/AgentRequestsPaidComponent';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 import { useDispatch } from 'react-redux';
 
 const AgentRequestsContainer = () => {
-    const dispatch = useDispatch
+    const dispatch = useDispatch();
     const [pendingRequests, setPendingRequests] = useState([]);
     const [isFetchPendingRequests, setIsFetchPendingRequests] = useState(false);
     const [paidRequests, setPaidRequests] = useState([]);
@@ -37,15 +38,17 @@ const AgentRequestsContainer = () => {
         setIsFetchCanceledRequests(true);
     }
 
-    const handleAccept = async (id) => {
-        setIsFetchCanceledRequests(false);
-        const result = await RequestService.acceptRequest({ "id": id });
-        if (result = "Uspjesno prihvacen zahjtev") {
+    const handleAccept = async (id, action) => {
+        const result = await RequestService.acceptRequest({ "id": id, "action": action });
+        console.log(result);
+        if (result === "Uspjesno prihvacen zahtjev" || result === "Uspjesno odbijen zahtjev") {
             dispatch(putSuccessMsg(result));
         } else {
             dispatch(putErrorMsg(result));
         }
         fetchPendingRequests();
+        fetchPaidRequests();
+        fetchCanceledRequests();
     }
 
     useEffect(() => {
@@ -69,7 +72,7 @@ const AgentRequestsContainer = () => {
                 <Col md={12} xs={12}>
                     {
                         isFetchPaidRequests ?
-                            <AgentRequestsComponent requests={paidRequests} status="paid" /> : <SpinnerContainer />
+                            <AgentRequestsPaidComponent requests={paidRequests} status="paid" /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>

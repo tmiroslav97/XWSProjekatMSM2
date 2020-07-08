@@ -13,5 +13,5 @@ public interface CarCalendarTermService {
     CarCalendarTerm createCarCalendarTerm(CarCalendarTermSynchronizeDTO dto);
     CarCalendarTerm editCarCalendarTerm(CarCalendarTerm carCalendarTerm);
     Integer deleteById(Long id);
-
+    void carCalendarTermSync(String msg);
 }

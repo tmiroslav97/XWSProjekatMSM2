@@ -5,7 +5,7 @@ import FormModalContainer from '../../containers/Common/FormModalContainer';
 import CommentComponent from '../Comment/CommentComponent';
 import ReactStars from "react-rating-stars-component";
 
-const EndUserRequestsPaidComponent = (props) => { 
+const EndUserRequestsPaidComponent = (props) => {
 
     return (
         <div>
@@ -20,11 +20,11 @@ const EndUserRequestsPaidComponent = (props) => {
                     <Table responsive>
                         <thead>
                             <tr>
-                                <th>Datum podnosenja zahtjeva</th>
+                                <th>Naziv oglasa</th>
                                 <th>Datum pocetka rentiranja</th>
                                 <th>Datum zavrsetka rentiranja</th>
                                 <th>Bundle zahtjev</th>
-                                <th>Naziv oglasa</th>
+                                <th>Datum podnosenja zahtjeva</th>
                                 <th>Ostavi komentar</th>
                                 <th>Ostavi ocenu</th>
                             </tr>
@@ -34,15 +34,6 @@ const EndUserRequestsPaidComponent = (props) => {
                                 props.requests.map((req, idx) => {
                                     return (
                                         <tr key={idx}>
-                                            <td>{req.submitDate}</td>
-                                            <td>{req.startDate}</td>
-                                            <td>{req.endDate}</td>
-                                            <td> {
-                                                req.bundle ?
-                                                    <p>Da</p> : <p>Ne</p>
-                                            }
-                                            </td>
-
                                             <td>
                                                 <ListGroup variant="flush">
                                                     {
@@ -50,12 +41,50 @@ const EndUserRequestsPaidComponent = (props) => {
                                                             return (
                                                                 <OverlayTrigger key={idx} overlay={<Tooltip id="tooltip-disabled">Klikni za detaljno</Tooltip>}>
                                                                     <span className="d-inline-block">
-                                                                        <ListGroup.Item action onClick={() => { history.push('/ad-detail-view/' + ad.id); }}>{ad.adName}</ListGroup.Item>
+                                                                        <ListGroup.Item action onClick={() => { history.push('/ad-detail-view/' + ad.mainId); }}>{ad.adName}</ListGroup.Item>
                                                                     </span>
                                                                 </OverlayTrigger>
                                                             );
                                                         })
                                                     }
+                                                </ListGroup>
+                                            </td>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    {
+                                                        req.ads.map((ad, idx) => {
+                                                            return (
+                                                                <ListGroup.Item key={idx}>{ad.startDate}</ListGroup.Item>
+                                                            );
+                                                        })
+                                                    }
+                                                </ListGroup>
+                                            </td>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    {
+                                                        req.ads.map((ad, idx) => {
+                                                            return (
+                                                                <ListGroup.Item key={idx}>{ad.endDate}</ListGroup.Item>
+                                                            );
+                                                        })
+                                                    }
+                                                </ListGroup>
+                                            </td>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    <ListGroup.Item> {
+                                                        req.bundle ?
+                                                            <p>Da</p> : <p>Ne</p>
+                                                    }
+                                                    </ListGroup.Item>
+                                                </ListGroup>
+                                            </td>
+                                            <td>
+                                                <ListGroup variant="flush">
+                                                    <ListGroup.Item>
+                                                        {req.submitDate}
+                                                    </ListGroup.Item>
                                                 </ListGroup>
                                             </td>
                                             <td>
@@ -87,7 +116,7 @@ const EndUserRequestsPaidComponent = (props) => {
                                                                             half={false}
                                                                             color2={"#ffd700"}
                                                                         />
-                                                                        
+
                                                                     </span>
                                                                 </OverlayTrigger>
                                                             );

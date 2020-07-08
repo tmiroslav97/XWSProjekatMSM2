@@ -1,6 +1,10 @@
 package services.app.adservice.config;
 
+import org.springframework.amqp.core.AmqpAdmin;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +19,24 @@ public class RabbitMQConfiguration {
     public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
     public static final String AD_ACCEPT_REQ_QUEUE_NAME = "ad_accept_req";
     public static final String AD_CAR_INFO_QUEUE_NAME = "ad_car_info";
+    public static final String ACCEPT_REQUEST_QUEUE_NAME = "accept_request";
+    public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
+    public static final String AGENT_SYNC_QUEUE_NAME = "agent_sync";
+
+    @Bean
+    public TopicExchange topic() {
+        return new TopicExchange(AGENT_SYNC_QUEUE_NAME);
+    }
+
+    @Bean
+    public Queue cctSync() {
+        return new Queue(CCT_SYNC_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue acceptRequest() {
+        return new Queue(ACCEPT_REQUEST_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue adCarInfo() {
@@ -56,4 +78,8 @@ public class RabbitMQConfiguration {
         return new Queue(AD_SEARCH_SYNC_QUEUE_NAME, false);
     }
 
+    @Bean
+    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
 }

@@ -9,6 +9,8 @@ public class PublisherUserConverter {
                 .userId(user.getId())
                 .userFirstName(user.getFirstName())
                 .userLastName(user.getLastName())
+                .userEmail(user.getEmail())
+                .local(user.getLocal())
                 .build();
     }
 }
