@@ -102,6 +102,14 @@ public class EndUserServiceImpl implements EndUserService {
     }
 
     @Override
+    @RabbitListener(queues = LocalRabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME)
+    public void submitRentCnt(Long id) {
+        EndUser endUser = this.findById(id);
+        endUser.setCanceledCnt(endUser.getCanceledCnt() + 1);
+        this.save(endUser);
+    }
+
+    @Override
     public EndUser save(EndUser endUser) {
         return endUserRepository.save(endUser);
     }

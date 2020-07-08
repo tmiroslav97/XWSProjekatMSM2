@@ -1,8 +1,0 @@
-dist
-tmp
-node_modules
-.gitignore
-.git
-.vscode
-.editorconfig
-*.md

@@ -7,7 +7,6 @@ import services.app.adservice.common.db.DbTableConstants;
 
 import javax.persistence.*;
 
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter

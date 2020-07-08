@@ -82,6 +82,11 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public Ad findByMainId(Long mainId) {
+        return adRepository.findByMainId(mainId);
+    }
+
+    @Override
     public Ad save(Ad ad) {
         if (ad.getId() != null) {
             if (adRepository.existsById(ad.getId())) {

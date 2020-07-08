@@ -13,6 +13,8 @@ public interface AdService {
 
     List<Ad> findAll();
 
+    Ad findByMainId(Long mainId);
+
     AdPageContentDTO findAll(Integer page, Integer size);
 
     AdPageContentDTO findAll(Integer page, Integer size, String email);

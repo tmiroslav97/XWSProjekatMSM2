@@ -82,7 +82,6 @@ public class AdController {
         return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
-
     @RequestMapping(value = "/accept", method = RequestMethod.POST)
     public Boolean acceptCarCalendar(@RequestBody AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO) {
         return adService.acceptCarCalendar(acceptReqestCalendarTermsDTO);

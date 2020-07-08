@@ -5,13 +5,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import services.app.carrequestservice.client.AdServiceClient;
-import services.app.carrequestservice.client.AuthenticationClient;
 import services.app.carrequestservice.config.RabbitMQConfiguration;
 import services.app.carrequestservice.converter.DateAPI;
 import services.app.carrequestservice.converter.RequestConverter;
 import services.app.carrequestservice.dto.AgentFirmIdentificationDTO;
+import services.app.carrequestservice.dto.UserFLNameDTO;
 import services.app.carrequestservice.dto.ad.AdCarInfoDTO;
 import services.app.carrequestservice.dto.ad.AdRequestDTO;
 import services.app.carrequestservice.dto.carreq.AcceptReqestCalendarTermsDTO;
@@ -38,12 +40,6 @@ public class RequestServiceImpl implements RequestService {
     private AdService adService;
 
     @Autowired
-    private AuthenticationClient authenticationClient;
-
-    @Autowired
-    private AdServiceClient adServiceClient;
-
-    @Autowired
     private RabbitTemplate rabbitTemplate;
 
     ObjectMapper objectMapper = new ObjectMapper();
@@ -60,7 +56,7 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> findAllByEndUserId(Long id) {
-        return requestRepository.findAllByEndUser(id);
+        return requestRepository.findAllByEndUserId(id);
     }
 
     @Override
@@ -70,28 +66,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<Request> findAllByPublisherUserId(Long id) {
-        return requestRepository.findAllByPublisherUser(id);
+        return requestRepository.findAllByPublisherUserId(id);
     }
 
-    @Override
-    public List<Request> findAllByPublisherUserEmail(String email, String identifier) {
-        Long publisherUserId = this.authAgent(email, identifier);
-        if (publisherUserId != null) {
-            return this.findAllByPublisherUserId(authenticationClient.findPublishUserByEmailWS(email));
-        } else {
-            return new ArrayList<>();
-        }
-    }
-
-    @Override
-    public List<Request> findAllByPublisherUserEmailAndStatus(String email, String identifier, String status) {
-        Long publisherUserId = this.authAgent(email, identifier);
-        if (publisherUserId != null) {
-            return this.findAllByPublisherUserIdAndByStatus(authenticationClient.findPublishUserByEmailWS(email), status);
-        } else {
-            return new ArrayList<>();
-        }
-    }
 
     @Override
     public Long authAgent(String email, String identifier) {
@@ -109,6 +86,25 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public Boolean quitRequest(Long id) {
+        Request request = this.findById(id);
+        request.setStatus(RequestStatusEnum.CANCELED);
+        this.save(request);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME, Long.valueOf(cp.getUserId()));
+        return true;
+    }
+
+    @Override
+    @Scheduled(cron = "${reject.cron}")
+    public void autoRejectRequests() {
+        List<Request> requests = requestRepository.findAllByStatusAndSubmitDate(RequestStatusEnum.PENDING, DateAPI.DateTimeNow().minusDays(1));
+        requests.stream().forEach(request -> request.setStatus(RequestStatusEnum.CANCELED));
+        requestRepository.saveAll(requests);
+    }
+
+    @Override
     public void deleteAllWithSameAdId(List<Ad> ads) {
         List<Request> requests = requestRepository.findRequestByAds(ads);
         for (Request req : requests) {
@@ -119,31 +115,42 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public String acceptRequest(AcceptRequest acceptRequest) {
-        Long publisherUser = this.authAgent(acceptRequest.getPublisherUserEmail(), acceptRequest.getIdentifier());
-        if (publisherUser == null) {
-            return "Agent nije registrovan u sistemu";
-        }
-        Request request = this.findById(acceptRequest.getId());
-        if (acceptRequest.getAction().equals("reject")) {
+    public String acceptRequest(Long requestId, String action) {
+        Request request = this.findById(requestId);
+        if (action.equals("reject")) {
             request.setStatus(RequestStatusEnum.CANCELED);
             this.save(request);
             return "Uspjesno odbijen zahtjev";
         }
+        if (!action.equals("accept")) {
+            return "Nepoznata akcija";
+        }
         AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO = RequestConverter.toCreateAcceptRequestCalendarTermsDTO(request);
-        Boolean flag = adServiceClient.acceptCarCalendar(acceptReqestCalendarTermsDTO);
-        if (flag) {
-            if (acceptRequest.getAction().equals("accept")) {
+        try {
+            String acceptReqestCalendarTermsDTOStr = objectMapper.writeValueAsString(acceptReqestCalendarTermsDTO);
+            Boolean flag = (Boolean) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.ACCEPT_REQUEST_QUEUE_NAME, acceptReqestCalendarTermsDTOStr);
+            if (flag) {
                 request.setStatus(RequestStatusEnum.PAID);
                 this.save(request);
-                //this.deleteAllWithSameAdId(request.getAds());
+                this.rejectOtherRequests(request);
                 return "Uspjesno prihvacen zahtjev";
             } else {
-                return "Nepoznata akcija";
+                return "Nije moguce prihvatiti zahtjev";
             }
-        } else {
+        } catch (JsonProcessingException exception) {
             return "Nije moguce prihvatiti zahtjev";
         }
+
+    }
+
+    @Override
+    public Boolean rejectOtherRequests(Request request) {
+        for (Ad ad : request.getAds()) {
+            List<Request> requests = requestRepository.findAllRequestContainsAdAndOverlapDate(request.getId(), ad.getMainId(), ad.getStartDate(), ad.getEndDate());
+            requests.stream().forEach(request1 -> request1.setStatus(RequestStatusEnum.CANCELED));
+            requestRepository.saveAll(requests);
+        }
+        return true;
     }
 
     @Override
@@ -164,8 +171,20 @@ public class RequestServiceImpl implements RequestService {
         if (blocked) {
             return 2;
         } else {
+            UserFLNameDTO endUserFLName = new UserFLNameDTO();
+            try {
+                String endUserFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, userId);
+                endUserFLName = objectMapper.readValue(endUserFLNameStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+            }
             for (Map.Entry<Long, SubmitRequestDTO> entry : submitRequestDTOS.entrySet()) {
                 SubmitRequestDTO itemSubmitRequestDTO = entry.getValue();
+                UserFLNameDTO publisherUserFLName = new UserFLNameDTO();
+                try {
+                    String publisherUserFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, entry.getKey());
+                    publisherUserFLName = objectMapper.readValue(publisherUserFLNameStr, UserFLNameDTO.class);
+                } catch (JsonProcessingException exception) {
+                }
                 if (itemSubmitRequestDTO.getBundle()) {
                     List<Ad> ads = new ArrayList<>();
                     for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
@@ -185,19 +204,26 @@ public class RequestServiceImpl implements RequestService {
                                 .pricePerKm(adCarInfoDTO.getPricePerKm())
                                 .pricePerKmCDW(adCarInfoDTO.getPricePerKmCDW())
                                 .cdw(adCarInfoDTO.getCdw())
-                                .rated(false)
+                                .review(null)
                                 .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
                                 .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
                                 .build();
                         ad = adService.save(ad);
+                        ads.add(ad);
                     }
                     Request request = Request.builder()
                             .submitDate(DateAPI.DateTimeNow())
                             .status(RequestStatusEnum.PENDING)
                             .ads(ads)
                             .bundle(itemSubmitRequestDTO.getBundle())
-                            .publisherUser(entry.getKey())
-                            .endUser(userId)
+                            .endUserId(endUserFLName.getUserId())
+                            .endUserFirstName(endUserFLName.getUserFirstName())
+                            .endUserLastName(endUserFLName.getUserLastName())
+                            .endUserEmail(endUserFLName.getUserEmail())
+                            .publisherUserId(publisherUserFLName.getUserId())
+                            .publisherUserFirstName(publisherUserFLName.getUserFirstName())
+                            .publisherUserLastName(publisherUserFLName.getUserLastName())
+                            .publisherUserEmail(publisherUserFLName.getUserEmail())
                             .build();
                     this.save(request);
                 } else {
@@ -219,7 +245,7 @@ public class RequestServiceImpl implements RequestService {
                                 .pricePerKm(adCarInfoDTO.getPricePerKm())
                                 .pricePerKmCDW(adCarInfoDTO.getPricePerKmCDW())
                                 .cdw(adCarInfoDTO.getCdw())
-                                .rated(false)
+                                .review(null)
                                 .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
                                 .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
                                 .build();
@@ -230,8 +256,14 @@ public class RequestServiceImpl implements RequestService {
                                 .status(RequestStatusEnum.PENDING)
                                 .ads(ads)
                                 .bundle(itemSubmitRequestDTO.getBundle())
-                                .publisherUser(entry.getKey())
-                                .endUser(userId)
+                                .endUserId(endUserFLName.getUserId())
+                                .endUserFirstName(endUserFLName.getUserFirstName())
+                                .endUserLastName(endUserFLName.getUserLastName())
+                                .endUserEmail(endUserFLName.getUserEmail())
+                                .publisherUserId(publisherUserFLName.getUserId())
+                                .publisherUserFirstName(publisherUserFLName.getUserFirstName())
+                                .publisherUserLastName(publisherUserFLName.getUserLastName())
+                                .publisherUserEmail(publisherUserFLName.getUserEmail())
                                 .build();
                         this.save(request);
                     }

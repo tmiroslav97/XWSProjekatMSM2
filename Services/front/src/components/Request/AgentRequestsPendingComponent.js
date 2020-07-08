@@ -85,7 +85,10 @@ const AgentRequestsPendingComponent = (props) => {
                                             <td>
                                                 <ListGroup variant="flush">
                                                     <ListGroup.Item>
-                                                        <Button variant="outline-primary" onClick={() => { props.handleAccept(req.id); }}>Prihvati</Button>
+                                                        <Button variant="outline-primary" onClick={() => { props.handleAccept(req.id, 'accept'); }}>Prihvati</Button>
+                                                    </ListGroup.Item>
+                                                    <ListGroup.Item>
+                                                        <Button variant="outline-danger" onClick={() => { props.handleAccept(req.id, 'reject'); }}>Odbij</Button>
                                                     </ListGroup.Item>
                                                 </ListGroup>
                                             </td>

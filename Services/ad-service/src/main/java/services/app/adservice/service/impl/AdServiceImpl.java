@@ -2,6 +2,10 @@ package services.app.adservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import services.app.adservice.client.AdSearchClient;
 import services.app.adservice.client.AuthenticationClient;
 import services.app.adservice.config.AppConfig;
 import services.app.adservice.config.RabbitMQConfiguration;
@@ -20,6 +23,7 @@ import services.app.adservice.converter.*;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
+import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
 import services.app.adservice.dto.pricelist.PriceListDTO;
@@ -59,13 +63,13 @@ public class AdServiceImpl implements AdService {
     private AuthenticationClient authenticationClient;
 
     @Autowired
-    private AdSearchClient adSearchClient;
-
-    @Autowired
     private AppConfig appConfig;
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private AmqpAdmin amqpAdmin;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -285,31 +289,44 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Boolean acceptCarCalendar(AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO) {
-        if (acceptReqestCalendarTermsDTO.getBundle()) {
-            int sumAds = acceptReqestCalendarTermsDTO.getAds().size();
-            int cnt = 0;
-            for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
-                Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getEndDate()));
-                if (carCalendarTerm != null) {
-                    return true;
-                } else {
-                    return false;
+    @RabbitListener(queues = RabbitMQConfiguration.ACCEPT_REQUEST_QUEUE_NAME)
+    public Boolean acceptCarCalendar(String msg) {
+        AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO;
+        UserFLNameDTO userFLNameDTO;
+        String routingKey;
+        try {
+            acceptReqestCalendarTermsDTO = objectMapper.readValue(msg, AcceptReqestCalendarTermsDTO.class);
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, acceptReqestCalendarTermsDTO.getPublisherUserId());
+            userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            routingKey = userFLNameDTO.getUserEmail().replace("@", ".")+".cct";
+        } catch (JsonProcessingException exception) {
+            return false;
+        }
+        int cnt = 0;
+        for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
+            Boolean flag = carCalendarTermService.canSplitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
+            if (flag) {
+                cnt++;
+            }
+        }
+        if (cnt == acceptReqestCalendarTermsDTO.getAdRequestDTOS().size()) {
+            for (AdRequestDTO adRequestDTO : acceptReqestCalendarTermsDTO.getAdRequestDTOS()) {
+                carCalendarTermService.splitCarCalendarTerm(adRequestDTO.getId(), DateAPI.DateTimeStringToDateTime(adRequestDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(adRequestDTO.getEndDate()));
+                List<CarCalendarTerm> carCalendarTerms = carCalendarTermService.findAllByAdId(adRequestDTO.getId());
+                List<CarCalendarTermSynchronizeDTO> carCalendarTermSynchronizeDTOS = CarCalendarTermConverter.toListCarCalendarTermSyncDTOFromListCarCalendarTerm(new HashSet<>(carCalendarTerms));
+                try {
+                    String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
+                    rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
+                    if (!userFLNameDTO.getLocal()) {
+                        rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, carCalendarTermSynchronizeDTOSStr);
+                    }
+                } catch (JsonProcessingException exception) {
+                    continue;
                 }
             }
             return true;
         } else {
-            for (Long adId : acceptReqestCalendarTermsDTO.getAds()) {
-                Ad ad = this.findById(adId);
-                CarCalendarTerm carCalendarTerm = carCalendarTermService.findByAdAndDate(adId, DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getStartDate()), DateAPI.DateTimeStringToDateTime(acceptReqestCalendarTermsDTO.getEndDate()));
-                if (carCalendarTerm != null) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-            return true;
+            return false;
         }
     }
 

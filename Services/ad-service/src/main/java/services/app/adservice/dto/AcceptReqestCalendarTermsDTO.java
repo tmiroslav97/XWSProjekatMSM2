@@ -2,6 +2,7 @@ package services.app.adservice.dto;
 
 import lombok.*;
 import org.joda.time.DateTime;
+import services.app.adservice.dto.ad.AdRequestDTO;
 
 import java.util.List;
 
@@ -11,8 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AcceptReqestCalendarTermsDTO {
+    Long publisherUserId;
     Boolean bundle;
-    String startDate;
-    String endDate;
-    List<Long> ads;
+    List<AdRequestDTO> adRequestDTOS;
 }

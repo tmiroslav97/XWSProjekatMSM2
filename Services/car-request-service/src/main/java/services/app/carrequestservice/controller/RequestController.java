@@ -6,8 +6,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import services.app.carrequestservice.dto.carreq.ReqAcceptDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.CustomPrincipal;
+import services.app.carrequestservice.model.Request;
 import services.app.carrequestservice.service.intf.RequestService;
 
 import java.util.HashMap;
@@ -21,6 +23,12 @@ public class RequestController {
         this.requestService = requestService;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getRequest(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(requestService.findById(id), HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/end-user", method = RequestMethod.GET)
     public ResponseEntity<?> getEndUserRequests(@RequestHeader(value = "status", required = false) String status) {
@@ -30,6 +38,21 @@ public class RequestController {
             return new ResponseEntity<>(requestService.findAllByEndUserId(Long.valueOf(cp.getUserId())), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(requestService.findAllByEndUserIdAndByStatus(Long.valueOf(cp.getUserId()), status), HttpStatus.OK);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value = "/end-user", method = RequestMethod.PUT)
+    public ResponseEntity<?> quitRequest(@RequestBody ReqAcceptDTO reqAcceptDTO) {
+        if (reqAcceptDTO.getAction().equals("quit")) {
+            Boolean flag = requestService.quitRequest(reqAcceptDTO.getId());
+            if (flag) {
+                return new ResponseEntity<>("Uspjesno odustajanje od zahtjeva", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Nepoznata akcija", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -53,10 +76,26 @@ public class RequestController {
         Integer flag = requestService.submitRequest(submitRequestDTOS, Long.valueOf(cp.getUserId()));
         if (flag == 1) {
             return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
-        } else if (flag==2){
+        } else if (flag == 2) {
             return new ResponseEntity<>("Vas nalog je blokiran, imate zabranu rentiranja vozila.", HttpStatus.BAD_REQUEST);
-        }else {
+        } else {
             return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(method = RequestMethod.PUT)
+    public ResponseEntity<?> acceptRequest(@RequestBody ReqAcceptDTO reqAcceptDTO) {
+        if (reqAcceptDTO.getAction() != null && (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject"))) {
+            String response = requestService.acceptRequest(reqAcceptDTO.getId(), reqAcceptDTO.getAction());
+            if (response.equals("Uspjesno odbijen zahtjev") || response.equals("Uspjesno prihvacen zahtjev")) {
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } else {
+            return new ResponseEntity<>("Nepoznata akcija", HttpStatus.BAD_REQUEST);
+
         }
     }
 }
