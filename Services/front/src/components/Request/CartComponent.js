@@ -86,11 +86,17 @@ const CartComponent = (props) => {
                                             </td>
                                             <td>
                                                 <ListGroup variant="flush">
-                                                    <ListGroup.Item>
-                                                        <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item); }}>
-                                                            Ukloni
-                                                        </Button>
-                                                    </ListGroup.Item>
+                                                    {
+                                                        props.cart.get(item).ads.map((ad, idx) => {
+                                                            return (
+                                                                <ListGroup.Item key={idx}>
+                                                                    <Button variant="outline-danger" id="delete" onClick={() => { props.handleRemoveItem(item, ad.id); }}>
+                                                                        Ukloni
+                                                                    </Button>
+                                                                </ListGroup.Item>
+                                                            );
+                                                        })
+                                                    }
                                                 </ListGroup>
                                             </td>
                                         </tr>

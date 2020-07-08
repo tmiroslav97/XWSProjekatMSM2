@@ -15,6 +15,7 @@ import CreateAdContainer from './Ad/CreateAdContainer';
 import MyAdsContainer from './Ad/MyAdsContainer';
 import EndUserRequestsContainer from './Request/EndUserRequestsContainer';
 import AgentRequestsContainer from './Request/AgentRequestsContainer';
+import AgentRequestDetailContainer from './Request/AgentRequestDetailContainer';
 import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
 import CommentsContainer from '../containers/Comment/CommentsContainer';
@@ -152,6 +153,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/my-ads`} component={MyAdsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/end-user-reqs`} component={EndUserRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs/:id`} component={AgentRequestDetailContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/comments`} component={CommentsContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/man-agent`} component={RegAgentContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/man-firm`} component={RegFirmContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />

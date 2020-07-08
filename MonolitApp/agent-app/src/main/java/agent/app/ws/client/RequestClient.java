@@ -2,6 +2,7 @@ package agent.app.ws.client;
 
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import services.app.carrequestservice.model.AcceptRequest;
+import services.app.carrequestservice.model.AcceptResponse;
 import services.app.carrequestservice.model.GetPublisherRequestsByStatusRequest;
 import services.app.carrequestservice.model.GetPublisherRequestsResponse;
 
@@ -24,7 +25,7 @@ public class RequestClient extends WebServiceGatewaySupport {
         request.setId(id);
         request.setAction(action);
 
-        String response = (String) getWebServiceTemplate().marshalSendAndReceive(request);
-        return response;
+        AcceptResponse response = (AcceptResponse) getWebServiceTemplate().marshalSendAndReceive(request);
+        return response.getMsg();
     }
 }

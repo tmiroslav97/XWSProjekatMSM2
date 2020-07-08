@@ -25,6 +25,12 @@ public class LocalRabbitMQConfiguration {
     public static final String AGENT_ID_BY_EMAIL_ID_QUEUE_NAME = "agent_id_by_email_id";
     public static final String END_USER_IS_BLOCKED_ID_QUEUE_NAME = "end_user_is_blocked_id";
     public static final String END_USER_IS_OBLIGED_ID_QUEUE_NAME = "end_user_is_obliged_id";
+    public static final String END_USER_CANCELED_RENT_CNT_QUEUE_NAME = "user_submit_rent_cnt";
+
+    @Bean
+    public Queue endUserCanceledRentCnt() {
+        return new Queue(END_USER_CANCELED_RENT_CNT_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue endUserIsObligedId() {
