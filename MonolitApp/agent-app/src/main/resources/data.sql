@@ -62,11 +62,11 @@ INSERT INTO discount_list(id, discount, day_num, agent_id)
 VALUES (1, 22, 30, 2);
 
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (1, false, 'Fiat', '500', 'Limuzina', 20, 'LIMITED', false, 2, 'Dizel', 'Automatski', 120, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+VALUES (1, false, 'Fiat', '500', 'Limuzina', 20, 'LIMITED', false, 2, 'Dizel', 'Automatik', 120, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (2, false, 'Mercedes-Benz', 'C-klasa', 'Limuzina',  25, 'LIMITED', false, 2, 'Dizel', 'Automatski', 200, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+VALUES (2, false, 'Mercedes-Benz', 'C-klasa', 'Limuzina',  25, 'LIMITED', false, 2, 'Dizel', 'Automatik', 200, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (3, false, 'Audi', 'A3', 'Limuzina', 200, 'LIMITED', false, 3, 'Dizel', 'Automatski', 280, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+VALUES (3, false, 'Audi', 'A3', 'Limuzina', 200, 'LIMITED', false, 3, 'Dizel', 'Automatik', 280, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
 VALUES (4, false, 'BMW', '320d', 'Limuzina', 100, 'LIMITED', true, 3, 'Benzin', 'Manuelni', 250, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
