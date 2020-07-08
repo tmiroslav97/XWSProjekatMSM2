@@ -26,6 +26,7 @@ const AgentRequestDetailContainer = (props) => {
     }
 
     const submitReport = async (payload) => {
+        console.log("Sinhroni poziv za submit report")
         const result = await RequestService.submitReport(payload);
         fetchRequest();
     }
@@ -35,21 +36,27 @@ const AgentRequestDetailContainer = (props) => {
     }, [id]);
 
     const handleSubmitReport = (event) => {
+        console.lod("HANDE SUBMIT REP")
         console.log(selectedAd);
         event.preventDefault();
         const form = event.target;
-        const data = new FormData(event.target);
+        let data = null;
+        console.log(form);
+        
+        // const data = new FormData(event.target);
 
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);
         } else {
-            const data = {
+            data = {
                 "distanceTraveled": data.get('distanceTraveled'),
                 "description": data.get('description'),
                 "adId": selectedAd
             };
-            submitReport(data);
+            console.log("Podaci:")
+            console.log(data);
+            // submitReport(data);
             setValidated(false);
         }
     }
