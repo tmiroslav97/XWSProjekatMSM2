@@ -30,3 +30,4 @@ export const FETCH_DISCOUNTS_FROM_AGENT = 'fetch_discounts_from_agent';
 export const ADD_DISCOUNT = 'add_discount';
 export const EDIT_DISCOUNT = 'edit_discount';
 export const DELETE_DISCOUNT = 'delete_discount';
+export const ADD_DISCOUNT_TO_AD = 'add_discount_to_ad';

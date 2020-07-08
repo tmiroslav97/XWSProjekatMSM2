@@ -67,5 +67,29 @@ public class DiscountController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value="/add-discount-to-ad/{discountId}/{adId}", method = RequestMethod.POST)
+    public ResponseEntity<?> addDiscountListToAd(@PathVariable(value = "discountId") Long discountId,
+                                                 @PathVariable(value = "adId") Long adId) {
+        Integer flag = discountListService.addDiscountToAd(discountId, adId);
+        if (flag == 1) {
+            return new ResponseEntity<>("Popust uspesno dodat.", HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value="/remove-discount-from-ad/{discountId}/{adId}", method = RequestMethod.POST)
+    public ResponseEntity<?> removeDiscountFromAd(@PathVariable(value = "discountId") Long discountId,
+                                                 @PathVariable(value = "adId") Long adId) {
+        Integer flag = discountListService.deleteDiscountFromAd(discountId, adId);
+        if (flag == 1) {
+            return new ResponseEntity<>("Popust uspesno dodat.", HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 }

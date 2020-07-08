@@ -24,4 +24,9 @@ public interface DiscountListService {
     Integer edit(DiscountList discountList);
 
     Integer createDiscount(DiscountListCreateDTO discountListCreateDTO, String email);
+
+    Integer addDiscountToAd(Long discountId, Long adId);
+
+    Integer deleteDiscountFromAd(Long discountId, Long adId);
+
 }

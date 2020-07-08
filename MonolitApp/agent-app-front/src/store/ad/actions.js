@@ -30,7 +30,8 @@ import{
     FETCH_DISCOUNTS_FROM_AD,
     ADD_DISCOUNT,
     EDIT_DISCOUNT,
-    DELETE_DISCOUNT
+    DELETE_DISCOUNT,
+    ADD_DISCOUNT_TO_AD
 } from './constants';
 
 
@@ -185,5 +186,10 @@ export const editDiscount = payload => ({
 });
 export const deleteDiscount = payload => ({
     type: DELETE_DISCOUNT,
+    payload
+});
+
+export const addDiscountToAd = payload => ({
+    type: ADD_DISCOUNT_TO_AD,
     payload
 });

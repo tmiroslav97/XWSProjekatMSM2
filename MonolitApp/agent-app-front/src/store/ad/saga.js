@@ -30,7 +30,8 @@ import {
     FETCH_DISCOUNTS_FROM_AGENT, 
     ADD_DISCOUNT,
     EDIT_DISCOUNT,
-    DELETE_DISCOUNT
+    DELETE_DISCOUNT,
+    ADD_DISCOUNT_TO_AD
 } from './constants';
 
 import {
@@ -350,6 +351,20 @@ export function* editDiscount(){
 export function* deleteDiscount(){
     const { payload } = yield take(DELETE_DISCOUNT);
     const msg = yield call(AdServices.deleteDiscount, payload);
+    yield put(putSuccessMsg(msg));
+    
+    const temp = yield select(discountsSelector);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* addDiscountToAd(){
+    const { payload } = yield take(ADD_DISCOUNT_TO_AD);
+    const msg = yield call(AdServices.addDiscountToAd, payload);
     yield put(putSuccessMsg(msg));
     
     const temp = yield select(discountsSelector);

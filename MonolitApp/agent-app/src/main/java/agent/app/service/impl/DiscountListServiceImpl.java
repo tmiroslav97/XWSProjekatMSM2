@@ -99,4 +99,26 @@ public class DiscountListServiceImpl implements DiscountListService {
         discountList = this.save(discountList);
         return 1;
     }
+
+    @Override
+    public Integer addDiscountToAd(Long discountId, Long adId) {
+        System.out.println("dodavanjeeee");
+        System.out.println(discountId + "    " + adId);
+        DiscountList discountList = this.findById(discountId);
+        Ad ad = adService.findById(adId);
+        ad.getDiscountLists().add(discountList);
+        ad = adService.edit(ad);
+        return 1;
+    }
+
+    @Override
+    public Integer deleteDiscountFromAd(Long discountId, Long adId) {
+        System.out.println("brisanjeee");
+        System.out.println(discountId + "    " + adId);
+        DiscountList discountList = this.findById(discountId);
+        Ad ad = adService.findById(adId);
+        ad.getDiscountLists().remove(discountList);
+        ad = adService.edit(ad);
+        return 1;
+    }
 }

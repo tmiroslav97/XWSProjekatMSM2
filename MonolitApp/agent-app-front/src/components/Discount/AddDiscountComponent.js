@@ -25,7 +25,7 @@ const AddDiscountComponent = (props) => {
                                     </InputGroup>
                                 </Form.Group>
                                 <Form.Group as={Col}>
-                                    <Form.Label>Broj potrebnih dana rentiranja</Form.Label>
+                                    <Form.Label>*Broj potrebnih dana rentiranja</Form.Label>
                                     <InputGroup className="mb-3">
                                         <Form.Control name="dayNum" required
                                             type="number" placeholder="Broj potrebnih dana"

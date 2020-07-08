@@ -348,6 +348,24 @@ class AdServices extends HttpBaseClient {
         );
         return response.data;
     };
+
+    addDiscountToAd = async payload => {
+        console.log("add discount to ad")
+        const response = await this.getApiClient().post(
+            FINALPOINTS.DISCOUNT_BASE + "/add-discount-to-ad/"
+             + payload.discountId + "/" + payload.adId
+        );
+        return response.data;
+    };
+
+    removeDiscountFromAd = async payload => {
+        console.log("add discount to ad")
+        const response = await this.getApiClient().post(
+            FINALPOINTS.DISCOUNT_BASE + "/remove-discount-from-ad/"
+             + payload.discountId + "/" + payload.adId
+        );
+        return response.data;
+    };
 }
 
 
