@@ -24,7 +24,6 @@ public class AdConverter extends AbstractConverter {
                 .deleted(false)
                 .enabled(true)
                 .discountLists(new HashSet<>())
-                .requests(new HashSet<>())
                 .comments(new HashSet<>())
                 .carCalendarTerms(new HashSet<>())
                 .rentCnt(0L)

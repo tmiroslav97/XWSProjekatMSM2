@@ -14,8 +14,6 @@ public interface RequestService {
 
     String findRequestPublisherUserIdentifier(String email);
 
-    Integer submitRequest(List<SubmitRequestDTO> submitRequestDTOS, String email);
-
     void delete(Request request);
 
     Request save(Request request);

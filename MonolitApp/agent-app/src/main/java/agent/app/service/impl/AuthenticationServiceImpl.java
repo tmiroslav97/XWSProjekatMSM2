@@ -82,7 +82,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .comments(new HashSet<>())
                     .inbox(new HashSet<>())
                     .reports(new HashSet<>())
-                    .requests(new HashSet<>())
                     .build();
             userService.save(endUser);
             return 3;

@@ -9,10 +9,8 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -21,9 +19,13 @@ import java.util.Set;
 @Entity
 @Table(name = DbTableConstants.REQUEST)
 public class Request {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = DbColumnConstants.MAINID)
+    private Long mainId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = DbColumnConstants.STATUS, nullable = false)
@@ -40,29 +42,16 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY)
     private EndUser endUser;
 
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.STARTDATE, nullable = false)
-    private DateTime startDate;
-
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.ENDDATE, nullable = false)
-    private DateTime endDate;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Agent agent;
 
     @Column(name = DbColumnConstants.BUNDLE, nullable = false)
     private Boolean bundle;
 
-    @ManyToMany(mappedBy = "requests", fetch = FetchType.LAZY)
-    private Set<Ad> ads = new HashSet<>();
-
-    @OneToMany(mappedBy = "request",fetch = FetchType.LAZY)
-    private Set<Message> messages = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = DbTableConstants.REQUESTAD,
+            joinColumns = @JoinColumn(name = "adRequest_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "request_id", referencedColumnName = "id"))
+    protected List<AdRequest> ads;
 
 }

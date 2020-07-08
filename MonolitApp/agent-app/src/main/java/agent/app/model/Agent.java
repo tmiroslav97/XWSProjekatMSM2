@@ -26,15 +26,20 @@ public class Agent extends PublisherUser {
     @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY)
     private Set<DiscountList> discountLists = new HashSet<>();
 
+    @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY)
+    private Set<Request> requests = new HashSet<>();
+
     @Builder(builderMethodName = "agentFirmBuilder")
     public Agent(Long id, String email, String password, String firstName,
                  String lastName, DateTime lastPasswordResetDate,
                  List<Authority> authorities, Boolean deleted, Set<Ad> ads,
                  Set<PriceList> priceLists, Set<Comment> comments,
                  Set<Message> inbox, Set<Report> reports, String identifier,
-                 Set<DiscountList> discountLists) {
+                 Set<DiscountList> discountLists,
+                 Set<Request> requests) {
         super(id, email, password, firstName, lastName, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, inbox, reports);
         this.discountLists = discountLists;
         this.identifier = identifier;
+        this.requests = requests;
     }
 }
