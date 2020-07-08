@@ -14,6 +14,8 @@ public interface RequestService {
 
     String findRequestPublisherUserIdentifier(String email);
 
+    Boolean rejectOtherRequests(Request request);
+
     List<RequestDTO> findAllByPublisherUserAndStatus(String email, String status);
 
     String acceptRequest(String email, Long id, String action);

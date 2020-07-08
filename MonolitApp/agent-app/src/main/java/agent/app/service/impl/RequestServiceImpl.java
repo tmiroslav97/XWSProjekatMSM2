@@ -77,6 +77,16 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public Boolean rejectOtherRequests(Request request) {
+        for (AdRequest adRequest : request.getAds()) {
+            List<Request> requests = requestRepository.findAllRequestContainsAdAndOverlapDate(request.getId(), adRequest.getAdId(), adRequest.getStartDate(), adRequest.getEndDate());
+            requests.stream().forEach(request1 -> request1.setStatus(RequestStatusEnum.CANCELED));
+            requestRepository.saveAll(requests);
+        }
+        return true;
+    }
+
+    @Override
     public List<RequestDTO> findAllByPublisherUserAndStatus(String email, String status) {
         List<Request> requests = requestRepository.findAllByEndUserAndByStatus(email, RequestStatusEnum.valueOf(status));
         List<RequestDTO> requestDTOS = RequestConverter.fromEntityList(requests, RequestConverter::toRequestDTOFromRequest);
@@ -112,6 +122,7 @@ public class RequestServiceImpl implements RequestService {
             }
             request.setStatus(RequestStatusEnum.PAID);
             this.save(request);
+            this.rejectOtherRequests(request);
             if (request.getMainId() != null) {
                 String identifier = this.findRequestPublisherUserIdentifier(email);
                 String response = requestClient.acceptRequest(email, identifier, request.getMainId(), action);
