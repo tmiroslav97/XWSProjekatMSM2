@@ -17,7 +17,6 @@ const CartContainer = () => {
             obj[item] = cart.get(item);
         });
         const result = await RequestService.submitReq(obj);
-        console.log(result);
         if (result === 'Zahtjev uspjesno kreiran.') {
             dispatch(putSuccessMsg(result));
         } else {

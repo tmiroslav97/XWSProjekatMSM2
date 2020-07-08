@@ -1,8 +1,6 @@
 package services.app.carrequestservice.service.intf;
 
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
-import services.app.carrequestservice.model.AcceptRequest;
-import services.app.carrequestservice.model.AcceptResponse;
 import services.app.carrequestservice.model.Ad;
 import services.app.carrequestservice.model.Request;
 
@@ -20,10 +18,6 @@ public interface RequestService {
     List<Request> findAllByEndUserIdAndByStatus(Long id, String status);
 
     List<Request> findAllByPublisherUserId(Long id);
-
-    List<Request> findAllByPublisherUserEmail(String email, String identifier);
-
-    List<Request> findAllByPublisherUserEmailAndStatus(String email,String identifier, String status);
 
     Long authAgent(String email, String identifier);
 

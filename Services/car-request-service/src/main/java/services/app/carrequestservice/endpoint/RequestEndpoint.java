@@ -17,21 +17,6 @@ public class RequestEndpoint {
         this.requestService = requestService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPublisherRequestsRequest")
-    @ResponsePayload
-    public GetPublisherRequestsResponse getAllRequestsByPublisherEmail(@RequestPayload GetPublisherRequestsRequest request) {
-        GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
-        response.getRequests().addAll(requestService.findAllByPublisherUserEmail(request.getPublisherUserEmail(), request.getIdentifier()));
-        return response;
-    }
-
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPublisherRequestsByStatusRequest")
-    @ResponsePayload
-    public GetPublisherRequestsResponse getAllRequestsByPublisherEmailAndStatus(@RequestPayload GetPublisherRequestsByStatusRequest request) {
-        GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
-        response.getRequests().addAll(requestService.findAllByPublisherUserEmailAndStatus(request.getPublisherUserEmail(), request.getIdentifier(), request.getStatus()));
-        return response;
-    }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "acceptRequest")
     @ResponsePayload

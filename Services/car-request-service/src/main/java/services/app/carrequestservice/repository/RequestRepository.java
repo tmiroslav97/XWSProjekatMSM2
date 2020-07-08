@@ -1,6 +1,5 @@
 package services.app.carrequestservice.repository;
 
-import org.bouncycastle.cert.ocsp.Req;
 import org.joda.time.DateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,14 +12,14 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-    List<Request> findAllByEndUser(Long id);
+    List<Request> findAllByEndUserId(Long id);
 
-    @Query("SELECT req FROM Request req where req.endUser=(?1) and req.status=(?2) order by req.submitDate desc")
+    @Query("SELECT req FROM Request req where req.endUserId=(?1) and req.status=(?2) order by req.submitDate desc")
     List<Request> findAllByEndUserAndByStatus(Long id, RequestStatusEnum status);
 
-    List<Request> findAllByPublisherUser(Long id);
+    List<Request> findAllByPublisherUserId(Long id);
 
-    @Query("SELECT req FROM Request req where req.publisherUser=(?1) and req.status=(?2) order by req.submitDate desc")
+    @Query("SELECT req FROM Request req where req.publisherUserId=(?1) and req.status=(?2) order by req.submitDate desc")
     List<Request> findAllByPublisherUserAndByStatus(Long id, RequestStatusEnum status);
 
     @Query("SELECT req FROM Request req where req.ads in (?1)")

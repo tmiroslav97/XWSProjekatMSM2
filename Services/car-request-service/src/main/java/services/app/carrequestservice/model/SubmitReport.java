@@ -8,35 +8,31 @@
 
 package services.app.carrequestservice.model;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import lombok.*;
 import org.w3._2001.xmlschema.Adapter2;
 import org.w3._2001.xmlschema.Adapter5;
-import services.app.carrequestservice.common.db.DbColumnConstants;
-import services.app.carrequestservice.common.db.DbTableConstants;
 
 
 /**
- * <p>Java class for Report complex type.
+ * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="Report"&gt;
+ * &lt;complexType&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
- *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="publisherUserEmail" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="identifier" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="distanceTraveled" type="{http://www.w3.org/2001/XMLSchema}float"/&gt;
- *         &lt;element name="publisherUser" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="adId" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
@@ -46,97 +42,78 @@ import services.app.carrequestservice.common.db.DbTableConstants;
  * 
  * 
  */
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
-@Builder
-@Entity
-@Table(name = DbTableConstants.REPORT)
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Report", propOrder = {
-    "id",
-    "description",
+@XmlType(name = "", propOrder = {
+    "publisherUserEmail",
+    "identifier",
     "distanceTraveled",
-    "publisherUser",
+    "description",
     "adId"
 })
-public class Report {
+@XmlRootElement(name = "submitReport")
+public class SubmitReport {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
-    @XmlSchemaType(name = "long")
-    protected Long id;
-
-    @Column(name = DbColumnConstants.DESCRIPTION)
-    protected String description;
-
-    @Column(name = DbColumnConstants.DISTANCETRAVELED, nullable = false)
+    @XmlElement(required = true)
+    protected String publisherUserEmail;
+    @XmlElement(required = true)
+    protected String identifier;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter2 .class)
     @XmlSchemaType(name = "float")
     protected Float distanceTraveled;
-
-    @Column(name = DbColumnConstants.PUBLISHERUSER, nullable = false)
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
-    @XmlSchemaType(name = "long")
-    protected Long publisherUser;
-
-    @Column(name = DbColumnConstants.ADID, nullable = false)
+    @XmlElement(required = true)
+    protected String description;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter5 .class)
     @XmlSchemaType(name = "long")
     protected Long adId;
 
     /**
-     * Gets the value of the id property.
+     * Gets the value of the publisherUserEmail property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public Long getId() {
-        return id;
+    public String getPublisherUserEmail() {
+        return publisherUserEmail;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the publisherUserEmail property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(Long value) {
-        this.id = value;
+    public void setPublisherUserEmail(String value) {
+        this.publisherUserEmail = value;
     }
 
     /**
-     * Gets the value of the description property.
+     * Gets the value of the identifier property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getDescription() {
-        return description;
+    public String getIdentifier() {
+        return identifier;
     }
 
     /**
-     * Sets the value of the description property.
+     * Sets the value of the identifier property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setDescription(String value) {
-        this.description = value;
+    public void setIdentifier(String value) {
+        this.identifier = value;
     }
 
     /**
@@ -164,27 +141,27 @@ public class Report {
     }
 
     /**
-     * Gets the value of the publisherUser property.
+     * Gets the value of the description property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public Long getPublisherUser() {
-        return publisherUser;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * Sets the value of the publisherUser property.
+     * Sets the value of the description property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPublisherUser(Long value) {
-        this.publisherUser = value;
+    public void setDescription(String value) {
+        this.description = value;
     }
 
     /**
