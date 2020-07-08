@@ -5,7 +5,8 @@ const FINALPOINTS = {
     AD_BASE: '/ad/ad',
     IMAGE_BASE: '/ad/image',
     CALENDAR_BASE: 'ad/calendar',
-    COMMENT_BASE: 'ad/comment'
+    COMMENT_BASE: 'ad/comment',
+    
 
 };
 
@@ -244,6 +245,8 @@ class AdServices extends HttpBaseClient {
         );
         return response.data;
     };
+
+    
 }
 
 

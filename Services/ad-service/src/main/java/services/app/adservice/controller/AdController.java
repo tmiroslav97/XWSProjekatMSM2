@@ -67,6 +67,8 @@ public class AdController {
                                                         @RequestParam(value = "size", required = false) Integer size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        System.out.println(principal.getUserId());
+        System.out.println(nextPage + " dfas " + size);
         return new ResponseEntity<>(adService.findAll(nextPage, size, principal.getUserId()), HttpStatus.OK);
     }
 

@@ -6,11 +6,11 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import { adsSelector } from '../../store/ad/selectors';
 import PaginationContainer from '../Pagination/PaginationContainer';
 import PaginationSize from '../../components/Pagination/PaginationSize';
-import OrdinarySearchContainer from '../../containers/Search/OrdinarySearchContainer'
 import { fetchAdsFromPublisher } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import AdViewContainer from '../Ad/AdViewContainer';
-import PricelistFromAdContainer from "../Pricelists/PricelistFromAdContainer"
+import PricelistFromAdContainer from "../Pricelists/PricelistFromAdContainer";
+import DiscountsFromAdContainer from "../Discount/DiscountsFromAdContainer";
 
 const MyAdsContainer = () => {
     const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const MyAdsContainer = () => {
     const [adId, setAdId] = useState(null);
     const [flagAdView, setFlagAdView] = useState(false);
     const [flagEditPricelist, setFlagEditPricelist] = useState(false);
+    const [flagDiscountlist, setFlagDiscountlist] = useState(false);
     
 
     useEffect(() => {
@@ -46,6 +47,7 @@ const MyAdsContainer = () => {
         setFlagAvailability(false);
         setFlagAdView(false);
         setFlagEditPricelist(false);
+        setFlagDiscountlist(false);
     }
     const viewAd = (event) => {
         console.log(event);
@@ -56,12 +58,26 @@ const MyAdsContainer = () => {
     const editPricelist = (event) => {
         console.log(event);
         setAdId(event);
-        console.log("IZMENA CENOVNIKA");
+
         setFlagEditPricelist(true);
     }
 
+    const definedDiscountList = (event) => {
+        console.log(event);
+        setAdId(event);
+        setFlagDiscountlist(true);
+    }    
+
     return (
         <Container>
+            { flagDiscountlist ?
+                <DiscountsFromAdContainer
+                adId={adId} setAdId={setAdId}
+                flagDiscountlist={flagDiscountlist} setFlagDiscountlist={setFlagDiscountlist}
+                handleBack={handleBack}
+                />
+               : null 
+            }
              {flagEditPricelist ?
                 <PricelistFromAdContainer
                     adId={adId} setAdId={setAdId}
@@ -91,7 +107,7 @@ const MyAdsContainer = () => {
                 null
 
             }
-            {flagAdView === false && flagAvailability === false && flagEditPricelist === false ?
+            {flagAdView === false && flagAvailability === false && flagEditPricelist === false && flagDiscountlist=== false ?
                 <Container>
                     <Row>
                         <Col md={12} xs={12}>
@@ -109,6 +125,7 @@ const MyAdsContainer = () => {
                                         definingAvailability={definingAvailability}
                                         viewAd={viewAd}
                                         editPricelist={editPricelist}
+                                        definedDiscountList={definedDiscountList}
                                     />
                                     : <SpinnerContainer />
                             }

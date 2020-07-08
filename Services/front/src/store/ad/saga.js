@@ -3,6 +3,7 @@ import { take, put, call, select } from 'redux-saga/effects';
 import { history } from '../../index';
 
 import AdServices from '../../services/AdServices';
+import PriceListService from '../../services/PriceListService';
 
 import {
     CREATED_AD,
@@ -272,7 +273,7 @@ export function* approvedComment() {
 export function* fetchDiscounts(){
     const { payload } = yield take(FETCH_DISCOUNTS);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicounts, payload);
+    const data = yield call(PriceListService.fetchAllDicounts, payload);
     console.log(data);
     yield put(putDiscounts({
         'data': data,
@@ -283,7 +284,7 @@ export function* fetchDiscounts(){
 export function* fetchDiscountsFromAgent(){
     const { payload } = yield take(FETCH_DISCOUNTS_FROM_AGENT);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicountsFromAgent, payload);
+    const data = yield call(PriceListService.fetchAllDicountsFromAgent, payload);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -292,11 +293,11 @@ export function* fetchDiscountsFromAgent(){
 
 export function* addDiscount(){
     const { payload } = yield take(ADD_DISCOUNT);
-    const msg = yield call(AdServices.addDiscount, payload);
+    const msg = yield call(PriceListService.addDiscount, payload);
     yield put(putSuccessMsg(msg));
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    const data = yield call(PriceListService.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -305,11 +306,11 @@ export function* addDiscount(){
 
 export function* editDiscount(){
     const { payload } = yield take(EDIT_DISCOUNT);
-    const msg = yield call(AdServices.editDiscount, payload);
+    const msg = yield call(PriceListService.editDiscount, payload);
     yield put(putSuccessMsg(msg));
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    const data = yield call(PriceListService.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -318,12 +319,12 @@ export function* editDiscount(){
 
 export function* deleteDiscount(){
     const { payload } = yield take(DELETE_DISCOUNT);
-    const msg = yield call(AdServices.deleteDiscount, payload);
+    const msg = yield call(PriceListService.deleteDiscount, payload);
     yield put(putSuccessMsg(msg));
     
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    const data = yield call(PriceListService.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -332,12 +333,12 @@ export function* deleteDiscount(){
 
 export function* addDiscountToAd(){
     const { payload } = yield take(ADD_DISCOUNT_TO_AD);
-    const msg = yield call(AdServices.addDiscountToAd, payload);
+    const msg = yield call(PriceListService.addDiscountToAd, payload);
     yield put(putSuccessMsg(msg));
     
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    const data = yield call(PriceListService.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
@@ -346,12 +347,12 @@ export function* addDiscountToAd(){
 
 export function* removeDiscountFromAd(){
     const { payload } = yield take(REMOVE_DISCOUNT_FROM_AD);
-    const msg = yield call(AdServices.removeDiscountFromAd, payload);
+    const msg = yield call(PriceListService.removeDiscountFromAd, payload);
     yield put(putSuccessMsg(msg));
     
     const temp = yield select(discountsSelector);
     yield put(putDiscounts({ 'isFetch': false }));
-    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    const data = yield call(PriceListService.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
         'data': data,
         'isFetch': true
