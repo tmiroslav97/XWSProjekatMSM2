@@ -18,6 +18,7 @@ public class RabbitMQConfiguration {
         return new TopicExchange(AGENT_SYNC_QUEUE_NAME);
     }
 
+
     @Bean
     public Queue autoDeleteQueueCarCalendarTerm() {
         return new AnonymousQueue();
@@ -26,6 +27,19 @@ public class RabbitMQConfiguration {
     @Bean
     public Queue autoDeleteRequest() {
         return new AnonymousQueue();
+    }
+
+    @Bean
+    public Queue autoDeleteRateAd() {
+        return new AnonymousQueue();
+    }
+
+    @Bean
+    public Binding bidingRateAd(TopicExchange topic,
+                                Queue autoDeleteRateAd) {
+        return BindingBuilder.bind(autoDeleteRateAd)
+                .to(topic)
+                .with("tomic.miroslav97.gmail.com.rate");
     }
 
     @Bean

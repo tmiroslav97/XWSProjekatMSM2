@@ -15,6 +15,12 @@ public class RabbitMQConfiguration {
     public static final String END_USER_CANCELED_RENT_CNT_QUEUE_NAME = "user_submit_rent_cnt";
     public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
     public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
+    public static final String RATE_AD_QUEUE_NAME = "rate_ad";
+
+    @Bean
+    public Queue rateAd() {
+        return new Queue(RATE_AD_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue userFLNameQueue() {

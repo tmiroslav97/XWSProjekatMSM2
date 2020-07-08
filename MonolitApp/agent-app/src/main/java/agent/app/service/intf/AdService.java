@@ -47,6 +47,8 @@ public interface AdService {
 
     Integer addRatingToAd(AdRatingDTO adRatingDTO);
 
+    void rateAd(String msg);
+
     void syncData();
 
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);

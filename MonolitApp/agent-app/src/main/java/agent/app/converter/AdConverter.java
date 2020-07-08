@@ -119,6 +119,9 @@ public class AdConverter extends AbstractConverter {
         return AdSyncDTO.builder()
                 .name(ad.getName())
                 .location(ad.getLocation())
+                .ratingCnt(ad.getRatingCnt())
+                .ratingNum(ad.getRatingNum())
+                .rentCnt(ad.getRentCnt())
                 .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .build();
     }

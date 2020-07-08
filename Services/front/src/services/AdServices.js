@@ -171,8 +171,6 @@ class AdServices extends HttpBaseClient {
     };
 
     ratingAd = async payload => {
-        console.log("********* DODAVANJE OCENE ***********")
-        console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE + "/rating",
             payload,
