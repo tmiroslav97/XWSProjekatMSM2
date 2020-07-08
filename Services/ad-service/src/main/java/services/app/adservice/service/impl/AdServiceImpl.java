@@ -68,9 +68,6 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    private AmqpAdmin amqpAdmin;
-
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -296,9 +293,9 @@ public class AdServiceImpl implements AdService {
         String routingKey;
         try {
             acceptReqestCalendarTermsDTO = objectMapper.readValue(msg, AcceptReqestCalendarTermsDTO.class);
-            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, acceptReqestCalendarTermsDTO.getPublisherUserId());
-            userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
-            routingKey = userFLNameDTO.getUserEmail().replace("@", ".")+".cct";
+//            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, acceptReqestCalendarTermsDTO.getPublisherUserId());
+//            userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+//            routingKey = userFLNameDTO.getUserEmail().replace("@", ".")+".cct";
         } catch (JsonProcessingException exception) {
             return false;
         }
@@ -317,9 +314,9 @@ public class AdServiceImpl implements AdService {
                 try {
                     String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
                     rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
-                    if (!userFLNameDTO.getLocal()) {
-                        rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, carCalendarTermSynchronizeDTOSStr);
-                    }
+//                    if (!userFLNameDTO.getLocal()) {
+//                        rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, carCalendarTermSynchronizeDTOSStr);
+//                    }
                 } catch (JsonProcessingException exception) {
                     continue;
                 }

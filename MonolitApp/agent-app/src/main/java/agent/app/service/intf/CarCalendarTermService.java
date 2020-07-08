@@ -20,4 +20,8 @@ public interface CarCalendarTermService {
     List<CarCalendarTermCreateDTO> findByAdId(Long id);
     CarCalendarTerm findByAdAndDate(Long adId, DateTime startDate, DateTime endDate);
     void carCalendarTermSync(String msg);
+
+    Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate);
+
+    Boolean canSplitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate);
 }

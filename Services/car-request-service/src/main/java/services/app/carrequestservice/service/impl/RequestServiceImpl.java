@@ -89,10 +89,20 @@ public class RequestServiceImpl implements RequestService {
     public Boolean quitRequest(Long id) {
         Request request = this.findById(id);
         request.setStatus(RequestStatusEnum.CANCELED);
-        this.save(request);
+        request = this.save(request);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME, Long.valueOf(cp.getUserId()));
+        try {
+            String userFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, request.getPublisherUserId());
+            UserFLNameDTO userFLName = objectMapper.readValue(userFLNameStr, UserFLNameDTO.class);
+            if (!userFLName.getLocal()) {
+                String routingKey = userFLName.getUserEmail().replace("@", ".") + ".req";
+                String requestStr = objectMapper.writeValueAsString(request);
+                rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+            }
+        } catch (JsonProcessingException exception) {
+        }
         return true;
     }
 
@@ -225,7 +235,16 @@ public class RequestServiceImpl implements RequestService {
                             .publisherUserLastName(publisherUserFLName.getUserLastName())
                             .publisherUserEmail(publisherUserFLName.getUserEmail())
                             .build();
-                    this.save(request);
+                    request = this.save(request);
+                    if (!publisherUserFLName.getLocal()) {
+                        try {
+                            String routingKey = publisherUserFLName.getUserEmail().replace("@", ".") + ".req";
+                            String requestStr = objectMapper.writeValueAsString(request);
+                            rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+                        } catch (JsonProcessingException exception) {
+
+                        }
+                    }
                 } else {
                     for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
                         List<Ad> ads = new ArrayList<>();
@@ -265,7 +284,15 @@ public class RequestServiceImpl implements RequestService {
                                 .publisherUserLastName(publisherUserFLName.getUserLastName())
                                 .publisherUserEmail(publisherUserFLName.getUserEmail())
                                 .build();
-                        this.save(request);
+                        request = this.save(request);
+                        if (!publisherUserFLName.getLocal()) {
+                            try {
+                                String routingKey = publisherUserFLName.getUserEmail().replace("@", ".") + ".req";
+                                String requestStr = objectMapper.writeValueAsString(request);
+                                rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+                            } catch (JsonProcessingException exception) {
+                            }
+                        }
                     }
                 }
 

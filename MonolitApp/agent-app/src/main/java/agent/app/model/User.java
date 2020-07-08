@@ -9,7 +9,6 @@ import org.joda.time.DateTime;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Builder
@@ -39,7 +38,10 @@ public class User implements UserDetails {
     @Column(name = DbColumnConstants.LASTNAME)
     private String lastName;
 
-    @Column(name= DbColumnConstants.LASTPASSWORDRESETDATE)
+    @Column(name = DbColumnConstants.LOCAL)
+    private Boolean local = true;
+
+    @Column(name = DbColumnConstants.LASTPASSWORDRESETDATE)
     @Temporal(TemporalType.DATE)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
             @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),

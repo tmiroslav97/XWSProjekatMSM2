@@ -17,9 +17,6 @@ public class RequestController {
 
     private final RequestService requestService;
 
-    @Autowired
-    private RequestClient requestClient;
-
     public RequestController(RequestService requestService) {
         this.requestService = requestService;
     }
@@ -35,9 +32,8 @@ public class RequestController {
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> acceptRequest(@RequestBody ReqAcceptDTO reqAcceptDTO, Principal principal) {
         String email = principal.getName();
-        String identifier = requestService.findRequestPublisherUserIdentifier(email);
         if (reqAcceptDTO.getAction() != null && (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject"))) {
-                String response = requestClient.acceptRequest(email, identifier, reqAcceptDTO.getId(), reqAcceptDTO.getAction());
+                String response = requestService.acceptRequest(email, reqAcceptDTO.getId(), reqAcceptDTO.getAction());
                 if (response.equals("Uspjesno odbijen zahtjev") || response.equals("Uspjesno prihvacen zahtjev")) {
                     return new ResponseEntity<>(response, HttpStatus.OK);
                 } else {

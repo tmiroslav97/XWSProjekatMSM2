@@ -12,4 +12,8 @@ import java.util.List;
 public interface RequestRepository extends JpaRepository<Request, Long> {
     @Query("SELECT req FROM Request req where req.publisherUser.email=(?1) and req.status=(?2) order by req.submitDate desc")
     List<Request> findAllByEndUserAndByStatus(String email, RequestStatusEnum status);
+
+    Boolean existsByMainId(Long mainId);
+
+    Request findByMainId(Long mainId);
 }

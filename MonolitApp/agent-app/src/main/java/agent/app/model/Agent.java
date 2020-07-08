@@ -29,12 +29,12 @@ public class Agent extends PublisherUser {
 
     @Builder(builderMethodName = "agentFirmBuilder")
     public Agent(Long id, String email, String password, String firstName,
-                 String lastName, DateTime lastPasswordResetDate,
+                 String lastName, Boolean local, DateTime lastPasswordResetDate,
                  List<Authority> authorities, Boolean deleted, Set<Ad> ads,
                  Set<PriceList> priceLists, Set<Comment> comments,
                  Set<Message> inbox, Set<Report> reports, Set<Request> publisherUserRequests, String identifier,
                  Set<DiscountList> discountLists) {
-        super(id, email, password, firstName, lastName, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, inbox, reports, publisherUserRequests);
+        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, inbox, reports, publisherUserRequests);
         this.discountLists = discountLists;
         this.identifier = identifier;
     }

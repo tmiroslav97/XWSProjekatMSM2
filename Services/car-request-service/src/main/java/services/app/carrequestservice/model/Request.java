@@ -8,16 +8,6 @@
 
 package services.app.carrequestservice.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -29,12 +19,18 @@ import services.app.carrequestservice.common.db.DbColumnConstants;
 import services.app.carrequestservice.common.db.DbTableConstants;
 import services.app.carrequestservice.converter.DateAPI;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * <p>Java class for Request complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="Request"&gt;
  *   &lt;complexContent&gt;
@@ -58,8 +54,6 @@ import services.app.carrequestservice.converter.DateAPI;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @AllArgsConstructor
 @NoArgsConstructor
@@ -70,26 +64,26 @@ import services.app.carrequestservice.converter.DateAPI;
 @Table(name = DbTableConstants.REQUEST)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "Request", propOrder = {
-    "id",
-    "status",
-    "submitDate",
-    "endUserId",
-    "endUserFirstName",
-    "endUserLastName",
-    "endUserEmail",
-    "bundle",
-    "publisherUserId",
-    "publisherUserFirstName",
-    "publisherUserLastName",
-    "publisherUserEmail",
-    "ads"
+        "id",
+        "status",
+        "submitDate",
+        "endUserId",
+        "endUserFirstName",
+        "endUserLastName",
+        "endUserEmail",
+        "bundle",
+        "publisherUserId",
+        "publisherUserFirstName",
+        "publisherUserLastName",
+        "publisherUserEmail",
+        "ads"
 })
 public class Request {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long id;
 
@@ -106,13 +100,13 @@ public class Request {
     })
     @Column(name = DbColumnConstants.SUBMITDATE, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter4 .class)
+    @XmlJavaTypeAdapter(Adapter4.class)
     @XmlSchemaType(name = "dateTime")
     protected DateTime submitDate;
 
     @Column(name = DbColumnConstants.ENDUSERID, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long endUserId;
 
@@ -130,13 +124,13 @@ public class Request {
 
     @Column(name = DbColumnConstants.BUNDLE, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter1 .class)
+    @XmlJavaTypeAdapter(Adapter1.class)
     @XmlSchemaType(name = "boolean")
     protected Boolean bundle;
 
     @Column(name = DbColumnConstants.PUBLISHERUSERID, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long publisherUserId;
 
@@ -166,11 +160,9 @@ public class Request {
 
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getId() {
         return id;
@@ -178,11 +170,9 @@ public class Request {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setId(Long value) {
         this.id = value;
@@ -190,11 +180,9 @@ public class Request {
 
     /**
      * Gets the value of the status property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link RequestStatusEnum }
-     *     
+     *
+     * @return possible object is
+     * {@link RequestStatusEnum }
      */
     public RequestStatusEnum getStatus() {
         return status;
@@ -202,11 +190,9 @@ public class Request {
 
     /**
      * Sets the value of the status property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link RequestStatusEnum }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link RequestStatusEnum }
      */
     public void setStatus(RequestStatusEnum value) {
         this.status = value;
@@ -214,11 +200,9 @@ public class Request {
 
     /**
      * Gets the value of the submitDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public DateTime getSubmitDate() {
         return submitDate;
@@ -226,11 +210,9 @@ public class Request {
 
     /**
      * Sets the value of the submitDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setSubmitDate(DateTime value) {
         this.submitDate = value;
@@ -238,11 +220,9 @@ public class Request {
 
     /**
      * Gets the value of the endUserId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getEndUserId() {
         return endUserId;
@@ -250,11 +230,9 @@ public class Request {
 
     /**
      * Sets the value of the endUserId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEndUserId(Long value) {
         this.endUserId = value;
@@ -262,11 +240,9 @@ public class Request {
 
     /**
      * Gets the value of the endUserFirstName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getEndUserFirstName() {
         return endUserFirstName;
@@ -274,11 +250,9 @@ public class Request {
 
     /**
      * Sets the value of the endUserFirstName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEndUserFirstName(String value) {
         this.endUserFirstName = value;
@@ -286,11 +260,9 @@ public class Request {
 
     /**
      * Gets the value of the endUserLastName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getEndUserLastName() {
         return endUserLastName;
@@ -298,11 +270,9 @@ public class Request {
 
     /**
      * Sets the value of the endUserLastName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEndUserLastName(String value) {
         this.endUserLastName = value;
@@ -310,11 +280,9 @@ public class Request {
 
     /**
      * Gets the value of the endUserEmail property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getEndUserEmail() {
         return endUserEmail;
@@ -322,11 +290,9 @@ public class Request {
 
     /**
      * Sets the value of the endUserEmail property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setEndUserEmail(String value) {
         this.endUserEmail = value;
@@ -334,11 +300,9 @@ public class Request {
 
     /**
      * Gets the value of the bundle property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Boolean isBundle() {
         return bundle;
@@ -346,11 +310,9 @@ public class Request {
 
     /**
      * Sets the value of the bundle property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setBundle(Boolean value) {
         this.bundle = value;
@@ -358,11 +320,9 @@ public class Request {
 
     /**
      * Gets the value of the publisherUserId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getPublisherUserId() {
         return publisherUserId;
@@ -370,11 +330,9 @@ public class Request {
 
     /**
      * Sets the value of the publisherUserId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUserId(Long value) {
         this.publisherUserId = value;
@@ -382,11 +340,9 @@ public class Request {
 
     /**
      * Gets the value of the publisherUserFirstName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPublisherUserFirstName() {
         return publisherUserFirstName;
@@ -394,11 +350,9 @@ public class Request {
 
     /**
      * Sets the value of the publisherUserFirstName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUserFirstName(String value) {
         this.publisherUserFirstName = value;
@@ -406,11 +360,9 @@ public class Request {
 
     /**
      * Gets the value of the publisherUserLastName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPublisherUserLastName() {
         return publisherUserLastName;
@@ -418,11 +370,9 @@ public class Request {
 
     /**
      * Sets the value of the publisherUserLastName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUserLastName(String value) {
         this.publisherUserLastName = value;
@@ -430,11 +380,9 @@ public class Request {
 
     /**
      * Gets the value of the publisherUserEmail property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPublisherUserEmail() {
         return publisherUserEmail;
@@ -442,11 +390,9 @@ public class Request {
 
     /**
      * Sets the value of the publisherUserEmail property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUserEmail(String value) {
         this.publisherUserEmail = value;
@@ -454,25 +400,23 @@ public class Request {
 
     /**
      * Gets the value of the ads property.
-     * 
+     *
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the ads property.
-     * 
+     *
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getAds().add(newItem);
      * </pre>
-     * 
-     * 
+     *
+     *
      * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link Ad }
-     * 
-     * 
      */
     public List<Ad> getAds() {
         if (ads == null) {

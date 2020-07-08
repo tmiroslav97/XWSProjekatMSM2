@@ -43,11 +43,11 @@ public class PublisherUser extends User {
 
     @Builder(builderMethodName = "publisherUserBuilder")
     public PublisherUser(Long id, String email, String password, String firstName,
-                         String lastName, DateTime lastPasswordResetDate,
+                         String lastName, Boolean local, DateTime lastPasswordResetDate,
                          List<Authority> authorities, Boolean deleted, Set<Ad> ads,
                          Set<PriceList> priceLists, Set<Comment> comments,
                          Set<Message> inbox, Set<Report> reports, Set<Request> publisherUserRequests) {
-        super(id, email, password, firstName, lastName, lastPasswordResetDate, authorities);
+        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities);
         this.deleted = deleted;
         this.ads = ads;
         this.priceLists = priceLists;

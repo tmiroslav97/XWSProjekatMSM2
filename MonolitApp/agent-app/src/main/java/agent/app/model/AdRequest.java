@@ -30,6 +30,9 @@ public class AdRequest {
     @Column(name = DbColumnConstants.MAINID, nullable = false)
     private Long mainId;
 
+    @Column(name = DbColumnConstants.ADID, nullable = false)
+    private Long adId;
+
     @Column(name = DbColumnConstants.REVIEW)
     private Integer review;
 

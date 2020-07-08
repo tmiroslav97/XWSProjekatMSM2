@@ -5,8 +5,9 @@ import agent.app.repository.AgentRepository;
 import agent.app.service.intf.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
+@Service
 public class AgentServiceImpl  implements AgentService {
 
     @Autowired

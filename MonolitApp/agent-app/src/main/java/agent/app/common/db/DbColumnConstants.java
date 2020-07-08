@@ -54,8 +54,6 @@ public class DbColumnConstants {
     public static final String DAYNUM = "dayNum";
     public static final String ADNAME = "adName";
     public static final String REVIEW = "review";
-    public static final String ENDUSERID = "endUserId";
-    public static final String ENDUSERFIRSTNAME = "endUserFirstName";
-    public static final String ENDUSERLASTNAME = "endUserLastName";
-    public static final String ENDUSEREMAIL = "endUserEmail";
+    public static final String ADID = "adId";
+    public static final String LOCAL = "local";
 }

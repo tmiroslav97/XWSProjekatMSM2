@@ -340,10 +340,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer syncData(String identifier, String email) {
         Agent agent = agentService.findByEmail(email);
-        if(agent.getIdentifier()==null){
-            agent.setIdentifier(identifier);
-            agent = agentService.save(agent);
-        }else{
+        if(agent.getIdentifier()!=null){
             return 5;
         }
         try {
@@ -363,6 +360,8 @@ public class AdServiceImpl implements AdService {
         } catch (JsonProcessingException exception) {
             return 4;
         }
+        agent.setIdentifier(identifier);
+        agent = agentService.save(agent);
         List<PriceList> pls = priceListService.findAllByPublisherUser(email);
         for (PriceList pl : pls) {
             try {

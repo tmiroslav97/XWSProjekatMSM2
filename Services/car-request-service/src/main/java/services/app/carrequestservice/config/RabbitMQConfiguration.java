@@ -14,6 +14,7 @@ public class RabbitMQConfiguration {
     public static final String ACCEPT_REQUEST_QUEUE_NAME = "accept_request";
     public static final String END_USER_CANCELED_RENT_CNT_QUEUE_NAME = "user_submit_rent_cnt";
     public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
+    public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
 
     @Bean
     public Queue userFLNameQueue() {
