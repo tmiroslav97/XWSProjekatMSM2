@@ -4,7 +4,6 @@ import { Row, Col, Card, OverlayTrigger, ListGroup, Tooltip, Button } from 'reac
 import ReportComponent from '../Report/ReportComponent';
 
 const AgentRequestDetailComponent = (props) => {
-
     return (
         <Card border="secondary" className="mt-5">
             <Card.Body>

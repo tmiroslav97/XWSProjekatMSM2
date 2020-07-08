@@ -49,11 +49,13 @@ const AgentRequestDetailContainer = (props) => {
              data = {
                 "distanceTraveled": form.distanceTraveled.value,
                 "description": form.description.value,
-                "adId": selectedAd
+                "adId": selectedAd,
+                "email": request.endUserEmail
             };
             console.log(data)
             submitReport(data);
             setValidated(false);
+            fetchRequest();
         }
     }
 

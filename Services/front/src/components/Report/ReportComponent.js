@@ -11,6 +11,7 @@ const ReportComponent = (props) => {
                         <tr>
                             <th>Broj predjenih kilometara</th>
                             <th>Opis</th>
+                            <th>Dodatna doplata</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -20,6 +21,9 @@ const ReportComponent = (props) => {
                             </td>
                             <td>
                                 {props.report.description}
+                            </td>
+                            <td>
+                                {props.report.invoice != null ? props.report.invoice.amount : "-"}
                             </td>
                         </tr>
                     </tbody>
