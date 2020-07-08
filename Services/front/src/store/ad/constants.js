@@ -20,3 +20,12 @@ export const PUT_COMMENTS = 'put_comments';
 export const APPROVED_COMMENT = 'approved_comment';
 export const FETCH_ALL_COMMENTS_FROM_USER = 'fetch_all_comments_from_user';
 export const FETCH_ALL_COMMENTS = 'fetch_all_comments';
+//discount list
+export const PUT_DISCOUNTS ='put_discounts';
+export const FETCH_DISCOUNTS = 'fetch_discounts';
+export const FETCH_DISCOUNTS_FROM_AGENT = 'fetch_discounts_from_agent';
+export const ADD_DISCOUNT = 'add_discount';
+export const EDIT_DISCOUNT = 'edit_discount';
+export const DELETE_DISCOUNT = 'delete_discount';
+export const ADD_DISCOUNT_TO_AD = 'add_discount_to_ad';
+export const REMOVE_DISCOUNT_FROM_AD = 'remove_discount_from_ad';

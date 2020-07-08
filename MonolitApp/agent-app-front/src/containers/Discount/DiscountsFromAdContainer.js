@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import DiscountsFromAdComponent from '../../components/Discount/DiscountsFromAdComponent';
 import { discountsSelector } from '../../store/ad/selectors';
-import { fetchDiscountsFromAgent, addDiscountToAd } from '../../store/ad/actions';
+import { fetchDiscountsFromAgent, addDiscountToAd, removeDiscountFromAd } from '../../store/ad/actions';
 import { adSelector } from '../../store/ad/selectors';
 import { fetchAd } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
@@ -35,7 +35,8 @@ const DiscountsFromAdContainer = (props) => {
                 })
                 if(flag === 1){
                     dugme.push(
-                        <Button key={discount.id} variant="success">
+                        <Button key={discount.id} variant="success"
+                        onClick={() => { handlerRemoveDiscountFromAd(discount.id); }}  >
                             Izabrano
                         </Button>
                     )
@@ -71,7 +72,17 @@ const DiscountsFromAdContainer = (props) => {
             "adId": props.adId
         }));
     }
-    
+
+    const handlerRemoveDiscountFromAd = (discountId) =>{
+        console.log("popust "+discountId);
+        console.log("oglas "+props.adId);
+
+        dispatch(removeDiscountFromAd({
+            "discountId": discountId,
+            "adId": props.adId
+        }));
+    }
+
 
     return (
         <Container>

@@ -85,7 +85,7 @@ public class DiscountController {
                                                  @PathVariable(value = "adId") Long adId) {
         Integer flag = discountListService.deleteDiscountFromAd(discountId, adId);
         if (flag == 1) {
-            return new ResponseEntity<>("Popust uspesno dodat.", HttpStatus.CREATED);
+            return new ResponseEntity<>("Popust uklonjen.", HttpStatus.CREATED);
         }else {
             return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
         }

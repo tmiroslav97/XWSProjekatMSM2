@@ -31,3 +31,4 @@ export const ADD_DISCOUNT = 'add_discount';
 export const EDIT_DISCOUNT = 'edit_discount';
 export const DELETE_DISCOUNT = 'delete_discount';
 export const ADD_DISCOUNT_TO_AD = 'add_discount_to_ad';
+export const REMOVE_DISCOUNT_FROM_AD = 'remove_discount_from_ad';
