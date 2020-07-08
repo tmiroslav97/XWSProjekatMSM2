@@ -15,5 +15,7 @@ public interface AdService {
 
     void delete(Ad ad);
 
+    void saveAll(List<Ad> ads);
+
     Ad save(Ad ad);
 }

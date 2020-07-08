@@ -30,9 +30,6 @@ public class PublisherUserController {
     @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findBestAverageGradeAd(Principal principal) {
         System.out.println("Best average grade");
-//        System.out.println(principal);
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        Principal principal = (Principal) auth.getPrincipal();
         return new ResponseEntity<>(publisherUserService.findBestAverageGrade(principal.getName()), HttpStatus.OK);
 
     }

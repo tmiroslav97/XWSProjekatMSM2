@@ -129,6 +129,7 @@ public class PublisherUserServiceImpl implements PublisherUserService {
                 adT = ad;
             } else {
                 averageGrade = ad.getRatingNum() / ad.getRatingCnt();
+                System.out.println("Izracunata ocjena: " + averageGrade);
                 if (averageGrade > max) {
                     System.out.println("Average: " + averageGrade);
                     max = averageGrade;
@@ -137,6 +138,7 @@ public class PublisherUserServiceImpl implements PublisherUserService {
             }
         }
         AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        System.out.println("Konacna ocj " + adPage.getAverageGrade());
         return adPage;
     }
 
