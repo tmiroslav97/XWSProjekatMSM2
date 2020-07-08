@@ -43,7 +43,7 @@ public class Request {
     private EndUser endUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Agent agent;
+    private PublisherUser publisherUser;
 
     @Column(name = DbColumnConstants.BUNDLE, nullable = false)
     private Boolean bundle;

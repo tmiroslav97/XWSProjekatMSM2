@@ -28,8 +28,7 @@ public class RequestController {
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status, Principal principal) {
         String email = principal.getName();
-        String identifier = requestService.findRequestPublisherUserIdentifier(email);
-        return new ResponseEntity<>(requestClient.getPublisherRequestsResponse(email, identifier, status).getRequests(), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.findAllByPublisherUserAndStatus(email, status), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")

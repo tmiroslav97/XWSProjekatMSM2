@@ -1,6 +1,5 @@
 package agent.app.service.intf;
 
-import agent.app.dto.carreq.SubmitRequestDTO;
 import agent.app.model.Request;
 
 import java.util.List;
@@ -13,6 +12,8 @@ public interface RequestService {
     Integer deleteById(Long id);
 
     String findRequestPublisherUserIdentifier(String email);
+
+    List<Request> findAllByPublisherUserAndStatus(String email, String status);
 
     void delete(Request request);
 

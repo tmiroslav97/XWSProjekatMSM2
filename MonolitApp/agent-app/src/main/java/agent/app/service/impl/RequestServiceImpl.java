@@ -1,23 +1,17 @@
 package agent.app.service.impl;
 
-import agent.app.converter.DateAPI;
-import agent.app.dto.carreq.SubmitRequestDTO;
 import agent.app.exception.NotFoundException;
-import agent.app.model.EndUser;
 import agent.app.model.Request;
+import agent.app.model.enumeration.RequestStatusEnum;
 import agent.app.repository.RequestRepository;
 import agent.app.service.intf.AdService;
 import agent.app.service.intf.AgentService;
 import agent.app.service.intf.EndUserService;
 import agent.app.service.intf.RequestService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import services.app.carrequestservice.model.Ad;
-import services.app.carrequestservice.model.DistanceLimitEnum;
-import services.app.carrequestservice.model.RequestStatusEnum;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class RequestServiceImpl implements RequestService {
@@ -54,6 +48,11 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public String findRequestPublisherUserIdentifier(String email) {
         return agentService.findByEmail(email).getIdentifier();
+    }
+
+    @Override
+    public List<Request> findAllByPublisherUserAndStatus(String email, String status) {
+        return requestRepository.findAllByEndUserAndByStatus(email, RequestStatusEnum.valueOf(status));
     }
 
 //    @Override
