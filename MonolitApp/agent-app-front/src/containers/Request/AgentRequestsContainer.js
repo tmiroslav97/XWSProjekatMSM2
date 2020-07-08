@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap'
 import AgentRequestsComponent from '../../components/Request/AgentRequestsComponent';
+import AgentRequestsPendingComponent from '../../components/Request/AgentRequestsPendingComponent';
+import AgentRequestsPaidComponent from '../../components/Request/AgentRequestsPaidComponent';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 import { useDispatch } from 'react-redux';
-import AgentRequestsPendingComponent from '../../components/Request/AgentRequestsPendingComponent';
 import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 
 const AgentRequestsContainer = () => {
@@ -69,7 +70,7 @@ const AgentRequestsContainer = () => {
                 <Col md={12} xs={12}>
                     {
                         isFetchPaidRequests ?
-                            <AgentRequestsComponent requests={paidRequests} status="paid" /> : <SpinnerContainer />
+                            <AgentRequestsPaidComponent requests={paidRequests} status="paid" /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>

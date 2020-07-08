@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import services.app.carrequestservice.dto.carreq.ReqAcceptDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.CustomPrincipal;
+import services.app.carrequestservice.model.Request;
 import services.app.carrequestservice.service.intf.RequestService;
 
 import java.util.HashMap;
@@ -20,6 +21,12 @@ public class RequestController {
 
     public RequestController(RequestService requestService) {
         this.requestService = requestService;
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getRequest(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(requestService.findById(id), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER')")

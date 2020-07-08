@@ -170,6 +170,12 @@ public class Ad {
     @XmlElement(required = true)
     protected String token;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = DbTableConstants.ADREPORT,
+            joinColumns = @JoinColumn(name = "ad_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "report_id", referencedColumnName = "id"))
+    protected Report report;
+
     @JsonProperty("startDate")
     public String getTheStartDate() {
         return DateAPI.DateTimeToStringDateTime(startDate);
