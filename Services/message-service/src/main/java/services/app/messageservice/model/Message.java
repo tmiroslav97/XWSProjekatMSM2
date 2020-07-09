@@ -19,7 +19,6 @@ import services.app.messageservice.common.db.DbColumnConstants;
 import services.app.messageservice.common.db.DbTableConstants;
 import services.app.messageservice.converter.DateAPI;
 
-
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;

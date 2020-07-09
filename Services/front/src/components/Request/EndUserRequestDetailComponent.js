@@ -5,7 +5,7 @@ import FormModalContainer from '../../containers/Common/FormModalContainer';
 import CommentComponent from '../Comment/CommentComponent';
 import ReactStars from "react-rating-stars-component";
 import ReportComponent from '../Report/ReportComponent';
-import MessageComponent from '../Message/MessageComponent';
+import MessageRequestComponent from '../Message/MessageRequestComponent';
 
 const EndUserRequestDetailComponent = (props) => {
 
@@ -13,7 +13,7 @@ const EndUserRequestDetailComponent = (props) => {
     return (
         <div>
             <FormModalContainer show={props.flagComment} setShow={props.setFlagComment} name={'Komentar'} footer={false} data={props.adId} onSubmit={props.handleCommentForm} validated={props.validated} component={CommentComponent} />
-            <FormModalContainer show={props.flagMessage} setShow={props.setFlagMessage} name={'Poruka'} footer={false} onSubmit={props.handleMessageForm} validated={props.validatedMessage} component={MessageComponent} />
+            <FormModalContainer show={props.flagMessage} setShow={props.setFlagMessage} name={'Poruka'} footer={false} onSubmit={props.handleMessageForm} validated={props.validatedMessage} component={MessageRequestComponent} />
             <Card border="secondary" className="mt-5">
                 <Card.Body>
                     <Card.Title as="h4">Detalji o zahtjevu</Card.Title>

@@ -1,36 +1,50 @@
 import React from 'react';
-import { Form, Button, Container, Row, Col } from 'react-bootstrap'
+import { Row, Col, Card, Form, Button } from 'react-bootstrap'
 
 const MessageComponent = (props) => {
 
     return (
-        <Container>
+        <div>
             <Row>
                 <Col md={12} xs={12}>
-                    <Form noValidate validated={props.validated} onSubmit={props.onSubmit}>
+                    <Form noValidate className="mb-2" validated={props.validated} onSubmit={props.onSubmit}>
                         <Form.Row>
-                            <Form.Group as={Col}>
-                                <Form.Label>Naslov poruke</Form.Label>
-                                <Form.Control required type="text" name="convName" id="txtConvName" placeholder="Naslov poruke" />
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group as={Col}>
-                                <Form.Label>Tekst poruke</Form.Label>
-                                <Form.Control required as="textarea" rows="5" name="content" id="txtContent" placeholder="Sadrzaj poruke" />
-                            </Form.Group>
-                        </Form.Row>
-                        <Form.Row>
-                            <Form.Group as={Col}>
-                                <Button variant="primary"  type="submit">
+                            <Col md={10} xs={12}>
+                                <Form.Control required as="textarea" rows="2" name="content" id="txtContent" placeholder="Sadrzaj poruke" />
+                            </Col>
+                            <Col md={2} xs={12}>
+                                <Button variant="primary" type="submit">
                                     Posalji
                                 </Button>
-                            </Form.Group>
+                            </Col>
                         </Form.Row>
                     </Form>
                 </Col>
             </Row>
-        </Container>
+            <Row>
+                <Col md={12} xs={12}>
+                    {
+                        props.messages.map((msg, idx) => {
+                            return (
+                                <Card key={idx} className="mt-3">
+                                    <Card.Header as="h6">{msg.senderFirstName + " " + msg.senderLastName}</Card.Header>
+                                    <Card.Body>
+                                        <p>
+                                            {msg.content}
+                                        </p>
+                                    </Card.Body>
+                                    <Card.Footer>
+                                        <small className="text-muted">
+                                            Poslato: {msg.sendDate}
+                                        </small>
+                                    </Card.Footer>
+                                </Card>
+                            );
+                        })
+                    }
+                </Col>
+            </Row>
+        </div>
     );
 }
 

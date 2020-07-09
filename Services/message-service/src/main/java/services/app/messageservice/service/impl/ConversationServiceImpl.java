@@ -1,9 +1,13 @@
 package services.app.messageservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import services.app.messageservice.exception.NotFoundException;
 import services.app.messageservice.model.Conversation;
+import services.app.messageservice.model.CustomPrincipal;
+import services.app.messageservice.model.Message;
 import services.app.messageservice.repository.ConversationRepository;
 import services.app.messageservice.service.intf.ConversationService;
 import services.app.messageservice.service.intf.MessageService;
@@ -26,7 +30,15 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public List<Conversation> findAllByParticipantId(Long participantId) {
-        return null;
+        return conversationRepository.findAllByParticipantId(participantId);
+    }
+
+    @Override
+    public List<Message> findAllConversationMessages(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        messageService.setAllConversationMessagesFromRecieverToSeen(id, cp.getEmail());
+        return this.findById(id).getMessage();
     }
 
     @Override

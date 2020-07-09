@@ -80,7 +80,7 @@ public class Conversation {
     @XmlSchemaType(name = "long")
     protected Long participantEndUserId;
 
-    @Column(name = DbColumnConstants.REQUESTID, nullable = false)
+    @Column(name = DbColumnConstants.REQUESTID, nullable = false, unique = true)
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
@@ -95,6 +95,7 @@ public class Conversation {
     @JoinTable(name = DbTableConstants.CONVMSG,
             joinColumns = @JoinColumn(name = "conv_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "msg_id", referencedColumnName = "id"))
+    @OrderBy("sendDate DESC")
     @XmlElement(name = "Message")
     protected List<Message> message;
 

@@ -1,10 +1,16 @@
 package services.app.messageservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import services.app.messageservice.config.RabbitMQConfiguration;
 import services.app.messageservice.converter.ConversationConverter;
+import services.app.messageservice.converter.DateAPI;
 import services.app.messageservice.converter.MessageConverter;
 import services.app.messageservice.dto.MessageRequestDTO;
+import services.app.messageservice.dto.UserFLNameDTO;
 import services.app.messageservice.exception.NotFoundException;
 import services.app.messageservice.model.Conversation;
 import services.app.messageservice.model.Message;
@@ -23,14 +29,24 @@ public class MessageServiceImpl implements MessageService {
     @Autowired
     private ConversationService conversationService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public Message findById(Long id) {
         return messageRepository.findById(id).orElseThrow(() -> new NotFoundException("Poruka ne postoji"));
     }
 
     @Override
-    public List<Message> findAllByConversationId(Long convId) {
-        return messageRepository.findByConversationId(convId);
+    public List<Message> findAllByConversationId(Long conversationId) {
+        return messageRepository.findByConversationId(conversationId);
+    }
+
+    @Override
+    public void setAllConversationMessagesFromRecieverToSeen(Long conversationId, String recieverEmail) {
+        messageRepository.setAllConversationMessagesFromRecieverToSeen(conversationId, recieverEmail);
     }
 
     @Override
@@ -51,8 +67,32 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Integer sendMessage(Message message) {
-        return null;
+    public Integer sendMessage(Message message, Long senderUserId) {
+        Conversation conversation = conversationService.findById(message.getConversationId());
+        Long recieverUserId;
+        if (conversation.getParticipantEndUserId() == senderUserId) {
+            recieverUserId = conversation.getParticipantPublisherUserId();
+        } else {
+            recieverUserId = conversation.getParticipantEndUserId();
+        }
+        try {
+            String senderUserStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, senderUserId);
+            String recieverUserStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, recieverUserId);
+            UserFLNameDTO senderUser = objectMapper.readValue(senderUserStr, UserFLNameDTO.class);
+            UserFLNameDTO recieverUser = objectMapper.readValue(recieverUserStr, UserFLNameDTO.class);
+            message.setRecieverSeen(false);
+            message.setSendDate(DateAPI.DateTimeNow());
+            message.setSenderId(senderUser.getUserId());
+            message.setSenderEmail(senderUser.getUserEmail());
+            message.setSenderFirstName(senderUser.getUserFirstName());
+            message.setSenderLastName(senderUser.getUserLastName());
+            message = this.save(message);
+            conversation.getMessage().add(message);
+            conversationService.save(conversation);
+            return 1;
+        } catch (JsonProcessingException exception) {
+            return 2;
+        }
     }
 
     @Override

@@ -74,9 +74,9 @@ const EndUserRequestDetailContainer = (props) => {
                 "endUserLastName": request.endUserLastName,
                 "endUserEmail": request.endUserEmail,
             };
-            console.log(payload);
             sendFirstMessage(payload);
             setValidatedMessage(false);
+            setFlagMessage(false);
         }
     }
 

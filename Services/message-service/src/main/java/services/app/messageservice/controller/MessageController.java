@@ -33,8 +33,10 @@ public class MessageController {
         Integer flag = messageService.sendFirstMessage(messageRequestDTO);
         if (flag == 1) {
             return new ResponseEntity<>("Uspjesno poslata poruka", HttpStatus.OK);
+        } else if (flag == 2) {
+            return new ResponseEntity<>("Vec ste poslali prvu poruku", HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>("Poruka nije uspjesno poslata", HttpStatus.OK);
+            return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -43,11 +45,11 @@ public class MessageController {
     public ResponseEntity<?> sendMessage(@RequestBody Message message) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
-        Integer flag = messageService.sendMessage(message);
+        Integer flag = messageService.sendMessage(message, Long.valueOf(cp.getUserId()));
         if (flag == 1) {
             return new ResponseEntity<>("Uspjesno poslata poruka", HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Poruka nije uspjesno poslata", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
         }
     }
 }

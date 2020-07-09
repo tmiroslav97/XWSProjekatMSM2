@@ -10,9 +10,11 @@ public interface MessageService {
 
     List<Message> findAllByConversationId(Long convId);
 
+    void setAllConversationMessagesFromRecieverToSeen(Long conversationId, String recieverEmail);
+
     Integer sendFirstMessage(MessageRequestDTO messageRequestDTO);
 
-    Integer sendMessage(Message message);
+    Integer sendMessage(Message message, Long senderUserId);
 
     Message save(Message message);
 
