@@ -29,4 +29,8 @@ public class DbTableConstants {
     public static final String ADREQUEST = "adRequest";
     public static final String ADREPORT = "adReport";
     public static final String REQUESTAD = "requestAd";
+    public static final String INVOICE = "invoice";
+
+
+    public static final String REPORTINVOICE = "reportInvoice";
 }

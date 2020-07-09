@@ -30,6 +30,14 @@ public class Report {
     @Column(name = DbColumnConstants.DISTANCETRAVELED, nullable = false)
     private Float distanceTraveled;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = DbTableConstants.REPORTINVOICE,
+            joinColumns = @JoinColumn(name = "report_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "invoice_id", referencedColumnName = "id"))
+    protected Invoice invoice;
+
     @ManyToOne(fetch = FetchType.LAZY)
     private PublisherUser publisherUser;
+
+
 }
