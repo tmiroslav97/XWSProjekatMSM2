@@ -86,8 +86,11 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Boolean quitRequest(Long id) {
+    public Integer quitRequest(Long id) {
         Request request = this.findById(id);
+        if(!request.getStatus().toString().equals("PENDING")){
+            return 2;
+        }
         request.setStatus(RequestStatusEnum.CANCELED);
         request = this.save(request);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -102,8 +105,9 @@ public class RequestServiceImpl implements RequestService {
                 rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
             }
         } catch (JsonProcessingException exception) {
+            return 3;
         }
-        return true;
+        return 1;
     }
 
     @Override
@@ -139,6 +143,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public String acceptRequest(Long requestId, String action) {
         Request request = this.findById(requestId);
+        if (!request.getStatus().toString().equals("PENDING")) {
+            return "Zahtjev je vec obradjen";
+        }
         if (action.equals("reject")) {
             request.setStatus(RequestStatusEnum.CANCELED);
             this.save(request);

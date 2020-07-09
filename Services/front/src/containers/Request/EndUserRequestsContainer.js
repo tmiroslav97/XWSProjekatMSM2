@@ -7,7 +7,7 @@ import EndUserRequestsPaidComponent from '../../components/Request/EndUserReques
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 import { ratingAd, addCommentForAd } from '../../store/ad/actions';
-import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
+import { putSuccessMsg, putErrorMsg, putWarnMsg } from '../../store/common/actions';
 
 const EndUserRequestsContainer = () => {
     const dispatch = useDispatch();
@@ -45,6 +45,8 @@ const EndUserRequestsContainer = () => {
         const result = await RequestService.quitRequest({ "id": reqId, "action": "quit" });
         if (result === "Uspjesno odustajanje od zahtjeva") {
             dispatch(putSuccessMsg(result));
+        } else if (result === "Zahtjev je vec obradjen") {
+            dispatch(putWarnMsg(result));
         } else {
             dispatch(putErrorMsg(result));
         }

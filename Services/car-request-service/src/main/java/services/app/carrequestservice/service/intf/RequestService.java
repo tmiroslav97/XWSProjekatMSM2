@@ -21,7 +21,7 @@ public interface RequestService {
 
     Long authAgent(String email, String identifier);
 
-    Boolean quitRequest(Long id);
+    Integer quitRequest(Long id);
 
     void autoRejectRequests();
 

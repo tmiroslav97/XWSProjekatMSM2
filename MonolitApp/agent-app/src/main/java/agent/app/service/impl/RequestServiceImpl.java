@@ -96,6 +96,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public String acceptRequest(String email, Long id, String action) {
         Request request = this.findById(id);
+        if(!request.getStatus().toString().equals("PENDING")){
+            return "Zahtjev je vec obradjen";
+        }
         if (action.equals("reject")) {
             request.setStatus(RequestStatusEnum.CANCELED);
             this.save(request);
