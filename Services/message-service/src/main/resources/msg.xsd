@@ -15,6 +15,7 @@
             <xs:element name="participantPublisherUser" type="xs:long"/>
             <xs:element name="participantEndUser" type="xs:long"/>
             <xs:element name="adRequest" type="xs:long"/>
+            <xs:element name="convName" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="Message" type="tns:Message"/>
         </xs:sequence>
     </xs:complexType>
