@@ -100,4 +100,22 @@ public class AdController {
         return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/ads-from-discount", method = RequestMethod.GET)
+    public ResponseEntity<?> getAdsFromDiscount(@RequestParam("discountId") Long discountId) {
+        return new ResponseEntity<>(adService.findAdsFromDiscount(discountId), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/add-discount", method = RequestMethod.GET)
+    public ResponseEntity<?> addDiscount(@RequestParam("discountId") Long discountId) {
+        return new ResponseEntity<>(adService.addDiscount(discountId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/add-discount-to-ad", method = RequestMethod.GET)
+    public ResponseEntity<?> addDiscountToAd(@RequestParam("discountId") Long discountId, @RequestParam("adId") Long adId) {
+        return new ResponseEntity<>(adService.addDiscountToAd(discountId, adId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/remove-discount-from-ad", method = RequestMethod.GET)
+    public ResponseEntity<?> removeDiscountToAd(@RequestParam("discountId") Long discountId, @RequestParam("adId") Long adId) {
+        return new ResponseEntity<>(adService.removeDiscountToAd(discountId, adId), HttpStatus.OK);
+    }
 }

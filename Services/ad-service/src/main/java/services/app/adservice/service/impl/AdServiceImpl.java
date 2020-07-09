@@ -33,10 +33,7 @@ import services.app.adservice.exception.ExistsException;
 import services.app.adservice.exception.NotFoundException;
 import services.app.adservice.model.*;
 import services.app.adservice.repository.AdRepository;
-import services.app.adservice.service.intf.AdService;
-import services.app.adservice.service.intf.CarCalendarTermService;
-import services.app.adservice.service.intf.CarService;
-import services.app.adservice.service.intf.ImageService;
+import services.app.adservice.service.intf.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -71,11 +68,14 @@ public class AdServiceImpl implements AdService {
     @Autowired
     private AmqpAdmin amqpAdmin;
 
+    @Autowired
+    private DiscountListService discountListService;
+
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Ad findById(Long id) {
-        return adRepository.findById(id).orElseThrow(() -> new NotFoundException("Oglas ne postoi."));
+        return adRepository.findById(id).orElseThrow(() -> new NotFoundException("Oglas ne postoji."));
     }
 
     @Override
@@ -529,6 +529,42 @@ public class AdServiceImpl implements AdService {
             return null;
         }
 
+    }
+
+    @Override
+    public List<Long> findAdsFromDiscount(Long discountId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        List<Long> adsList = new ArrayList<>();
+        DiscountList discountList = discountListService.findById(discountId);
+        for(Ad ad : discountList.getAds()){
+            adsList.add(ad.getId());
+            System.out.println("oglas od popusta"+ad.getId());
+        }
+        return adsList;
+    }
+
+    @Override
+    public Integer addDiscountToAd(Long discountId, Long adId) {
+        Ad ad = this.findById(adId);
+        DiscountList discountList = discountListService.findById(discountId);
+        ad.getDiscountLists().add(discountList);
+        ad = this.edit(ad);
+        return 1;
+    }
+
+    @Override
+    public Integer removeDiscountToAd(Long discountId, Long adId) {
+        Ad ad = this.findById(adId);
+        DiscountList discountList = discountListService.findById(discountId);
+        ad.getDiscountLists().remove(discountList);
+        ad = this.edit(ad);
+        return 1;
+    }
+
+    @Override
+    public Integer addDiscount(Long discountId) {
+        return discountListService.addDiscount(discountId);
     }
 
 }

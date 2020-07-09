@@ -5,15 +5,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import services.app.pricelistanddiscountservice.client.AdClient;
+import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.DiscountListConverter;
+import services.app.pricelistanddiscountservice.dto.discount.DiscountListCreateDTO;
+import services.app.pricelistanddiscountservice.dto.discount.DiscountListDTO;
 import services.app.pricelistanddiscountservice.dto.sync.DiscountListSyncDTO;
 import services.app.pricelistanddiscountservice.exception.NotFoundException;
+import services.app.pricelistanddiscountservice.model.CustomPrincipal;
 import services.app.pricelistanddiscountservice.model.DiscountList;
 import services.app.pricelistanddiscountservice.repository.DiscountListRepository;
 import services.app.pricelistanddiscountservice.service.intf.DiscountListService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,6 +33,12 @@ public class DiscountListServiceImpl implements DiscountListService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private AuthenticationClient authenticationClient;
+
+    @Autowired
+    private AdClient adClient;
+
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -34,8 +48,33 @@ public class DiscountListServiceImpl implements DiscountListService {
     }
 
     @Override
-    public List<DiscountList> findAll() {
-        return discountListRepository.findAll();
+    public List<DiscountListDTO> findAll() {
+        List<DiscountList> discountLists = discountListRepository.findAll();
+        return DiscountListConverter.fromEntityList(discountLists, DiscountListConverter::toDiscountListDTOFromDiscountList);
+    }
+
+    @Override
+    public List<DiscountList> findAllByAgent() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        return discountListRepository.findAllByAgent(Long.parseLong(principal.getUserId()));
+    }
+
+    @Override
+    public List<DiscountListDTO> findAllByAgentDTO() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+
+        List<DiscountList> discountLists = this.findAllByAgent();
+        List<DiscountListDTO> discountListDTOS = new ArrayList<>();
+
+        for(DiscountList dl : discountLists){
+            DiscountListDTO discountListDTO = DiscountListConverter.toDiscountListDTOFromDiscountList(dl);
+            List<Long> adsId = adClient.getAdsFromDiscount(dl.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+            discountListDTO.setAdsId(adsId);
+            discountListDTOS.add(discountListDTO);
+        }
+        return discountListDTOS;
     }
 
     @Override
@@ -56,8 +95,12 @@ public class DiscountListServiceImpl implements DiscountListService {
     }
 
     @Override
-    public Integer edit(Long id) {
-        return null;
+    public Integer edit(DiscountList discountList) {
+        DiscountList discountList1 = this.findById(discountList.getId());
+        discountList1.setDayNum(discountList.getDayNum());
+        discountList1.setDiscount(discountList.getDiscount());
+        discountList1 = discountListRepository.save(discountList1);
+        return 1;
     }
 
     @Override
@@ -74,4 +117,40 @@ public class DiscountListServiceImpl implements DiscountListService {
             return null;
         }
     }
+
+    @Override
+    public Integer createDiscount(DiscountListCreateDTO discountListCreateDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+
+        DiscountList discountList = DiscountListConverter.toDiscountListFromDiscountListCreateDTO(discountListCreateDTO);
+        discountList.setAgent(Long.parseLong(principal.getUserId()));
+        discountList = this.save(discountList);
+        Integer i = adClient.addDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+        return i;
+    }
+
+    @Override
+    public Integer addDiscountToAd(Long discountId, Long adId) {
+        System.out.println("dodavanjeeee");
+        System.out.println(discountId + "    " + adId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        DiscountList discountList = this.findById(discountId);
+        Integer i = adClient.addDiscountToAd(discountId, adId, principal.getUserId(),principal.getEmail(), principal.getRoles(), principal.getToken());
+        System.out.println("USPESNOO DODAVANJE");
+        return i;
+    }
+
+    @Override
+    public Integer deleteDiscountFromAd(Long discountId, Long adId) {
+        System.out.println("brisanjeee");
+        System.out.println(discountId + "    " + adId);
+        DiscountList discountList = this.findById(discountId);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        Integer i = adClient.removeDiscountToAd(discountId, adId,principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken() );
+        return i;
+    }
+
 }
