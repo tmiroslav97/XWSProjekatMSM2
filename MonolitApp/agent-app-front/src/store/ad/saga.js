@@ -24,7 +24,15 @@ import {
     FETCH_ALL_COMMENTS,
     FETCH_BEST_GRADE,
     FETCH_MAX_MILEAGE,
-    FETCH_MAX_COMMENTS
+    FETCH_MAX_COMMENTS,
+    PUT_DISCOUNTS,
+    FETCH_DISCOUNTS,
+    FETCH_DISCOUNTS_FROM_AGENT, 
+    ADD_DISCOUNT,
+    EDIT_DISCOUNT,
+    DELETE_DISCOUNT,
+    ADD_DISCOUNT_TO_AD,
+    REMOVE_DISCOUNT_FROM_AD
 } from './constants';
 
 import {
@@ -33,7 +41,8 @@ import {
     putAd,
     putImageSrc,
     putCalendar,
-    putComments
+    putComments,
+    putDiscounts
 } from './actions';
 
 import {
@@ -42,7 +51,8 @@ import {
 
 import {
     imageNameSelector,
-    calendarSelector
+    calendarSelector,
+    discountsSelector
 } from './selectors';
 
 
@@ -138,7 +148,7 @@ export function* loadImage() {
     // }));
 
 }
-//PROVERITI
+
 export function* fetchCalendar() {
     const { payload } = yield take(FETCH_CALENDAR);
     console.log("SAGA " + payload.id)
@@ -210,9 +220,6 @@ export function* fetchComments() {
     console.log(data);
     yield put(putComments({
         'data': data,
-        // 'totalPageCnt': data.totalPageCnt,
-        // 'nextPage': payload.nextPage,
-        // 'size': payload.size,
         'isFetch': true
     }));
 }
@@ -290,6 +297,95 @@ export function* fetchMaxCommentsAd() {
     yield put(putAd({ 'isFetch': false }));
     const data = yield call(AdServices.fetchMaxCommentsAd, payload);
     yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetchDiscounts(){
+    const { payload } = yield take(FETCH_DISCOUNTS);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicounts, payload);
+    console.log(data);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetchDiscountsFromAgent(){
+    const { payload } = yield take(FETCH_DISCOUNTS_FROM_AGENT);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, payload);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* addDiscount(){
+    const { payload } = yield take(ADD_DISCOUNT);
+    const msg = yield call(AdServices.addDiscount, payload);
+    yield put(putSuccessMsg(msg));
+    const temp = yield select(discountsSelector);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* editDiscount(){
+    const { payload } = yield take(EDIT_DISCOUNT);
+    const msg = yield call(AdServices.editDiscount, payload);
+    yield put(putSuccessMsg(msg));
+    const temp = yield select(discountsSelector);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* deleteDiscount(){
+    const { payload } = yield take(DELETE_DISCOUNT);
+    const msg = yield call(AdServices.deleteDiscount, payload);
+    yield put(putSuccessMsg(msg));
+    
+    const temp = yield select(discountsSelector);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* addDiscountToAd(){
+    const { payload } = yield take(ADD_DISCOUNT_TO_AD);
+    const msg = yield call(AdServices.addDiscountToAd, payload);
+    yield put(putSuccessMsg(msg));
+    
+    const temp = yield select(discountsSelector);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* removeDiscountFromAd(){
+    const { payload } = yield take(REMOVE_DISCOUNT_FROM_AD);
+    const msg = yield call(AdServices.removeDiscountFromAd, payload);
+    yield put(putSuccessMsg(msg));
+    
+    const temp = yield select(discountsSelector);
+    yield put(putDiscounts({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchAllDicountsFromAgent, temp);
+    yield put(putDiscounts({
         'data': data,
         'isFetch': true
     }));

@@ -132,4 +132,6 @@ public class AdController {
             return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }

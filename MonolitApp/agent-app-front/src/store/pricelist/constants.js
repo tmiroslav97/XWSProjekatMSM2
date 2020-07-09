@@ -6,3 +6,4 @@ export const PUT_PRICE_LIST = 'put_price_list';
 export const ADD_PRICE_LIST = 'add_price_list';
 export const EDIT_PRICE_LIST = 'edit_price_list';
 export const DELETE_PRICE_LIST = 'delete_price_list';
+export const REVERSE_PRICE_LIST = 'reverse_price_list';

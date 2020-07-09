@@ -7,10 +7,18 @@ import agent.app.model.PriceList;
 public class PriceListConverter extends AbstractConverter {
 
     public static PriceList toCreatePriceListFromRequest(PriceListCreateDTO priceListCreateDTO) {
-//        DateTime dt = DateAPI.DateTimeFromDateString(priceListCreateDTO.getCreationDate());
-
         return PriceList.builder()
                 .creationDate(DateAPI.DateTimeNow())
+                .pricePerKm(priceListCreateDTO.getPricePerKm())
+                .pricePerKmCDW(priceListCreateDTO.getPricePerKmCDW())
+                .pricePerDay(priceListCreateDTO.getPricePerDay())
+                .build();
+    }
+
+    public static PriceList toEditPriceListFromRequest(PriceListCreateDTO priceListCreateDTO) {
+
+        return PriceList.builder()
+                .id(priceListCreateDTO.getId())
                 .pricePerKm(priceListCreateDTO.getPricePerKm())
                 .pricePerKmCDW(priceListCreateDTO.getPricePerKmCDW())
                 .pricePerDay(priceListCreateDTO.getPricePerDay())
