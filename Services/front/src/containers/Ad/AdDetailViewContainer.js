@@ -41,32 +41,36 @@ const AdDetailViewContainer = (props) => {
     };
 
     const addToCart = (ad) => {
-        let cart = new Map();
-        if (JSON.parse(localStorage.getItem('cart')) != null) {
-            cart = new Map(JSON.parse(localStorage.getItem('cart')));
-        }
-        if (cart.get(ad.publisherUserId) == null) {
-            cart.set(ad.publisherUserId, { bundle: false, startDate: searchData.startDate, endDate: searchData.endDate, ads: [{ id: ad.id, adName: ad.name }] });
-            dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
+        if (searchData.startDate === undefined || searchData.startDate === null || searchData.startDate === '' || searchData.endDate === undefined || searchData.endDate === null || searchData.endDate === '') {
+            dispatch(putWarnMsg('Niste odabrali pocetni i krajnji datum rentiranja'));
         } else {
-            var temp = cart.get(ad.publisherUserId);
-            var flag = false;
-            for (let item of temp.ads) {
-                if (item.id == ad.id) {
-                    flag = true;
-                    break;
+            let cart = new Map();
+            if (JSON.parse(localStorage.getItem('cart')) != null) {
+                cart = new Map(JSON.parse(localStorage.getItem('cart')));
+            }
+            if (cart.get(ad.publisherUserId) == null) {
+                cart.set(ad.publisherUserId, { user: ad.publisherUserFirstName + " " + ad.publisherUserLastName, bundle: false, ads: [{ id: ad.id, adName: ad.name, startDate: searchData.startDate, endDate: searchData.endDate }] });
+                dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
+            } else {
+                var temp = cart.get(ad.publisherUserId);
+                var flag = false;
+                for (let item of temp.ads) {
+                    if (item.id == ad.id) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    dispatch(putWarnMsg('Oglas ste vec dodali u korpu'));
+                } else {
+                    cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name, startDate: searchData.startDate, endDate: searchData.endDate });
+                    dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
                 }
             }
 
-            if (flag) {
-                dispatch(putWarnMsg('Oglas ste vec dodali u korpu'));
-            } else {
-                cart.get(ad.publisherUserId).ads.push({ id: ad.id, adName: ad.name });
-                dispatch(putSuccessMsg('Oglas uspjesno dodat u korpu'));
-            }
+            localStorage.setItem('cart', JSON.stringify(Array.from(cart.entries())));
         }
-
-        localStorage.setItem('cart', JSON.stringify(Array.from(cart.entries())));
     };
 
     const handleDateFormat = (event) => {
@@ -108,7 +112,7 @@ const AdDetailViewContainer = (props) => {
         );
         setFlagComments(true);
     }
-    const getComments = (adId) =>{
+    const getComments = (adId) => {
         console.log("oglas " + adId);
         dispatch(
             fetchAllComments({
@@ -118,10 +122,10 @@ const AdDetailViewContainer = (props) => {
         setFlagComments(true);
     }
 
-    const getCommentsView = ()=>{
+    const getCommentsView = () => {
         let list = [];
-        if(comments.isFetch){
-            comments.data.map((comment)=>{
+        if (comments.isFetch) {
+            comments.data.map((comment) => {
                 let ss = comment.creationDate.substring(0, 10);
                 let ss2 = comment.creationDate.substring(11, 16);
                 ss = ss2 + " " + ss;
@@ -137,7 +141,7 @@ const AdDetailViewContainer = (props) => {
         return list;
     }
 
-    const hideComments =()=>{
+    const hideComments = () => {
         setFlagComments(false);
     }
     return (

@@ -8,7 +8,7 @@ VALUES ('ROLE_USER');
 INSERT INTO user(id, email, first_name, last_name, password)
 VALUES (1, 'msm@msm.com', 'msm', 'msm', '$2a$10$VSlWn0nzWDB2Jxv7cx.sf.NakwjllWrSjdkWi66g2dMM.OdBGThlS');
 INSERT INTO user(id, email, first_name, last_name, password)
-VALUES (2, 'miroslav@gmail.com', 'Miroslav', 'Tomic', '$2a$10$VSlWn0nzWDB2Jxv7cx.sf.NakwjllWrSjdkWi66g2dMM.OdBGThlS');
+VALUES (2, 'tomic.miroslav97@gmail.com', 'Miroslav', 'Tomic', '$2a$10$VSlWn0nzWDB2Jxv7cx.sf.NakwjllWrSjdkWi66g2dMM.OdBGThlS');
 INSERT INTO user(id, email, first_name, last_name, password)
 VALUES (3, 'svetlana@gmail.com', 'Svetlana', 'Antesevic', '$2a$10$VSlWn0nzWDB2Jxv7cx.sf.NakwjllWrSjdkWi66g2dMM.OdBGThlS');
 INSERT INTO user(id, email, first_name, last_name, password)
@@ -50,6 +50,68 @@ VALUES (5, false);
 
 INSERT INTO end_user(id, ad_limit_num, canceled_cnt, enabled, obliged)
 VALUES (5, 3, 0, true, false);
+
+INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
+VALUES (1, STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 20, 10, 0, 3);
+INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
+VALUES (2, STR_TO_DATE('25-05-2020', '%d-%m-%Y'), 4000, 2000, 10000, 2);
+INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
+VALUES (3, STR_TO_DATE('24-04-2020', '%d-%m-%Y'), 20, 10, 0, 4);
+
+INSERT INTO discount_list(id, discount, day_num, agent_id)
+VALUES (1, 22, 30, 2);
+
+INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
+VALUES (1, false, 'Audi', 'A8', 'Limuzina',  550000, 'LIMITED', false, 2, 'Dizel', 'Automatik', 300000, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
+VALUES (2, false, 'BMW', '320i', 'Limuzina', null, 'UNLIMITED', true, 3, 'Benzin', 'Manuelni', 250000, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
+INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
+VALUES (3, false, 'Mercedes', 'ML', 'Limuzina', null, 'UNLIMITED', true, 3, 'Dizel', 'Automatik', 150000, null, STR_TO_DATE('20-05-2015', '%d-%m-%Y'));
+
+INSERT INTO ad(id, cover_photo, deleted, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
+VALUES (1, 'slika7.jpg', false, true, 'Zrenjanin', 'Oglas za automobil audi (A8)', STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 6, 31, 8, 2, 2);
+INSERT INTO ad(id, cover_photo, deleted, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
+VALUES (2, 'slika1.jpg', false, true, 'Novi Sad', 'Oglas za automobil BMW', STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 2, 17, 6, 2, 2);
+INSERT INTO ad(id, cover_photo, deleted, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
+VALUES (3, 'slika9.jpg', false, true, 'Zrenjanin', 'Oglas za automobil Mercedes!', STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 3, 18, 3, 2, 2);
+
+INSERT INTO ad_car(ad_id, car_id) VALUES (1,1);
+INSERT INTO ad_car(ad_id, car_id) VALUES (2,2);
+INSERT INTO ad_car(ad_id, car_id) VALUES (3,3);
+
+INSERT INTO car_calendar_term(start_date, end_date, ad_id)
+VALUES (STR_TO_DATE('09:00 06-02-2020', '%H:%i %d-%m-%Y'), STR_TO_DATE('09:00 09-02-2020', '%H:%i %d-%m-%Y'), 1);
+INSERT INTO car_calendar_term(start_date, end_date, ad_id)
+VALUES (STR_TO_DATE('09:00 06-03-2020', '%H:%i %d-%m-%Y'), STR_TO_DATE('09:00 06-08-2020', '%H:%i %d-%m-%Y'), 2);
+INSERT INTO car_calendar_term(start_date, end_date, ad_id)
+VALUES (STR_TO_DATE('09:00 07-02-2020', '%H:%i %d-%m-%Y'), STR_TO_DATE('09:00 29-07-2020', '%H:%i %d-%m-%Y'), 3);
+
+INSERT INTO image(id, name, ad_id)
+VALUES (1, 'slika5.jpg', 1);
+INSERT INTO image(id, name, ad_id)
+VALUES (2, 'slika6.jfif', 1);
+INSERT INTO image(id, name, ad_id)
+VALUES (3, 'slika7.jpg', 1);
+INSERT INTO image(id, name, ad_id)
+VALUES (4, 'slika8.jpg', 1);
+
+INSERT INTO image(id, name, ad_id)
+VALUES (5, 'slika1.jpg', 2);
+INSERT INTO image(id, name, ad_id)
+VALUES (6, 'slika2.jfif', 2);
+INSERT INTO image(id, name, ad_id)
+VALUES (7, 'slika3.jpg', 2);
+INSERT INTO image(id, name, ad_id)
+VALUES (8, 'slika4.jfif', 2);
+
+INSERT INTO image(id, name, ad_id)
+VALUES (9, 'slika9.jpg', 3);
+INSERT INTO image(id, name, ad_id)
+VALUES (10, 'slika10.jpg', 3);
+INSERT INTO image(id, name, ad_id)
+VALUES (11, 'slika11.jpg', 3);
+INSERT INTO image(id, name, ad_id)
+VALUES (12, 'slika12.jpg', 3);
 
 --car manufacturers
 INSERT INTO car_manufacturer(id, name)
@@ -93,37 +155,7 @@ VALUES (19, 'Seat');
 INSERT INTO car_manufacturer(id, name)
 VALUES (20, 'Ferari');
 INSERT INTO car_manufacturer(id, name)
-VALUES (21, 'Proche');
-
-INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (1, '20.04.2020', 20, 10, 0, 3);
-INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (2, '25.05.2020', 20, 10, 0, 2);
-INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (3, '24.04.2020', 20, 10, 0, 4);
-
-INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (1, false, 'Fiat', '500', 'Limuzina', false, 2, 'Dizel', 'Automatski', 120, null, '2020-05-20');
-INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (2, false, 'Mercedes-Benz', 'C-klasa', 'Limuzina', false, 2, 'Dizel', 'Automatski', 200, null, '2020-05-20');
-INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (3, false, 'Audi', 'A3', 'Limuzina', false, 3, 'Dizel', 'Automatski', 125, null, '2017-05-20');
-INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (4, false, 'BMW', '320d', 'Limuzina', true, 3, 'Benzin', 'Manuelni', 250, null, '2019-02-20');
-
-INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (1, 'slika1.jpg', false, 20, 'LIMITED', true, 'Beograd', 'Oglas za autic fiat', '20.04.2020.', 1, 8, 1, 1, 3);
-INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (2, 'slika6.jpg', false, 25, 'LIMITED', true, 'Zrenjanin', 'Oglas za automobil mercedes', '20.04.2020.', 3, 30, 3, 1, 2);
-INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (3, 'slika9.jpg', false, 200, 'LIMITED', true, 'Beograd', 'Oglas za audi', '20.05.2020.', 3, 15, 3, 1, 4);
-INSERT INTO ad(id, cover_photo, deleted, distance_limit, distance_limit_flag, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
-VALUES (4, 'slika16.jpg', false, 100, 'LIMITED', true, 'Novi Sad', 'Oglas za automobil BMW', '29.03.2020.', 2, 17, 2, 1, 4);
-
-INSERT INTO ad_car(ad_id, car_id) VALUES (1,1);
-INSERT INTO ad_car(ad_id, car_id) VALUES (2,2);
-INSERT INTO ad_car(ad_id, car_id) VALUES (3,3);
-INSERT INTO ad_car(ad_id, car_id) VALUES (4,4);
+VALUES (21, 'Porsche');
 
 --car models
 INSERT INTO car_model(id, name, car_manufacturer_id)
@@ -142,6 +174,12 @@ INSERT INTO car_model(id, name, car_manufacturer_id)
 VALUES (7, '318d', 1);
 INSERT INTO car_model(id, name, car_manufacturer_id)
 VALUES (8, '318i', 1);
+INSERT INTO car_model(id, name, car_manufacturer_id)
+VALUES (9, 'ML', 2);
+INSERT INTO car_model(id, name, car_manufacturer_id)
+VALUES (10, 'Moris', 6);
+INSERT INTO car_model(id, name, car_manufacturer_id)
+VALUES (11, 'xc90', 9);
 
 --car types
 INSERT INTO car_type(id, name)
@@ -174,46 +212,3 @@ INSERT INTO gearbox_type(id, name)
 VALUES (4, 'DSG');
 INSERT INTO gearbox_type(id, name)
 VALUES (5, 'Tiptronik');
-
-INSERT INTO car_calendar_term(start_date, end_date, ad_id)
-VALUES ('2020.06.02.', '2020.09.02', 1);
-INSERT INTO car_calendar_term(start_date, end_date, ad_id)
-VALUES ('2020.06.03.', '2020.06.08.', 2);
-INSERT INTO car_calendar_term(start_date, end_date, ad_id)
-VALUES ('2020.07.02.', '2020.07.29', 3);
-INSERT INTO car_calendar_term(start_date, end_date, ad_id)
-VALUES ('2020.06.08.', '2020.08.08.', 4);
-
-
-INSERT INTO image(id, name, ad_id)
-VALUES (1, 'slika1.jpg', 1);
-INSERT INTO image(id, name, ad_id)
-VALUES (2, 'slika2.jpg', 1);
-INSERT INTO image(id, name, ad_id)
-VALUES (3, 'slika3.jpg', 1);
-INSERT INTO image(id, name, ad_id)
-VALUES (4, 'slika4.jpg', 1);
-INSERT INTO image(id, name, ad_id)
-VALUES (5, 'slika5.jpg', 2);
-INSERT INTO image(id, name, ad_id)
-VALUES (6, 'slika6.jpg', 2);
-INSERT INTO image(id, name, ad_id)
-VALUES (7, 'slika7.jpg', 2);
-INSERT INTO image(id, name, ad_id)
-VALUES (8, 'slika8.jpg', 2);
-INSERT INTO image(id, name, ad_id)
-VALUES (9, 'slika9.jpg', 3);
-INSERT INTO image(id, name, ad_id)
-VALUES (10, 'slika10.jpg', 3);
-INSERT INTO image(id, name, ad_id)
-VALUES (11, 'slika11.jpg', 3);
-INSERT INTO image(id, name, ad_id)
-VALUES (12, 'slika12.jpg', 3);
-INSERT INTO image(id, name, ad_id)
-VALUES (13, 'slika13.jpg', 4);
-INSERT INTO image(id, name, ad_id)
-VALUES (14, 'slika14.jpg', 4);
-INSERT INTO image(id, name, ad_id)
-VALUES (15, 'slika15.jpg', 4);
-INSERT INTO image(id, name, ad_id)
-VALUES (16, 'slika16.jpg', 4);

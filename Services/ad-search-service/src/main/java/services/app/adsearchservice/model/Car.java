@@ -8,6 +8,7 @@ import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import services.app.adsearchservice.common.db.DbColumnConstants;
 import services.app.adsearchservice.common.db.DbTableConstants;
+import services.app.adsearchservice.model.enumeration.DistanceLimitEnum;
 
 import javax.persistence.*;
 
@@ -22,7 +23,6 @@ import javax.persistence.*;
 public class Car {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Temporal(TemporalType.DATE)
@@ -53,6 +53,13 @@ public class Car {
 
     @Column(name = DbColumnConstants.CHILDRENSEATNUM, nullable = false)
     private Integer childrenSeatNum;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = DbColumnConstants.DISTANCELIMITFLAG, nullable = false)
+    private DistanceLimitEnum distanceLimitFlag;
+
+    @Column(name = DbColumnConstants.DISTANCELIMIT)
+    private Float distanceLimit;
 
     @Column(name = DbColumnConstants.CDW, nullable = false)
     private Boolean cdw;

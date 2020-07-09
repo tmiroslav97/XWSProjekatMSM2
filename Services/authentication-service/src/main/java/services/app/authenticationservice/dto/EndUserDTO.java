@@ -8,13 +8,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EndUserDTO {
-
-    Long id;
-    String email;
-    String firstName;
-    String lastName;
-    Integer canceledCnt;
-    Boolean enabled;
-    Boolean obligated;
-    Boolean deleted;
+    private Long id;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private Integer canceledCnt;
+    private Boolean enabled;
+    private Boolean obligated;
+    private Boolean deleted;
 }

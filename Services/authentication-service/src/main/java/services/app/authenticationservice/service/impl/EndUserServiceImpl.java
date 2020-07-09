@@ -1,11 +1,15 @@
 package services.app.authenticationservice.service.impl;
 
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import services.app.authenticationservice.config.LocalRabbitMQConfiguration;
 import services.app.authenticationservice.converter.EndUserConverter;
 import services.app.authenticationservice.dto.EndUserDTO;
 import services.app.authenticationservice.dto.EndUserPageDTO;
@@ -22,6 +26,10 @@ public class EndUserServiceImpl implements EndUserService {
 
     @Autowired
     private EndUserRepository endUserRepository;
+
+    @Autowired
+    @Qualifier(value = "localRabbitTemplate")
+    private RabbitTemplate localRabbitTemplate;
 
     @Override
     public EndUser findById(Long id) {
@@ -94,6 +102,14 @@ public class EndUserServiceImpl implements EndUserService {
     }
 
     @Override
+    @RabbitListener(queues = LocalRabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME)
+    public void submitRentCnt(Long id) {
+        EndUser endUser = this.findById(id);
+        endUser.setCanceledCnt(endUser.getCanceledCnt() + 1);
+        this.save(endUser);
+    }
+
+    @Override
     public EndUser save(EndUser endUser) {
         return endUserRepository.save(endUser);
     }
@@ -127,5 +143,19 @@ public class EndUserServiceImpl implements EndUserService {
         endUserRepository.save(endUser);
         System.out.println("limit num posle: " + endUser.getAdLimitNum());
         return br - 1;
+    }
+
+    @Override
+    @RabbitListener(queues = LocalRabbitMQConfiguration.END_USER_IS_BLOCKED_ID_QUEUE_NAME)
+    public Boolean isBlockedById(Long id) {
+        EndUser endUser = this.findById(id);
+        return !endUser.getEnabled();
+    }
+
+    @Override
+    @RabbitListener(queues = LocalRabbitMQConfiguration.END_USER_IS_OBLIGED_ID_QUEUE_NAME)
+    public Boolean isObligedById(Long id) {
+        EndUser endUser = this.findById(id);
+        return endUser.getObliged();
     }
 }

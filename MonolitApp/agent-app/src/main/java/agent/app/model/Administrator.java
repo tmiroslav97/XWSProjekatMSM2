@@ -21,8 +21,8 @@ public class Administrator extends User {
 
     @Builder(builderMethodName = "administratorBuilder")
     public Administrator(Long id, String email, String password, String firstName,
-                         String lastName, DateTime lastPasswordResetDate,
+                         String lastName, Boolean local, DateTime lastPasswordResetDate,
                          List<Authority> authorities) {
-        super(id, email, password, firstName, lastName, lastPasswordResetDate, authorities);
+        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities);
     }
 }

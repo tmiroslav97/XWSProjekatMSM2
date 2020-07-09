@@ -18,6 +18,8 @@ public class CarCreateDTO {
     private String carType;
     private Float mileage;
     private Integer childrenSeatNum;
+    private String distanceLimitFlag;
+    private Float distanceLimit;
     private Boolean cdw;
     private Boolean androidFlag;
 

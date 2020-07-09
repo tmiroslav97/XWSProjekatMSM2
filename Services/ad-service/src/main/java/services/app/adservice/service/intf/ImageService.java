@@ -17,9 +17,9 @@ public interface ImageService {
     Image editImage(Image image);
     Integer deleteById(Long id);
     Integer getImageSize();
-
+    String findImageByNameBase64(String name);
+    String saveImageBase64(String imageBase64);
     ImageDTO findImageLocationByName(String name, Long ad_id);
-
     String getImageName();
     Integer addImage(String imageName);
     String uploadImage(MultipartFile photo);

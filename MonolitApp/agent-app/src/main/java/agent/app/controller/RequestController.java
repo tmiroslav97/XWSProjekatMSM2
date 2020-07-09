@@ -17,42 +17,28 @@ public class RequestController {
 
     private final RequestService requestService;
 
-    @Autowired
-    private RequestClient requestClient;
-
     public RequestController(RequestService requestService) {
         this.requestService = requestService;
     }
-
-//    @PreAuthorize("hasAuthority('ROLE_USER')")
-//    @RequestMapping(method = RequestMethod.POST)
-//    public ResponseEntity<?> submitRequest(@RequestBody ListSubmitRequestDTO listSubmitRequestDTO, Principal principal) {
-//        String email = principal.getName();
-//        Integer flag = requestService.submitRequest(listSubmitRequestDTO.getSubmitRequestDTOS(), email);
-//        if (flag == 1) {
-//            return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
-//        }
-//    }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status, Principal principal) {
         String email = principal.getName();
-        return new ResponseEntity<>(requestClient.getPublisherRequestsResponse(email, status).getRequests(), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.findAllByPublisherUserAndStatus(email, status), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> acceptRequest(@RequestBody ReqAcceptDTO reqAcceptDTO, Principal principal) {
         String email = principal.getName();
-        if (reqAcceptDTO.getAction() != null) {
-            if (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject")) {
-                return new ResponseEntity<>(requestClient.acceptRequest(email, reqAcceptDTO.getId(), reqAcceptDTO.getAction()), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Novi objekat", HttpStatus.OK);
-            }
+        if (reqAcceptDTO.getAction() != null && (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject"))) {
+                String response = requestService.acceptRequest(email, reqAcceptDTO.getId(), reqAcceptDTO.getAction());
+                if (response.equals("Uspjesno odbijen zahtjev") || response.equals("Uspjesno prihvacen zahtjev")) {
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+                }
         } else {
             return new ResponseEntity<>("Nepoznata akcija", HttpStatus.BAD_REQUEST);
 

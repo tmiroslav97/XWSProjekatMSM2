@@ -1,10 +1,7 @@
 package agent.app.service.intf;
 
 
-import agent.app.dto.ad.AdCreateDTO;
-import agent.app.dto.ad.AdPageContentDTO;
-import agent.app.dto.ad.AdPageDTO;
-import agent.app.dto.ad.AdStatisticsDTO;
+import agent.app.dto.ad.*;
 import agent.app.model.Ad;
 import org.joda.time.DateTime;
 
@@ -16,13 +13,23 @@ public interface AdService {
 
     List<Ad> findAll();
 
+    Ad findByMainId(Long mainId);
+
     AdPageContentDTO findAll(Integer page, Integer size);
 
     AdPageContentDTO findAll(Integer page, Integer size, String email);
 
+    AdDetailViewDTO getAdDetailView(Long ad_id);
+
+    List<Ad> findMyAds(String email);
+
     Set<Ad> findAllByIds(List<Long> adIds);
 
+    Integer syncData(String identifier, String email);
+
     Ad save(Ad ad);
+
+    Ad edit(Ad ad);
 
     void delete(Ad ad);
 
@@ -34,15 +41,17 @@ public interface AdService {
 
     Integer createAd(AdCreateDTO adCreateDTO, String email);
 
+    Integer isExistToken(String token);
+
+    String generateToken();
+
+    Integer addRatingToAd(AdRatingDTO adRatingDTO);
+
+    void rateAd(String msg);
+
     void syncData();
 
     AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, DateTime startDate, DateTime endDate);
 
-    Ad findAdWithGrade(Double max_grade);
-
-    AdStatisticsDTO findBestAverageGrade(String email);
-
-    Ad findAdWithMileage(Float max_mileage);
-
-    AdStatisticsDTO findMaxMileage(String email);
+    List<Ad> findAllFromPublisher(String publisherEmail);
 }

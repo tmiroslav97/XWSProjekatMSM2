@@ -8,4 +8,6 @@ public class DbTableConstants {
     public static final String CAR = "car";
     public static final String ADCAR = "adCar";
     public static final String IMAGE = "image";
+    public static final String ADDISCOUNTLIST = "adDiscountList";
+
 }

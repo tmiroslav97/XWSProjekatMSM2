@@ -1,14 +1,16 @@
 package services.app.authenticationservice.converter;
 
-import services.app.authenticationservice.dto.PublisherUserDTO;
+import services.app.authenticationservice.dto.UserFLNameDTO;
 import services.app.authenticationservice.model.User;
 
 public class PublisherUserConverter {
-    public static PublisherUserDTO fromPublisherUserToPublisherUserDTO(User user) {
-        return PublisherUserDTO.builder()
-                .publisherUserId(user.getId())
-                .publisherUserFirstName(user.getFirstName())
-                .publisherUserLastName(user.getLastName())
+    public static UserFLNameDTO toUserFLNameDTOFromUser(User user) {
+        return UserFLNameDTO.builder()
+                .userId(user.getId())
+                .userFirstName(user.getFirstName())
+                .userLastName(user.getLastName())
+                .userEmail(user.getEmail())
+                .local(user.getLocal())
                 .build();
     }
 }

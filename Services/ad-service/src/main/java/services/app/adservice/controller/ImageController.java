@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import services.app.adservice.service.intf.ImageService;
 import java.io.IOException;
@@ -44,5 +41,11 @@ public class ImageController {
         System.out.println("METODAA ZA LOAD SLIKE SRC");
         return new ResponseEntity<>(imageService.findImageLocationByName(name,ad_id), HttpStatus.BAD_REQUEST);
     }
+
+    @RequestMapping(path = "/{name}", method = RequestMethod.GET)
+    public ResponseEntity<?> getImage(@PathVariable("name") String name){
+        return new ResponseEntity<>(imageService.findImageByNameBase64(name), HttpStatus.OK);
+    }
+
 
 }

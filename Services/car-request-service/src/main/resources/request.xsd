@@ -2,69 +2,38 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="http://www.app.services/carrequestservice/model"
     xmlns:tns="http://www.app.services/carrequestservice/model">
-    <xs:element name="getPublisherRequestsRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="publisherUser" type="xs:string"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="getPublisherRequestsByStatusRequest">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element name="publisherUser" type="xs:string"/>
-                <xs:element name="status" type="xs:string"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
     <xs:element name="acceptRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="publisherUser" type="xs:string"/>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
                 <xs:element name="id" type="xs:long"/>
                 <xs:element name="action" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="getPublisherReportsRequest">
+    <xs:element name="acceptResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="publisherUser" type="xs:string"/>
+                <xs:element name="msg" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="getAdReportsRequest">
+    <xs:element name="submitReport">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="distanceTraveled" type="xs:float"/>
+                <xs:element name="description" type="xs:string"/>
                 <xs:element name="adId" type="xs:long"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="getPublisherRequestsResponse">
+    <xs:element name="submitReportResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" name="requests" type="tns:Request"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="getPublisherReportsResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" name="reports" type="tns:Report"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="getAdReportsResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" minOccurs="0" name="reports" type="tns:Report"/>
-            </xs:sequence>
-        </xs:complexType>
-    </xs:element>
-    <xs:element name="submitResponse">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="1" minOccurs="1" name="msg" type="xs:string"/>
+                <xs:element name="msg" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -73,11 +42,15 @@
             <xs:element name="id" type="xs:long"/>
             <xs:element name="status" type="tns:RequestStatusEnum"/>
             <xs:element name="submitDate" type="xs:dateTime"/>
-            <xs:element name="endUser" type="xs:long"/>
-            <xs:element name="publisherUser" type="xs:long"/>
+            <xs:element name="endUserId" type="xs:long"/>
+            <xs:element name="endUserFirstName" type="xs:string"/>
+            <xs:element name="endUserLastName" type="xs:string"/>
+            <xs:element name="endUserEmail" type="xs:string"/>
             <xs:element name="bundle" type="xs:boolean"/>
-            <xs:element name="startDate" type="xs:dateTime"/>
-            <xs:element name="endDate" type="xs:dateTime"/>
+            <xs:element name="publisherUserId" type="xs:long"/>
+            <xs:element name="publisherUserFirstName" type="xs:string"/>
+            <xs:element name="publisherUserLastName" type="xs:string"/>
+            <xs:element name="publisherUserEmail" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="1" name="ads" type="tns:Ad"/>
         </xs:sequence>
     </xs:complexType>
@@ -89,10 +62,28 @@
             <xs:enumeration value="PAID"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:simpleType name="DistanceLimitEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="UNLIMITED"/>
+            <xs:enumeration value="LIMITED"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="Ad">
         <xs:sequence>
             <xs:element name="id" type="xs:long" maxOccurs="1"/>
             <xs:element name="adName" type="xs:string" maxOccurs="1" minOccurs="1"/>
+            <xs:element name="mainId" type="xs:long"/>
+            <xs:element name="review" type="xs:int"/>
+            <xs:element name="startDate" type="xs:dateTime"/>
+            <xs:element name="endDate" type="xs:dateTime"/>
+            <xs:element name="distanceLimitFlag" type="tns:DistanceLimitEnum"/>
+            <xs:element name="distanceLimit" type="xs:float"/>
+            <xs:element name="cdw" type="xs:boolean"/>
+            <xs:element name="pricePerDay" type="xs:float"/>
+            <xs:element name="pricePerKm" type="xs:float"/>
+            <xs:element name="pricePerKmCDW" type="xs:float"/>
+            <xs:element name="token" type="xs:string"/>
+            <xs:element name="report" type="tns:Report"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="Report">

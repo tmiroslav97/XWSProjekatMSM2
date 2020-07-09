@@ -11,9 +11,13 @@ public interface AdService {
 
     Integer deleteById(Long id);
 
+    Integer rateAd(String msg);
+
     Boolean existsById(Long id);
 
     void delete(Ad ad);
+
+    void saveAll(List<Ad> ads);
 
     Ad save(Ad ad);
 }

@@ -1,12 +1,9 @@
 package services.app.adservice.service.intf;
 
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
-import services.app.adservice.dto.ad.AdCreateDTO;
-import services.app.adservice.dto.ad.AdDetailViewDTO;
-import services.app.adservice.dto.ad.AdPageContentDTO;
+import services.app.adservice.dto.ad.*;
 
 import services.app.adservice.dto.car.StatisticCarDTO;
-import services.app.adservice.dto.ad.AdRatingDTO;
 import services.app.adservice.model.Ad;
 
 import java.util.List;
@@ -23,8 +20,8 @@ public interface AdService {
     AdPageContentDTO findAll(Integer page, Integer size);
     Integer createAd(AdCreateDTO adCreateDTO);
     List<StatisticCarDTO> getCarsWithBestRating(Long publisherId);
-    Boolean acceptCarCalendar(AcceptReqestCalendarTermsDTO acceptReqestCalendarTermsDTO);
-    void syncData();
+    Boolean acceptCarCalendar(String msg);
+    Long syncAd(String msg);
     void setRating(AdRatingDTO ad);
     void logicalDeleteOrRevertAds(List<Ad> ads, Boolean status);
     void logicalDeleteOrRevert(Ad ad, Boolean status);
@@ -33,6 +30,14 @@ public interface AdService {
     Integer addRatingToAd(AdRatingDTO adRatingDTO);
 
     AdDetailViewDTO getAdDetailView(Long ad_id);
+    List<Long> findPricelistsFromAds();
+    List<Ad> findAllFromPublisher(Long publisherId);
+    Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
+    String findAdCarInfoById(Long id);
+    List<Long> findAdsFromDiscount(Long discountId);
+    Integer addDiscountToAd(Long discountId, Long adId);
+    Integer removeDiscountToAd(Long discountId, Long adId);
+    Integer addDiscount(Long discountId);
 
 
 

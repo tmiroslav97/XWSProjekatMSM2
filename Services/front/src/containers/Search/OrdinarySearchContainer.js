@@ -5,19 +5,23 @@ import OrdinarySearchComponent from '../../components/Search/OrdinarySearchCompo
 import { carManufacturersSelector, carTypesSelector, carModelsSelector, gearboxTypesSelector, fuelTypesSelector } from '../../store/codebook/selectors';
 import { fetchAllCarManufacturers, fetchAllCarTypes, fetchAllCarModels, fetchAllGearboxTypes, fetchAllFuelTypes, putCarManufacturers, putCarModels, putCarTypes, putFuelTypes, putGearboxTypes } from '../../store/codebook/actions';
 import { searchAd } from '../../store/ad/actions';
-import { adsSelector } from '../../store/ad/selectors';
+import { adsSelector, searchDataSelector } from '../../store/ad/selectors';
 import { putSearchData } from '../../store/ad/actions';
 
-const OrdinarySearchContainer = () => {
+
+const OrdinarySearchContainer = (props) => {
     const dispatch = useDispatch();
     const [validated, setValidated] = useState(false);
 
     const ads = useSelector(adsSelector);
+    const searchData = useSelector(searchDataSelector);
     const [nextPage, setNextPage] = useState(ads.nextPage);
     const [size, setSize] = useState(ads.size);
+    const [sort, setSort] = useState(ads.sort);
 
-    const [startDate, setStartDate] = useState();
-    const [endDate, setEndDate] = useState();
+    const [location, setLocation] = useState(searchData.location);
+    const [startDate, setStartDate] = useState(searchData.startDate);
+    const [endDate, setEndDate] = useState(searchData.endDate);
     const [toggleAdvancedSearch, setToggled] = useState(false);
     const [lowValue, setLowValue] = useState(0);
     const [highValue, setHighValue] = useState(3000);
@@ -151,41 +155,19 @@ const OrdinarySearchContainer = () => {
     const handleChange1 = (date) => {
         setStartDate(date.target.value);
         let dateCurrent = new Date();
-        console.log("Trenutni datum: ");
-        console.log(dateCurrent);
     };
 
     const handleChange2 = (date) => {
         setEndDate(date.target.value);
     };
 
-    const hanleLocation = (location) => {
-        console.log(location.target.value)
-    }
-
-    const handleKm1 = (e) => {
-        console.log(e.target.value)
-    }
-
-    const handleKm2 = (e) => {
-        console.log(e.target.value)
-    }
-
     const handleChangePrice = (e) => {
-        console.log('setting level', e)
         setLowValue(e[0]);
         setHighValue(e[1]);
-        //kasni za jedan  
-        //console.log(lowValue);
-        //console.log(highValue);
-    }
-
-    const handleSeat = (e) => {
-        console.log(e.target.value)
     }
 
     const handleCDW = (e) => {
-        console.log(e.target.checked)
+        setCDW(e.target.checked);
 
     }
 
@@ -219,7 +201,6 @@ const OrdinarySearchContainer = () => {
     const handleForm = (event) => {
         event.preventDefault();
         const form = event.target;
-        //console.log(form);
         let data = null;
         if (form.checkValidity() === false) {
             event.stopPropagation();
@@ -231,13 +212,28 @@ const OrdinarySearchContainer = () => {
                     'startDate': startDate,
                     'endDate': endDate,
                     'nextPage': nextPage,
-                    'size': size
+                    'size': size,
+                    'carManufacturer': '',
+                    'carModel': '',
+                    'carType': '',
+                    'mileage': 0,
+                    'mileageKM': 0,
+                    'gearboxType': '',
+                    'fuelType': '',
+                    'childrenSeatNum': 0,
+                    'cdw': false,
+                    'startPrice': 0,
+                    'endPrice': 0,
+                    'advancedSearch': false,
+                    'sort': sort
                 }
             } else {
                 data = {
                     'location': form.location.value,
                     'startDate': startDate,
                     'endDate': endDate,
+                    'nextPage': nextPage,
+                    'size': size,
                     'carManufacturer': form.carManufacturer.value,
                     'carModel': form.carModel.value,
                     'carType': form.carType.value,
@@ -246,11 +242,15 @@ const OrdinarySearchContainer = () => {
                     'gearboxType': form.gearboxType.value,
                     'fuelType': form.fuelType.value,
                     'childrenSeatNum': form.childrenSeatNum.value,
-                    'cdw': cdw
+                    'cdw': cdw,
+                    'startPrice': lowValue,
+                    'endPrice': highValue,
+                    'advancedSearch': toggleAdvancedSearch,
+                    'sort': sort
                 }
             }
 
-            //console.log(data)
+            console.log(data)
             dispatch(searchAd({
                 data
             }));
@@ -270,6 +270,7 @@ const OrdinarySearchContainer = () => {
                     <OrdinarySearchComponent
                         onSubmit={handleForm}
                         validated={validated}
+                        location={location}
                         startDate={startDate}
                         endDate={endDate}
                         toggleAdvancedSearch={toggleAdvancedSearch}
@@ -281,10 +282,6 @@ const OrdinarySearchContainer = () => {
                         handleChangePrice={handleChangePrice}
                         highValue={highValue}
                         lowValue={lowValue}
-                        hanleLocation={hanleLocation}
-                        handleKm1={handleKm1}
-                        handleKm2={handleKm2}
-                        handleSeat={handleSeat}
                         handleCDW={handleCDW}
                         setCDW={setCDW}
                         getCarManufacturers={getCarManufacturers}
@@ -298,6 +295,8 @@ const OrdinarySearchContainer = () => {
                 </Col>
             </Row>
             <br />
+            
+            
         </Container>
 
 

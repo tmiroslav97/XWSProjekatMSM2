@@ -15,4 +15,6 @@ public class DbColumnConstants {
     public static final String ADLIMITNUM = "adLimitNum";
     public static final String OBLIGED = "obliged";
     public static final String CANCELEDCNT = "canceledCnt";
+    public static final String LOCAL = "local";
+    public static final String IDENTIFIER = "identifier";
 }

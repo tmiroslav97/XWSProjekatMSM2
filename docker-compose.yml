@@ -27,6 +27,8 @@ services:
       - "8084:8084"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      CLOUDAMQP_URL: amqp://llczznly:CsYfEvoLUMjGFKescLDRmbl6rcTLRZos@swan.rmq.cloudamqp.com/llczznly
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
@@ -34,6 +36,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
       
   message-service:
     image: message-service
@@ -49,6 +52,7 @@ services:
       - "8091:8091"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
@@ -56,6 +60,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
 
   ad-service:
     image: ad-service
@@ -71,16 +76,19 @@ services:
       - "8086:8086"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      PHOTO_DIR: /var/data/adService
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    volumes:
+      - images:/var/data/adService
     depends_on: 
       - eureka-serviceregistry
       - mysql
-    volumes:
-      - img-ad:/img-ad
-
+      - rabbitmq-broker
+    
   car-request-service:
     image: car-request-service
     container_name: car-request-service
@@ -95,6 +103,7 @@ services:
       - "8090:8090"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
@@ -102,6 +111,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
 
   price-list-and-discount-service:
     image: price-list-and-discount-service
@@ -117,6 +127,7 @@ services:
       - "8088:8088"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
@@ -124,6 +135,7 @@ services:
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
       
   ad-search-service:
     image: ad-search-service
@@ -139,13 +151,18 @@ services:
       - "8085:8085"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
+      PHOTO_DIR: /var/data/adService
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_search_db?createDatabaseIfNotExist=true&serverTimezone=UTC
+    volumes:
+      - images:/var/data/adService
     depends_on: 
       - eureka-serviceregistry
       - mysql
+      - rabbitmq-broker
 
   codebook-service:
     image: codebook-service
@@ -181,8 +198,6 @@ services:
       - static-network
     ports:
       - "8093:8093"
-    volumes:
-      - img-ad:/img-ad
       
   zuul:
     image: zuul
@@ -220,12 +235,18 @@ services:
     ports:
       - "8083:8083"
     environment:
+      ZUUL_GATEWAY: zuul
+      LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
+      PHOTO_DIR: /var/data/agent
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: rent_a_car?createDatabaseIfNotExist=true&serverTimezone=UTC
+    volumes:
+      - images:/var/data/agent
     depends_on: 
       - mysql
+      - rabbitmq-broker
   
   mysql:
     image: mysql:8.0.19
@@ -239,8 +260,17 @@ services:
     volumes:
       - db-data:/var/lib/mysql
 
+  rabbitmq-broker:
+    image: rabbitmq:management-alpine
+    container_name: rabbitmq-broker
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - static-network
+
 volumes:
-  img-ad:
+  images:
   db-data:
 
 networks:

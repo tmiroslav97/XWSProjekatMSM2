@@ -51,7 +51,7 @@ const AdViewContainer = (props) => {
             for (let item of temp.ads) {
                 if (item.id == ad.id) {
                     flag = true;
-                    break; 
+                    break;
                 }
             }
 

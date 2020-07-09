@@ -20,4 +20,6 @@ public class AdPageDTO {
     private Integer childrenSeatNum;
     private Float mileage;
     private Long publisherUserId;
+    private String publisherUserFirstName;
+    private String publisherUserLastName;
 }

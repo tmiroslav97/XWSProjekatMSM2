@@ -17,9 +17,8 @@ import java.util.Set;
 public class DiscountList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "discountLists", fetch = FetchType.LAZY)
     private Set<Ad> ads = new HashSet<>();
 }

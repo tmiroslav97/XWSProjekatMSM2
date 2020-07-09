@@ -29,7 +29,7 @@ public class TokenAuthenticationFilter extends UsernamePasswordAuthenticationFil
         String userId = httpServletRequest.getHeader("userId");
         String email = httpServletRequest.getHeader("email");
         String roles = httpServletRequest.getHeader("roles");
-        String token = httpServletRequest.getHeader("Auth");
+        String token = httpServletRequest.getHeader("Authorization");
 
         if (roles != null && token != null) {
             Set<SimpleGrantedAuthority> authorities = new HashSet<>();

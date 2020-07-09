@@ -59,6 +59,12 @@ INSERT INTO car_model(id, name, car_manufacturer_id)
 VALUES (7, '318d', 1);
 INSERT INTO car_model(id, name, car_manufacturer_id)
 VALUES (8, '318i', 1);
+INSERT INTO car_model(id, name, car_manufacturer_id)
+VALUES (9, 'ML', 2);
+INSERT INTO car_model(id, name, car_manufacturer_id)
+VALUES (10, 'Moris', 6);
+INSERT INTO car_model(id, name, car_manufacturer_id)
+VALUES (11, 'xc90', 9);
 
 --car types
 INSERT INTO car_type(id, name)

@@ -23,6 +23,8 @@ public interface EndUserService {
 
     void delete(EndUser endUser);
 
+    void submitRentCnt(Long id);
+
     EndUser save(EndUser endUser);
 
     Boolean existsByEmail(String email);
@@ -33,4 +35,7 @@ public interface EndUserService {
 
     Integer reduceAdLimitNum(String email);
 
+    Boolean isBlockedById(Long id);
+
+    Boolean isObligedById(Long id);
 }

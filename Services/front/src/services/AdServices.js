@@ -5,7 +5,8 @@ const FINALPOINTS = {
     AD_BASE: '/ad/ad',
     IMAGE_BASE: '/ad/image',
     CALENDAR_BASE: 'ad/calendar',
-    COMMENT_BASE: 'ad/comment'
+    COMMENT_BASE: 'ad/comment',
+    
 
 };
 
@@ -68,12 +69,21 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    getImageBase64 = async payload => {
+        const response = await this.getApiClient().get(
+            FINALPOINTS.IMAGE_BASE +"/"+ payload,
+        );
+
+        return response.data;
+    };
+
     fetchAdsPaginated = async payload => {
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_SEARCH_BASE + '/ad', {
             params: {
                 nextPage: payload.nextPage,
-                size: payload.size
+                size: payload.size,
+                sort: payload.sort
             }
         }
         );
@@ -106,20 +116,30 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAdsPaginatedSearch = async payload => {
-        console.log("SERVICEEE SEARCH")
-        console.log(payload);
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_SEARCH_BASE + '/ad/search', {
             params: {
                 location: payload.location,
                 startDate: payload.startDate,
                 endDate: payload.endDate,
+                carManufacturer: payload.carManufacturer,
+                carModel: payload.carModel,
+                carType: payload.carType,
+                mileage: payload.mileage,
+                mileageKM: payload.mileageKM,
+                gearboxType: payload.gearboxType,
+                fuelType: payload.fuelType,
+                childrenSeatNum: payload.childrenSeatNum,
+                cdw: payload.cdw,
+                startPrice: payload.startPrice,
+                endPrice: payload.endPrice,
+                advancedSearch: payload.advancedSearch,
                 nextPage: payload.nextPage,
-                size: payload.size
+                size: payload.size,
+                sort: payload.sort
             }
         }
         );
-        console.log(response);
         return response.data;
     };
 
@@ -166,8 +186,6 @@ class AdServices extends HttpBaseClient {
     };
 
     ratingAd = async payload => {
-        console.log("********* DODAVANJE OCENE ***********")
-        console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE + "/rating",
             payload,
@@ -183,8 +201,6 @@ class AdServices extends HttpBaseClient {
     };
 
     addCommentForAd = async payload => {
-        console.log("********* DODAVANJE KOMENTARA ***********")
-        console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.COMMENT_BASE,
             payload,
@@ -193,7 +209,6 @@ class AdServices extends HttpBaseClient {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             }
-
         );
 
         return response.data;
@@ -231,6 +246,16 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    reversePricelist = async payload =>{
+        console.log("REVERSE PRICELIST") 
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/reverse-pricelist",
+            payload
+        );
+        return response.data;
+    };
+
+    
 }
 
 

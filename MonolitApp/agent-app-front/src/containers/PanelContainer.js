@@ -14,9 +14,13 @@ import EndUsersContainer from '../containers/Users/EndUsersContainer';
 import CreateAdContainer from './Ad/CreateAdContainer';
 import MyAdsContainer from './Ad/MyAdsContainer';
 import AgentRequestsContainer from './Request/AgentRequestsContainer';
+import AgentRequestDetailContainer from './Request/AgentRequestDetailContainer';
 import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
 import StatisticsContainer from '../containers/AgentFirm/StatisticsContainer';
+import SynchronizeContainer from '../containers/AgentFirm/SynchronizeContainer';
+import PricelistContainer from '../containers/Pricelists/PricelistContainer';
+import DiscountsContainer from '../containers/Discount/DiscountsContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -100,17 +104,38 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
-                        {hasRole(['ROLE_AGENT']) &&
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="publisher-user-reqs" onClick={() => { history.push("/panel/publisher-user-reqs"); }}>
-                                    Moji zahtjevi
+                                    Zahtjevi za moje oglase
                                 </Nav.Link>
                             </Nav.Item>
                         }
-                           {hasRole(['ROLE_AGENT']) &&
+                        {hasRole(['ROLE_AGENT']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="statistics" onClick={() => { history.push("/panel/statistics"); }}>
                                     Statistika
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_AGENT']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="sync" onClick={() => { history.push("/panel/sync"); }}>
+                                    Sinhronizacija
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="pricelist" onClick={() => { history.push("/panel/pricelist"); }}>
+                                    Moji cenovnici
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_AGENT']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="discount-list" onClick={() => { history.push("/panel/discount-list"); }}>
+                                    Moji popusti
                                 </Nav.Link>
                             </Nav.Item>
                         }
@@ -126,8 +151,12 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/man-end-users`} component={EndUsersContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/create-ad`} component={CreateAdContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/my-ads`} component={MyAdsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
-                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT','ROLE_USER']} />
+                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs/:id`} component={AgentRequestDetailContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT','ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/statistics`} component={StatisticsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/sync`} component={SynchronizeContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/pricelist`} component={PricelistContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
+                    <PrivateRoute exact path={`${match.path}/discount-list`} component={DiscountsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                 </Col>
             </Row>
         </Container >

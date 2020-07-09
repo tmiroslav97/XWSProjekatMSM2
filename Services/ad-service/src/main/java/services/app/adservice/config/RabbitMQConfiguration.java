@@ -1,112 +1,91 @@
 package services.app.adservice.config;
 
-import com.rabbitmq.client.ConnectionFactory;
-import lombok.Value;
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.security.KeyStore;
-import java.util.Queue;
 
 @Configuration
 public class RabbitMQConfiguration {
 
-    public static final String KEYSTORE_PROVIDER = "SunX509";
-    public static final String QUEUE_NAME = "logs";
+    public static final String USER_ID_QUEUE_NAME = "user_id";
+    public static final String AD_SYNC_QUEUE_NAME = "ad_sync_rpc";
+    public static final String AD_SEARCH_SYNC_QUEUE_NAME = "ad_search_sync";
+    public static final String PL_NEW_EDIT_QUEUE_NAME = "pl_new_edit";
+    public static final String PL_GET_QUEUE_NAME = "pl_get_queue";
+    public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
+    public static final String AD_ACCEPT_REQ_QUEUE_NAME = "ad_accept_req";
+    public static final String AD_CAR_INFO_QUEUE_NAME = "ad_car_info";
+    public static final String ACCEPT_REQUEST_QUEUE_NAME = "accept_request";
+    public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
+    public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
+    public static final String RATE_AD_QUEUE_NAME = "rate_ad";
 
-//    /**
-//     * TLS version.
-//     */
-//    @Value("${TLS_VERSION:TLSv1.2}")
-//    private String algorithm;
-//
-//    /**
-//     * Application keystore path.
-//     */
-//    @Value("${KEYSTORE:logan.keystore.p12}")
-//    private String keystore;
-//
-//    /**
-//     * Application keystore type.
-//     */
-//    @Value("${KEYSTORE_TYPE:PKCS12}")
-//    private String keystoreType;
-//
-//    /**
-//     * Application keystore password.
-//     */
-//    @Value("${KEYSTORE_PASSWORD:password}")
-//    private String keystorePassword;
-//
-//    /**
-//     * Keystore alias for application client credential.
-//     */
-//    @Value("${KEYSTORE_ALIAS:logan}")
-//    private String applicationKeyAlias;
-//
-//    /**
-//     * Application truststore path.
-//     */
-//    @Value("${TRUSTSTORE:logan.truststore.p12}")
-//    private String truststore;
-//
-//    /**
-//     * Application truststore type.
-//     */
-//    @Value("${TRUSTSTORE_TYPE:PKCS12}")
-//    private String truststoreType;
-//
-//    /**
-//     * Application truststore password.
-//     */
-//    @Value("${TRUSTSTORE_PASSWORD:password}")
-//    private String truststorePassword;
-//
-//    @Value("${RMQ_HOST:localhost}")
-//    private String host;
-//
-//    @Value("${RMQ_PORT:5671}")
-//    private String port;
+    @Bean
+    public Queue rateAd() {
+        return new Queue(RATE_AD_QUEUE_NAME, false);
+    }
 
+    @Bean
+    public TopicExchange topic() {
+        return new TopicExchange(AGENT_SYNC_QUEUE_NAME);
+    }
 
-//    @Bean
-//    public Queue queue() {
-//        return new Queue(QUEUE_NAME, false);
-//    }
-//
-//    @Bean
-//    public ConnectionFactory connectionFactory() {
-//
-//        try {
-//            KeyStore keyStore = KeyStore.getInstance(keystoreType);
-//            keyStore.load(new FileInputStream(new File(keystore)), keystorePassword.toCharArray());
-//
-//            KeyManagerFactory kmf = KeyManagerFactory.getInstance(KEYSTORE_PROVIDER);
-//            kmf.init(keyStore, keystorePassword.toCharArray());
-//
-//            KeyStore trustStore = KeyStore.getInstance(truststoreType);
-//            trustStore.load(new FileInputStream(new File(truststore)), truststorePassword.toCharArray());
-//
-//            TrustManagerFactory tmf = TrustManagerFactory.getInstance(KEYSTORE_PROVIDER);
-//            tmf.init(trustStore);
-//
-//            SSLContext sslcontext = SSLContext.getInstance(algorithm);
-//            sslcontext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
-//
-//            ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
-//            factory.setHost(host);
-//            factory.setPort(Integer.parseInt(port));
-//            factory.useSslProtocol(sslcontext);
-//
-//            return factory;
-//
-//        } catch (Exception e) {
-//            throw new IllegalStateException("Error while configuring rabbitmq template", e);
-//        }
-//    }
+    @Bean
+    public Queue cctSync() {
+        return new Queue(CCT_SYNC_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue acceptRequest() {
+        return new Queue(ACCEPT_REQUEST_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue adCarInfo() {
+        return new Queue(AD_CAR_INFO_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue adAcceptReq() {
+        return new Queue(AD_ACCEPT_REQ_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue userFLNameQueue() {
+        return new Queue(USER_FL_NAME_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue plGetQueue() {
+        return new Queue(PL_GET_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue plNewEditQueue() {
+        return new Queue(PL_NEW_EDIT_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue userIdQueue() {
+        return new Queue(USER_ID_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue adQueue() {
+        return new Queue(AD_SYNC_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue adSearchQueue() {
+        return new Queue(AD_SEARCH_SYNC_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
 }

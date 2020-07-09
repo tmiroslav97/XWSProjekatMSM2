@@ -14,10 +14,16 @@ import EndUsersContainer from '../containers/Users/EndUsersContainer';
 import CreateAdContainer from './Ad/CreateAdContainer';
 import MyAdsContainer from './Ad/MyAdsContainer';
 import EndUserRequestsContainer from './Request/EndUserRequestsContainer';
+import EndUserRequestDetailContainer from './Request/EndUserRequestDetailContainer';
 import AgentRequestsContainer from './Request/AgentRequestsContainer';
+import AgentRequestDetailContainer from './Request/AgentRequestDetailContainer';
 import PrivateRoute from '../authorization/PrivateRoute';
 import PanelHomeContainer from './PanelHomeContainer';
 import CommentsContainer from '../containers/Comment/CommentsContainer';
+import RegAgentContainer from '../containers/Authorization/RegAgentContainer';
+import RegFirmContainer from '../containers/Authorization/RegFirmContainer';
+import PricelistContainer from '../containers/Pricelists/PricelistContainer';
+import DiscountsContainer from '../containers/Discount/DiscountsContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -108,10 +114,10 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
-                        {hasRole(['ROLE_AGENT']) &&
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="publisher-user-reqs" onClick={() => { history.push("/panel/publisher-user-reqs"); }}>
-                                    Moji zahtjevi
+                                    Zahtjevi za moje oglase
                                 </Nav.Link>
                             </Nav.Item>
                         }
@@ -119,6 +125,34 @@ const PanelContainer = ({ match }) => {
                             <Nav.Item>
                                 <Nav.Link eventKey="comments" onClick={() => { history.push("/panel/comments"); }}>
                                     Komentari
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="man-agent" onClick={() => { history.push("/panel/man-agent"); }}>
+                                    Agenti
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="man-firm" onClick={() => { history.push("/panel/man-firm"); }}>
+                                    Firme
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="pricelist" onClick={() => { history.push("/panel/pricelist"); }}>
+                                    Moji cenovnici
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                        {hasRole(['ROLE_AGENT']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="discount-list" onClick={() => { history.push("/panel/discount-list"); }}>
+                                    Moji popusti
                                 </Nav.Link>
                             </Nav.Item>
                         }
@@ -135,8 +169,14 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/create-ad`} component={CreateAdContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/my-ads`} component={MyAdsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/end-user-reqs`} component={EndUserRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_USER']} />
-                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/end-user-reqs/:id`} component={EndUserRequestDetailContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_USER']} />
+                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
+                    <PrivateRoute exact path={`${match.path}/publisher-user-reqs/:id`} component={AgentRequestDetailContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/comments`} component={CommentsContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
+                    <PrivateRoute exact path={`${match.path}/man-agent`} component={RegAgentContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
+                    <PrivateRoute exact path={`${match.path}/man-firm`} component={RegFirmContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
+                    <PrivateRoute exact path={`${match.path}/pricelist`} component={PricelistContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
+                    <PrivateRoute exact path={`${match.path}/discount-list`} component={DiscountsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                 </Col>
             </Row>
         </Container >

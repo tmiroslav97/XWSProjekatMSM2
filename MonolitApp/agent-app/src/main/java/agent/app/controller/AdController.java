@@ -1,33 +1,20 @@
 package agent.app.controller;
 
+import agent.app.config.AppConfig;
 import agent.app.converter.AdConverter;
 import agent.app.converter.DateAPI;
 import agent.app.dto.ad.AdCreateDTO;
-import agent.app.model.CarManufacturer;
+import agent.app.dto.ad.AdRatingDTO;
 import agent.app.service.intf.AdService;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.security.Principal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/ad")
@@ -39,23 +26,19 @@ public class AdController {
         this.adService = adService;
     }
 
-    ObjectMapper objectMapper = new ObjectMapper();
-
-    //    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getAd(@PathVariable("id") Long id) {
-        System.out.println("Service ad !!!!!");
-        return new ResponseEntity<>(AdConverter.toAdDetailViewDTOFromAd(adService.findById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(adService.getAdDetailView(id), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value="/withImages", method = RequestMethod.POST,
+    @RequestMapping(value = "/withImages", method = RequestMethod.POST,
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createAdWithPhotos(@RequestParam(value = "photos0") MultipartFile photos0 ,
-                                                @RequestParam(value = "photos1") MultipartFile photos1 ,
-                                                @RequestParam(value = "photos2") MultipartFile photos2 ,
-                                                @RequestParam(value = "photos3") MultipartFile photos3 ,
+    public ResponseEntity<?> createAdWithPhotos(@RequestParam(value = "photos0") MultipartFile photos0,
+                                                @RequestParam(value = "photos1") MultipartFile photos1,
+                                                @RequestParam(value = "photos2") MultipartFile photos2,
+                                                @RequestParam(value = "photos3") MultipartFile photos3,
                                                 @RequestParam(value = "data") String data,
                                                 Principal principal) {
         System.out.println("///////////////////////////////////////////////////");
@@ -73,12 +56,10 @@ public class AdController {
         System.out.println("///////////////////////////////////////////////////");
 
 
-
-
         return new ResponseEntity<>("Oglas uspesno kreiran.", HttpStatus.CREATED);
 
     }
-    
+
 
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -91,20 +72,18 @@ public class AdController {
 
         if (flag == 1) {
             return new ResponseEntity<>("Oglas uspesno kreiran.", HttpStatus.CREATED);
-        }else if (flag == 2){
+        } else if (flag == 2) {
             return new ResponseEntity<>("Dozvoljeno je dodati samo 3 oglasa.", HttpStatus.BAD_REQUEST);
-        }else {
+        } else {
             return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
         }
     }
 
-    //@PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findAllPageAd(@RequestParam(value = "nextPage", required = false) Integer nextPage,
                                            @RequestParam(value = "size", required = false) Integer size) {
 
         if (nextPage != null) {
-            System.out.println("ima 1 str");
             return new ResponseEntity<>(adService.findAll(nextPage, size), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(adService.findAll(), HttpStatus.OK);
@@ -112,17 +91,6 @@ public class AdController {
 
     }
 
-    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value="/publisher",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findAllPageAdFromPublisher(@RequestParam(value = "nextPage", required = false) Integer nextPage,
-                                                        @RequestParam(value = "size", required = false) Integer size,
-                                                        Principal principal) {
-
-        return new ResponseEntity<>(adService.findAll(nextPage, size, principal.getName()), HttpStatus.OK);
-    }
-
-
-    //@PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_ADMIN')")
     @RequestMapping(path = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findAllSearch(@RequestParam(value = "nextPage", required = false) Integer nextPage,
                                            @RequestParam(value = "size", required = false) Integer size,
@@ -130,36 +98,40 @@ public class AdController {
                                            @RequestParam(value = "startDate") String startDate,
                                            @RequestParam(value = "endDate") String endDate) {
 
-
-        DateTime startD = DateAPI.dateStringToDateTime(startDate);
-        DateTime endD = DateAPI.dateStringToDateTime(endDate);
-//        System.out.println(startD);
-//        System.out.println(endD);
-//        System.out.println(startD.toString(DateTimeFormat.forPattern("HH:mm dd-MM-yyyy")));
-//        System.out.println(endD.toString(DateTimeFormat.forPattern("HH:mm dd-MM-yyyy")));
-//        System.out.println(location);
+        DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+        DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
 
         return new ResponseEntity<>(adService.findAllOrdinarySearch(nextPage, size, location, startD, endD), HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/best-average-grade", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findBestAverageGradeAd(@RequestParam(value = "email") String email) {
-        System.out.println("Best average grade");
-//        System.out.println(principal);
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        Principal principal = (Principal) auth.getPrincipal();
-        System.out.println(email);
-        return new ResponseEntity<>(adService.findBestAverageGrade(email), HttpStatus.OK);
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @RequestMapping(value = "/rating", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addRatingToAd(@RequestBody AdRatingDTO adRatingDTO) {
+
+        Integer rez = adService.addRatingToAd(adRatingDTO);
+        if (rez == 1) {
+            return new ResponseEntity<>("Ocenili ste oglas.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
-//        @PreAuthorize("hasAuthority('ROLE_AGENT')")
-    @RequestMapping(value = "/max-mileage", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> findMaxMileageAd(@RequestParam(value = "email") String email) {
-        System.out.println("Max mileage contoller");
-        System.out.println(email);
-        return new ResponseEntity<>(adService.findMaxMileage(email), HttpStatus.OK);
-
+    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/sync", method = RequestMethod.POST, consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<?> syncData(@RequestBody String identifier, Principal principal) {
+        Integer flag = adService.syncData(identifier, principal.getName());
+        if (flag == 1) {
+            return new ResponseEntity<>("Sinhronizacija uspjesno obavljena.", HttpStatus.OK);
+        } else if (flag == 2) {
+            return new ResponseEntity<>("Niste registrovani na rent-a-car sistem.", HttpStatus.BAD_REQUEST);
+        } else if (flag == 3) {
+            return new ResponseEntity<>("Los identifikacioni kod za ret-a-car sistem.", HttpStatus.BAD_REQUEST);
+        } else if (flag == 5) {
+            return new ResponseEntity<>("Vec ste odradili prvobitnu sinhronizaciju sa rent-a-car sistemom.", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
+        }
     }
+
+
 }

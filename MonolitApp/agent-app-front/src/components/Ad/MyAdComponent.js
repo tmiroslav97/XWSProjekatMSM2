@@ -1,7 +1,6 @@
 import React from 'react';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-
-
+import { LocalGasStation, AirlineSeatReclineNormal, MyLocation, LocalOffer, ConfirmationNumber } from '@material-ui/icons';
 
 const MyAdComponent = (props) => {
 
@@ -24,70 +23,79 @@ const MyAdComponent = (props) => {
                     <Card.Subtitle className="mb-2 text-muted">{variant.carManufacturer} {variant.carModel}  </Card.Subtitle>
                     <Row>
                         <Col md={4}>
-                            <Card.Img src="/img-ad/fiat.jpg" />
+                            <Card.Img src={`data:image/jpeg;base64,${variant.coverPhoto}`} />
                         </Col>
                         <Col >
-                            <br />
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/seat-num.png" />
+                                    <AirlineSeatReclineNormal />
                                 </Col>
-                                <Card.Text>
-                                    {variant.childrenSeatNum}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.childrenSeatNum}
+                                    </Card.Text>
+                                </Col>
                             </Row>
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/location.png" />
+                                    <MyLocation />
                                 </Col>
-                                <Card.Text>
-                                    {variant.location}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.location}
+                                    </Card.Text>
+                                </Col>
                             </Row>
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/price-tag.png" />
+                                    <LocalOffer />
                                 </Col>
-                                <Card.Text>
-                                    {variant.price} $
-                                        </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.price} RSD
+                                    </Card.Text>
+                                </Col>
                             </Row>
-
                         </Col>
                         <Col>
-                            <br />
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/fuel24.png" />
+                                    <LocalGasStation />
                                 </Col>
-                                <Card.Text>
-                                    {variant.fuelType}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.fuelType}
+                                    </Card.Text>
+                                </Col>
                             </Row>
-                            <Row>
+                            <Row className="mb-2">
                                 <Col sm={2}>
-                                    <Card.Img src="/img-icon/km.png" />
+                                    <ConfirmationNumber />
                                 </Col>
-                                <Card.Text>
-                                    {variant.mileage}
-                                </Card.Text>
+                                <Col>
+                                    <Card.Text>
+                                        {variant.mileage} Km
+                                    </Card.Text>
+                                </Col>
                             </Row>
-
                             {/* <Card.Link href={'/agent-firm/ad-detail-view/' + variant.id} >Vise detalja</Card.Link> */}
-
                         </Col>
-                        
+
                         <Col>
                             {
-                                disable ? null : <Button className="mb-2" variant="outline-success" 
-                               
-                                >Pregled oglasa</Button>
+                                disable ? null : <Button className="mb-2" variant="outline-success" onClick={() => { props.viewAd(variant.id); }}>Pregled oglasa</Button>
                             }
                             {
-                                disable ? null : 
-                                <Button variant="outline-success"
-                                    onClick={() => { props.definingAvailability(variant.id); }}
-                                >Definisi dostupnost</Button>
+                                disable ? null :
+                                    <Button className="mb-2" variant="outline-success" onClick={() => { props.definingAvailability(variant.id); }}>Definisi dostupnost</Button>
+                            }
+                            {
+                                disable ? null :
+                                    <Button  className="mb-2" variant="outline-success" onClick={() => { props.editPricelist(variant.id); }}>Izmeni cenovnik</Button>
+                            }
+                            {
+                                disable ? null :
+                                    <Button variant="outline-success" onClick={() => { props.definedDiscountList(variant.id); }}>Dodaj popust</Button>
                             }
                         </Col>
 

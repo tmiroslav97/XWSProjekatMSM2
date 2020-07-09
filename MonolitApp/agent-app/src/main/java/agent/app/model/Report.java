@@ -21,15 +21,14 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = DbColumnConstants.MAINID)
+    private Long mainId;
+
     @Column(name = DbColumnConstants.DESCRIPTION)
     private String description;
 
     @Column(name = DbColumnConstants.DISTANCETRAVELED, nullable = false)
     private Float distanceTraveled;
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    private Ad ad;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private PublisherUser publisherUser;

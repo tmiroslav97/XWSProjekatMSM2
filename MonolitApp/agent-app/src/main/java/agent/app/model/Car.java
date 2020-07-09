@@ -3,6 +3,7 @@ package agent.app.model;
 
 import agent.app.common.db.DbColumnConstants;
 import agent.app.common.db.DbTableConstants;
+import agent.app.model.enumeration.DistanceLimitEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -53,6 +54,13 @@ public class Car {
     @Column(name = DbColumnConstants.CHILDRENSEATNUM, nullable = false)
     private Integer childrenSeatNum;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = DbColumnConstants.DISTANCELIMITFLAG, nullable = false)
+    private DistanceLimitEnum distanceLimitFlag;
+
+    @Column(name = DbColumnConstants.DISTANCELIMIT)
+    private Float distanceLimit;
+
     @Column(name = DbColumnConstants.CDW, nullable = false)
     private Boolean cdw;
 
@@ -62,7 +70,4 @@ public class Car {
     @Column(name = DbColumnConstants.TOKEN)
     private String token;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER)
-    private Ad ad;
 }

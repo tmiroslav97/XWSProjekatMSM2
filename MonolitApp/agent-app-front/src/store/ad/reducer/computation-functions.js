@@ -30,3 +30,24 @@ export function putCalendar(state, payload) {
     };
 }
 
+export function putSearchData(state, payload) {
+    return {
+        ...state,
+        searchData: payload
+    };
+}
+
+export function putComments(state, payload) {
+    return {
+        ...state,
+        comments: payload
+    };
+}
+
+export function putDiscounts(state, payload){
+    return {
+        ...state,
+        discounts: payload
+    };
+}
+

@@ -2,10 +2,7 @@ package agent.app.model;
 
 import agent.app.common.db.DbColumnConstants;
 import agent.app.common.db.DbTableConstants;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -24,21 +22,11 @@ public class DiscountList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.STARTDATE, nullable = false)
-    private DateTime startDate;
+    @Column(name = DbColumnConstants.DAYNUM, nullable = false)
+    private Integer dayNum;
 
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.ENDDATE, nullable = false)
-    private DateTime endDate;
+    @Column(name = DbColumnConstants.MAINID, unique = true)
+    private Long mainId;
 
     @Column(name = DbColumnConstants.DISCOUNT, nullable = false)
     private Float discount;
@@ -46,7 +34,7 @@ public class DiscountList {
     @ManyToOne(fetch = FetchType.LAZY)
     private Agent agent;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "discountLists", fetch = FetchType.LAZY)
     private Set<Ad> ads = new HashSet<>();
 
 }

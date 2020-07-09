@@ -1,69 +1,27 @@
 import React from 'react';
-import { TabContent, Container, Row, Col, Card, Button, Table } from 'react-bootstrap';
-import AppBar from '@material-ui/core/AppBar';
-import Tab from 'react-bootstrap/Tab'
-import Tabs from 'react-bootstrap/Tabs'
-import AdComponent from '../../components/Ad/AdComponent'
-import { adSelector } from '../../store/ad/selectors';
-
+import {  Container, Row, Col, Card, Button, Table } from 'react-bootstrap';
+import AdsTableComponent from '../AgentFirm/AdsTableComponent'
 
 
 const StatisticsComponent = (props) => {
 
-
   console.log(props.ad)
   return (
 
-    <Container>
-      <Tabs activeKey={props.key} onSelect={(k)=>{props.handleTabClick(k);}}>
-        <Tab eventKey="grade" title="Najbolja prosjecna ocjena">
-          <div>
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th>Naziv oglasa</th>
-                  <th>Proizvodjac automobila</th>
-                  <th>Ocjena</th>
-                </tr>
-              </thead>
-              <tbody>
+   <Container className="mt-3">
+     <Row>
+       <Col>
 
-                <tr key={props.ad.id}>
-                  <td>{props.ad.name}</td>
-                  <td>{props.ad.carManufacturer}</td>
-                  <td>{props.ad.averageGrade}</td>
-                </tr>
+          <Button onClick={ props.handleGrade } variant="outline-success" block>Najveca ocjena</Button>{' '}
+          <Button onClick={props.handleMileage} variant="outline-warning" block>Predjena kilometraza</Button>{' '}
+          <Button onClick={props.handleComment} variant="outline-danger" block>Komentari</Button>{' '}
+          {
+            props.isFetchAd ? <AdsTableComponent ad={props.ad} flag={props.flag}></AdsTableComponent> : null
+          }
+       </Col>
+     </Row>
+   </Container>
 
-              </tbody>
-            </Table>
-          </div>
-        </Tab>
-        <Tab eventKey="mileage" title="Najvise kilometara">
-        <div>
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th>Naziv oglasa</th>
-                  <th>Proizvodjac automobila</th>
-                  <th>Kilometraza</th>
-                </tr>
-              </thead>
-              <tbody>
-
-                <tr key={props.ad.id}>
-                  <td>{props.ad.name}</td>
-                  <td>{props.ad.carManufacturer}</td>
-                  <td>{props.ad.mileage}</td>
-                </tr>
-
-              </tbody>
-            </Table>
-          </div>
-        </Tab>
-        <Tab eventKey="comment" title="Najvise komentara" >
-        </Tab>
-      </Tabs>
-    </Container>
 
   );
 }

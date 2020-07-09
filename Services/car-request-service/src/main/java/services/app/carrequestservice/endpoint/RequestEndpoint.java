@@ -17,27 +17,18 @@ public class RequestEndpoint {
         this.requestService = requestService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPublisherRequestsRequest")
-    @ResponsePayload
-    public GetPublisherRequestsResponse getAllRequestsByPublisherEmail(@RequestPayload GetPublisherRequestsRequest request) {
-        GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
-        response.getRequests().addAll(requestService.findAllByPublisherUserEmail(request.getPublisherUser()));
-        return response;
-    }
-
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getPublisherRequestsByStatusRequest")
-    @ResponsePayload
-    public GetPublisherRequestsResponse getAllRequestsByPublisherEmailAndStatus(@RequestPayload GetPublisherRequestsByStatusRequest request) {
-        GetPublisherRequestsResponse response = new GetPublisherRequestsResponse();
-        response.getRequests().addAll(requestService.findAllByPublisherUserEmailAndStatus(request.getPublisherUser(), request.getStatus()));
-        return response;
-    }
 
     @PayloadRoot(namespace = NAMESPACE_URI, localPart = "acceptRequest")
     @ResponsePayload
-    public SubmitResponse acceptRequest(@RequestPayload AcceptRequest request) {
-        SubmitResponse response = new SubmitResponse();
-        response.setMsg(requestService.acceptRequest(request));
-        return response;
+    public AcceptResponse acceptRequest(@RequestPayload AcceptRequest request) {
+        AcceptResponse acceptResponse = new AcceptResponse();
+        Long publisherUser = requestService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
+        if (publisherUser == null) {
+            acceptResponse.setMsg("Agent nije registrovan u sistemu");
+            return acceptResponse;
+        }else{
+            acceptResponse.setMsg(requestService.acceptRequest(request.getId(), request.getAction()));
+            return acceptResponse;
+        }
     }
 }
