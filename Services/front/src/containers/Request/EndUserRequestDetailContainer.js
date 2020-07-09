@@ -45,7 +45,6 @@ const EndUserRequestDetailContainer = (props) => {
     const handleCommentForm = (event) => {
         event.preventDefault();
         const form = event.target;
-        console.log("komentar");
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);

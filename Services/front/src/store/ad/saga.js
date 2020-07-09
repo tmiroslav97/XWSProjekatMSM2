@@ -186,11 +186,7 @@ export function* ratingAd() {
 
 export function* addComment() {
     const { payload } = yield take(ADD_COMMENT);
-
-    console.log("sagaaa")
-    console.log(payload);
     const data = yield call(AdServices.addCommentForAd, payload);
-    console.log(data);
     yield put(putSuccessMsg(data));
 
 }

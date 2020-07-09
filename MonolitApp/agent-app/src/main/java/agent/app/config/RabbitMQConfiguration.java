@@ -35,6 +35,19 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public Queue autoDeleteComment() {
+        return new AnonymousQueue();
+    }
+
+    @Bean
+    public Binding bindingComment(TopicExchange topic,
+                                  Queue autoDeleteComment) {
+        return BindingBuilder.bind(autoDeleteComment)
+                .to(topic)
+                .with("tomic.miroslav97.gmail.com.comment");
+    }
+
+    @Bean
     public Binding bidingRateAd(TopicExchange topic,
                                 Queue autoDeleteRateAd) {
         return BindingBuilder.bind(autoDeleteRateAd)
