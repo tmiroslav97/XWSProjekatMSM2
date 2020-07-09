@@ -4,7 +4,6 @@ import AgentRequestsComponent from '../../components/Request/AgentRequestsCompon
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 import ReportService from '../../services/ReportService';
-
 import { useDispatch } from 'react-redux';
 import AgentRequestDetailComponent from '../../components/Request/AgentRequestDetailComponent';
 import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
@@ -12,6 +11,7 @@ import ReportSubmitComponent from '../../components/Report/ReportSubmitComponent
 import FormModalContainer from '../Common/FormModalContainer';
 
 const AgentRequestDetailContainer = (props) => {
+    const dispatch = useDispatch();
     const id = props.match.params.id;
     const [isFetch, setIsFetch] = useState(false);
     const [request, setRequest] = useState();
@@ -29,6 +29,9 @@ const AgentRequestDetailContainer = (props) => {
 
     const submitReport = async (payload) => {
         const result = await ReportService.submitReport(payload);
+        if (result === "Izvjestaj uspjesno dodat.") {
+            dispatch(putSuccessMsg(result));
+        }
         fetchRequest();
     }
 
@@ -56,7 +59,6 @@ const AgentRequestDetailContainer = (props) => {
             submitReport(data);
             setValidated(false);
             setShowForm(false);
-
             fetchRequest();
         }
     }

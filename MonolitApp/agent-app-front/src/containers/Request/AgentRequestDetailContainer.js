@@ -12,6 +12,7 @@ import ReportService from '../../services/ReportService';
 
 
 const AgentRequestDetailContainer = (props) => {
+    const dispatch = useDispatch();
     const id = props.match.params.id;
     const [isFetch, setIsFetch] = useState(false);
     const [request, setRequest] = useState();
@@ -29,6 +30,9 @@ const AgentRequestDetailContainer = (props) => {
 
     const submitReport = async (payload) => {
         const result = await ReportService.submitReport(payload);
+        if (result === "Izvjestaj uspjesno dodat.") {
+            dispatch(putSuccessMsg(result));
+        }
         fetchRequest();
     }
 

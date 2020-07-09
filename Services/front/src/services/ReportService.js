@@ -21,7 +21,6 @@ class ReportService extends HttpBaseClient {
             return response.data;
 
         } catch (error) {
-            console.log("GRESKA")
             return error.response.data;
         }
     };

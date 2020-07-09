@@ -31,7 +31,7 @@ public class ReportController {
     public ResponseEntity<?> submitReport(@RequestBody SubmitReportDTO submitReportDTO, Principal principal) {
         System.out.println("REPORT CONTROLERRR");
         reportService.submitReport(submitReportDTO, principal.getName());
-        return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
+        return new ResponseEntity<>("\"Izvjestaj uspjesno dodat.", HttpStatus.OK);
 
     }
 }

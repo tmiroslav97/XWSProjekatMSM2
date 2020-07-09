@@ -35,7 +35,7 @@ public class ReportController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
         reportService.submitReport(submitReportDTO, Long.valueOf(cp.getUserId()));
-        return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
+        return new ResponseEntity<>("Izvjestaj uspjesno dodat.", HttpStatus.OK);
 
     }
 }
