@@ -24,6 +24,7 @@ import RegAgentContainer from '../containers/Authorization/RegAgentContainer';
 import RegFirmContainer from '../containers/Authorization/RegFirmContainer';
 import PricelistContainer from '../containers/Pricelists/PricelistContainer';
 import DiscountsContainer from '../containers/Discount/DiscountsContainer';
+import StatisticsContainer from '../containers/AgentFirm/StatisticsContainer';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -121,6 +122,13 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
+                        {hasRole(['ROLE_AGENT']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="statistics" onClick={() => { history.push("/panel/statistics"); }}>
+                                    Statistika
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="comments" onClick={() => { history.push("/panel/comments"); }}>
@@ -172,6 +180,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/end-user-reqs/:id`} component={EndUserRequestDetailContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs`} component={AgentRequestsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/publisher-user-reqs/:id`} component={AgentRequestDetailContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
+                    <PrivateRoute exact path={`${match.path}/statistics`} component={StatisticsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
                     <PrivateRoute exact path={`${match.path}/comments`} component={CommentsContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/man-agent`} component={RegAgentContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/man-firm`} component={RegFirmContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />

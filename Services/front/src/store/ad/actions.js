@@ -29,7 +29,10 @@ import{
     EDIT_DISCOUNT,
     DELETE_DISCOUNT,
     ADD_DISCOUNT_TO_AD,
-    REMOVE_DISCOUNT_FROM_AD
+    REMOVE_DISCOUNT_FROM_AD,
+    FETCH_BEST_GRADE,
+    FETCH_MAX_MILEAGE,
+    FETCH_MAX_COMMENTS
 } from './constants';
 
 export const putSearchData = payload => ({
@@ -177,5 +180,20 @@ export const addDiscountToAd = payload => ({
 
 export const removeDiscountFromAd = payload => ({
     type: REMOVE_DISCOUNT_FROM_AD,
+    payload
+});
+
+export const fetchBestGrade = payload => ({
+    type: FETCH_BEST_GRADE,
+    payload
+});
+
+export const fetchMaxMileage = payload => ({
+    type: FETCH_MAX_MILEAGE,
+    payload
+});
+
+export const fetchMaxComments = payload => ({
+    type: FETCH_MAX_COMMENTS,
     payload
 });
