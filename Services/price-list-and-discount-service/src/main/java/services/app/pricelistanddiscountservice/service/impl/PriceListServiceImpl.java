@@ -3,6 +3,7 @@ package services.app.pricelistanddiscountservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.DateTime;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import services.app.pricelistanddiscountservice.client.AdClient;
 import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.PriceListConverter;
+import services.app.pricelistanddiscountservice.dto.AgentFirmIdentificationDTO;
 import services.app.pricelistanddiscountservice.dto.pricelist.PriceListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.sync.PriceListSyncDTO;
 import services.app.pricelistanddiscountservice.exception.ExistsException;
@@ -155,6 +157,34 @@ public class PriceListServiceImpl implements PriceListService {
         } catch (JsonProcessingException exception) {
             return null;
         }
+    }
+
+    @Override
+    public Long authAgent(String email, String identifier) {
+        AgentFirmIdentificationDTO agentFirmIdentificationDTO = AgentFirmIdentificationDTO.builder()
+                .email(email)
+                .identifier(identifier)
+                .build();
+        try {
+            String agentFirmIdentificationDTOStr = objectMapper.writeValueAsString(agentFirmIdentificationDTO);
+            Long publisherUserId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, agentFirmIdentificationDTOStr);
+            return publisherUserId;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long createPriceListFromAgent(Long publisherUser, DateTime creationDate, Float pricePerDay,
+                                         Float pricePerKm, Float pricePerKmCDW) {
+        PriceList priceList = new PriceList();
+        priceList.setCreationDate(creationDate);
+        priceList.setPricePerDay(pricePerDay);
+        priceList.setPricePerKm(pricePerKm);
+        priceList.setPricePerKmCDW(pricePerKmCDW);
+        priceList.setPublisherUser(publisherUser);
+        priceList = this.priceListRepository.save(priceList);
+        return priceList.getId();
     }
 
 

@@ -12,6 +12,7 @@ public class RabbitMQConfiguration {
     public static final String USER_ID_QUEUE_NAME = "user_id";
     public static final String PL_NEW_EDIT_QUEUE_NAME = "pl_new_edit";
     public static final String PL_GET_QUEUE_NAME = "pl_get_queue";
+    public static final String AGENT_ID_BY_EMAIL_ID_QUEUE_NAME = "agent_id_by_email_id";
 
     @Bean
     public Queue plGetQueue() {
@@ -36,5 +37,10 @@ public class RabbitMQConfiguration {
     @Bean
     public Queue dlQueue() {
         return new Queue(DL_SYNC_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue agentIdByEmailId() {
+        return new Queue(AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, false);
     }
 }

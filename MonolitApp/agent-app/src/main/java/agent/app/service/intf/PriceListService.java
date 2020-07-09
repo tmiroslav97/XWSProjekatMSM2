@@ -33,4 +33,6 @@ public interface PriceListService {
 
     Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
 
+    String findPriceListPublisherUserIdentifier(String email);
+
 }

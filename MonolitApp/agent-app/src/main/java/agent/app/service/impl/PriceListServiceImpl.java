@@ -12,8 +12,11 @@ import agent.app.model.PriceList;
 import agent.app.model.PublisherUser;
 import agent.app.repository.PriceListRepository;
 import agent.app.service.intf.AdService;
+import agent.app.service.intf.AgentService;
 import agent.app.service.intf.PriceListService;
 import agent.app.service.intf.PublisherUserService;
+import agent.app.ws.client.PadClient;
+import agent.app.ws.client.RequestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +39,12 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
     private AdService adService;
+
+    @Autowired
+    private PadClient padClient;
+
+    @Autowired
+    private AgentService agentService;
 
     @Override
     public PriceList findById(Long id) {
@@ -88,8 +97,16 @@ public class PriceListServiceImpl implements PriceListService {
         PriceList priceList = PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO);
         PublisherUser publisherUser = publisherUserService.findByEmail(priceListCreateDTO.getPublisherUsername());
         priceList.setPublisherUser(publisherUser);
-        priceList = this.priceListRepository.save(priceList);
 
+        //soap
+        String identifier = this.findPriceListPublisherUserIdentifier(priceListCreateDTO.getPublisherUsername());
+        Long response = padClient.addPriceListRequest(priceListCreateDTO.getPublisherUsername(),
+                identifier, priceList.getCreationDate(), priceList.getPricePerDay(),
+                priceList.getPricePerKm(), priceList.getPricePerKmCDW());
+        priceList.setMainId(response);
+        System.out.println("main id: " + response);
+
+        priceList = this.priceListRepository.save(priceList);
         return priceList;
     }
 
@@ -136,6 +153,11 @@ public class PriceListServiceImpl implements PriceListService {
         ad.setPriceList(priceList);
         ad = adService.edit(ad);
         return 1;
+    }
+
+    @Override
+    public String findPriceListPublisherUserIdentifier(String email) {
+        return agentService.findByEmail(email).getIdentifier();
     }
 
 
