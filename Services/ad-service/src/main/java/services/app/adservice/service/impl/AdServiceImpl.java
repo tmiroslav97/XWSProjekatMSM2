@@ -2,10 +2,6 @@ package services.app.adservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,9 +60,6 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private AmqpAdmin amqpAdmin;
 
     @Autowired
     private DiscountListService discountListService;
@@ -296,9 +289,9 @@ public class AdServiceImpl implements AdService {
         String routingKey;
         try {
             acceptReqestCalendarTermsDTO = objectMapper.readValue(msg, AcceptReqestCalendarTermsDTO.class);
-            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, acceptReqestCalendarTermsDTO.getPublisherUserId());
-            userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
-            routingKey = userFLNameDTO.getUserEmail().replace("@", ".")+".cct";
+//            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, acceptReqestCalendarTermsDTO.getPublisherUserId());
+//            userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+//            routingKey = userFLNameDTO.getUserEmail().replace("@", ".")+".cct";
         } catch (JsonProcessingException exception) {
             return false;
         }
@@ -317,9 +310,9 @@ public class AdServiceImpl implements AdService {
                 try {
                     String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
                     rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
-                    if (!userFLNameDTO.getLocal()) {
-                        rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, carCalendarTermSynchronizeDTOSStr);
-                    }
+//                    if (!userFLNameDTO.getLocal()) {
+//                        rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, carCalendarTermSynchronizeDTOSStr);
+//                    }
                 } catch (JsonProcessingException exception) {
                     continue;
                 }
@@ -440,12 +433,27 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Integer addRatingToAd(AdRatingDTO adRatingDTO) {
-        Ad ad = this.findById(adRatingDTO.getAdId());
-        ad.setRatingNum(ad.getRatingNum() + adRatingDTO.getRating());
-        ad.setRatingCnt(ad.getRatingCnt() + 1);
-        ad = this.edit(ad);
-        return 1;
-
+        try {
+            String adRatingDTOStr = objectMapper.writeValueAsString(adRatingDTO);
+            Integer flag = (Integer) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.RATE_AD_QUEUE_NAME, adRatingDTOStr);
+            if (flag == 1) {
+                Ad ad = this.findById(adRatingDTO.getMainId());
+                ad.setRatingNum(ad.getRatingNum() + adRatingDTO.getRating());
+                ad.setRatingCnt(ad.getRatingCnt() + 1);
+                ad = this.edit(ad);
+                String userFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+                UserFLNameDTO userFLName = objectMapper.readValue(userFLNameStr, UserFLNameDTO.class);
+                if (!userFLName.getLocal()) {
+                    String routingKey = userFLName.getUserEmail().replace("@", ".") + ".rate";
+                    rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, adRatingDTOStr);
+                }
+                return 1;
+            } else {
+                return flag;
+            }
+        } catch (JsonProcessingException exception) {
+            return 3;
+        }
     }
 
     @Override

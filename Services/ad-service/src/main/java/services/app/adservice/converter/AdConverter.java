@@ -8,7 +8,6 @@ import services.app.adservice.dto.ad.AdSynchronizeDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
 import services.app.adservice.model.Image;
-import services.app.adservice.model.enumeration.DistanceLimitEnum;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -127,9 +126,9 @@ public class AdConverter extends AbstractConverter {
                 .priceList(adSyncDTO.getPriceList())
                 .deleted(false)
                 .enabled(true)
-                .rentCnt(0L)
-                .ratingCnt(0L)
-                .ratingNum(0L)
+                .rentCnt(adSyncDTO.getRentCnt())
+                .ratingCnt(adSyncDTO.getRatingCnt())
+                .ratingNum(adSyncDTO.getRatingNum())
                 .comments(new HashSet<>())
                 .build();
     }

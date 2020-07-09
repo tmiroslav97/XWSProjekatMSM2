@@ -1,16 +1,23 @@
 package agent.app.service.impl;
 
 import agent.app.converter.CommentConverter;
+import agent.app.converter.DateAPI;
+import agent.app.dto.SignUpDTO;
 import agent.app.dto.car.StatisticCarDTO;
 import agent.app.dto.comment.CommentCreateDTO;
 import agent.app.dto.comment.CommentDTO;
+import agent.app.dto.comment.CommentSyncDTO;
 import agent.app.exception.ExistsException;
 import agent.app.exception.NotFoundException;
 import agent.app.model.Ad;
 import agent.app.model.Comment;
+import agent.app.model.EndUser;
 import agent.app.model.PublisherUser;
 import agent.app.repository.CommentRepository;
 import agent.app.service.intf.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,11 +38,19 @@ public class CommentServiceImpl implements CommentService {
     private AdService adService;
 
     @Autowired
+    private EndUserService endUserService;
+
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Autowired
     private PublisherUserService publisherUserService;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public Comment finById(Long id) {
-        return commentRepository.findById(id).orElseThrow(()-> new NotFoundException("Komentar ne postoji."));
+        return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Komentar ne postoji."));
     }
 
     @Override
@@ -45,8 +60,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment save(Comment comment) {
-        if(comment.getId() != null){
-            if(commentRepository.existsById(comment.getId())){
+        if (comment.getId() != null) {
+            if (commentRepository.existsById(comment.getId())) {
                 throw new ExistsException(String.format("Komentar vec postoji."));
             }
         }
@@ -85,9 +100,38 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @RabbitListener(queues = "#{autoDeleteComment.name}")
+    public void syncComment(String msg) {
+        try {
+            CommentSyncDTO commentSyncDTO = objectMapper.readValue(msg, CommentSyncDTO.class);
+            Ad ad = adService.findByMainId(commentSyncDTO.getMainId());
+            EndUser endUser = endUserService.findByEmail(commentSyncDTO.getPublisherUserEmail());
+            if (endUser == null) {
+                SignUpDTO signUpDTO = SignUpDTO.builder()
+                        .email(commentSyncDTO.getPublisherUserEmail())
+                        .firstName(commentSyncDTO.getPublisherUserFirstName())
+                        .lastName(commentSyncDTO.getPublisherUserLastName())
+                        .password("12345")
+                        .password2("12345")
+                        .build();
+                authenticationService.signUp(signUpDTO);
+                endUser = endUserService.findByEmail(commentSyncDTO.getPublisherUserEmail());
+            }
+            Comment comment = Comment.builder()
+                    .content(commentSyncDTO.getContent())
+                    .approved(false)
+                    .creationDate(DateAPI.DateTimeStringToDateTime(commentSyncDTO.getCreationDate()))
+                    .ad(ad)
+                    .publisherUser(endUser)
+                    .build();
+            this.save(comment);
+        } catch (JsonProcessingException exception) {
+            return;
+        }
+    }
+
+    @Override
     public Integer createComment(CommentCreateDTO commentCreateDTO) {
-        System.out.println("----------------------------------------");
-        System.out.println("KREIRANJE KOMENTARA");
         Comment comment = CommentConverter.toCommentFromCommentCreateDTO(commentCreateDTO);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -101,7 +145,6 @@ public class CommentServiceImpl implements CommentService {
         comment = this.save(comment);
         ad.getComments().add(comment);
         ad = adService.edit(ad);
-        System.out.println("----------------------------------------");
         return 1;
     }
 
@@ -110,8 +153,8 @@ public class CommentServiceImpl implements CommentService {
         Ad ad = adService.findById(id);
         List<CommentDTO> list = new ArrayList<>();
         Set<Comment> commentSet = ad.getComments();
-        for(Comment comment: commentSet){
-            if(comment.getApproved()){
+        for (Comment comment : commentSet) {
+            if (comment.getApproved()) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
                 PublisherUser publisherUser = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
                 commentDTO.setPublisherUserFirstName(publisherUser.getFirstName());
@@ -134,14 +177,14 @@ public class CommentServiceImpl implements CommentService {
         PublisherUser publisherUser = publisherUserService.findByEmail(principal.getName());
 
         Set<Comment> commentSet = ad.getComments();
-        for(Comment comment: commentSet){
-            if(comment.getApproved()){
+        for (Comment comment : commentSet) {
+            if (comment.getApproved()) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
                 PublisherUser pu = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
                 commentDTO.setPublisherUserFirstName(pu.getFirstName());
                 commentDTO.setPublisherUserLastName(pu.getLastName());
                 list.add(commentDTO);
-            }else if(comment.getPublisherUser().equals(publisherUser)){
+            } else if (comment.getPublisherUser().equals(publisherUser)) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
                 PublisherUser pu = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
                 commentDTO.setPublisherUserFirstName(pu.getFirstName());
@@ -156,8 +199,8 @@ public class CommentServiceImpl implements CommentService {
     public List<CommentDTO> findAllUnapprovedCommentFromAd() {
         List<CommentDTO> list = new ArrayList<>();
         List<Comment> comments = this.findAll();
-        for(Comment comment: comments){
-            if(!comment.getApproved()){
+        for (Comment comment : comments) {
+            if (!comment.getApproved()) {
                 CommentDTO commentDTO = CommentConverter.toCommentDTOFromComment(comment);
                 PublisherUser pu = publisherUserService.findByEmail(comment.getPublisherUser().getEmail());
                 commentDTO.setPublisherUserFirstName(pu.getFirstName());

@@ -6,7 +6,7 @@ import AgentRequestsPaidComponent from '../../components/Request/AgentRequestsPa
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 import { useDispatch } from 'react-redux';
-import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
+import { putSuccessMsg, putErrorMsg, putWarnMsg } from '../../store/common/actions';
 
 const AgentRequestsContainer = () => {
     const dispatch = useDispatch();
@@ -40,8 +40,11 @@ const AgentRequestsContainer = () => {
 
     const handleAccept = async (id, action) => {
         const result = await RequestService.acceptRequest({ "id": id, "action": action });
+        console.log(result);
         if (result === "Uspjesno prihvacen zahtjev" || result === "Uspjesno odbijen zahtjev") {
             dispatch(putSuccessMsg(result));
+        } else if (result === "Zahtjev je vec obradjen") {
+            dispatch(putWarnMsg(result));
         } else {
             dispatch(putErrorMsg(result));
         }

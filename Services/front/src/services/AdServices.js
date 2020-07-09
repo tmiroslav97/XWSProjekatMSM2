@@ -186,8 +186,6 @@ class AdServices extends HttpBaseClient {
     };
 
     ratingAd = async payload => {
-        console.log("********* DODAVANJE OCENE ***********")
-        console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE + "/rating",
             payload,
@@ -203,8 +201,6 @@ class AdServices extends HttpBaseClient {
     };
 
     addCommentForAd = async payload => {
-        console.log("********* DODAVANJE KOMENTARA ***********")
-        console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.COMMENT_BASE,
             payload,
@@ -213,7 +209,6 @@ class AdServices extends HttpBaseClient {
                     'Content-Type': 'application/json; charset=utf-8'
                 }
             }
-
         );
 
         return response.data;

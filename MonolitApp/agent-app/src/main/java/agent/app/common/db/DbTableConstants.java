@@ -27,4 +27,6 @@ public class DbTableConstants {
     public static final String IMAGE = "image";
     public static final String ADDISCOUNTLIST = "adDiscountList";
     public static final String ADREQUEST = "adRequest";
+    public static final String ADREPORT = "adReport";
+    public static final String REQUESTAD = "requestAd";
 }

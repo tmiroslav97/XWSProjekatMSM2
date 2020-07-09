@@ -89,6 +89,7 @@ public class PriceListServiceImpl implements PriceListService {
         PublisherUser publisherUser = publisherUserService.findByEmail(priceListCreateDTO.getPublisherUsername());
         priceList.setPublisherUser(publisherUser);
         priceList = this.priceListRepository.save(priceList);
+
         return priceList;
     }
 

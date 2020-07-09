@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import services.app.adservice.client.AuthenticationClient;
 import services.app.adservice.config.RabbitMQConfiguration;
 import services.app.adservice.converter.CommentConverter;
+import services.app.adservice.converter.DateAPI;
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.comment.CommentCreateDTO;
 import services.app.adservice.dto.comment.CommentDTO;
+import services.app.adservice.dto.comment.CommentSyncDTO;
 import services.app.adservice.dto.user.UserFLNameDTO;
 import services.app.adservice.exception.ExistsException;
 import services.app.adservice.exception.NotFoundException;
@@ -97,14 +99,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Integer createComment(CommentCreateDTO commentCreateDTO) {
-        System.out.println("----------------------------------------");
-        System.out.println("KREIRANJE KOMENTARA");
         Comment comment = CommentConverter.toCommentFromCommentCreateDTO(commentCreateDTO);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
-        Long publisherUser = authenticationClient.findPublishUserByEmail(principal.getToken());
-        comment.setPublisherUser(publisherUser);
+        comment.setPublisherUser(Long.valueOf(principal.getUserId()));
 
         Ad ad = adService.findById(commentCreateDTO.getAdId());
         comment.setAd(ad);
@@ -112,7 +111,28 @@ public class CommentServiceImpl implements CommentService {
         comment = this.save(comment);
         ad.getComments().add(comment);
         ad = adService.edit(ad);
-        System.out.println("----------------------------------------");
+
+        try {
+            String publisherUserFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO publisherUserFLName = objectMapper.readValue(publisherUserFLNameStr, UserFLNameDTO.class);
+            if (!publisherUserFLName.getLocal()) {
+                String userFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, Long.valueOf(principal.getUserId()));
+                UserFLNameDTO userFLName = objectMapper.readValue(userFLNameStr, UserFLNameDTO.class);
+                CommentSyncDTO commentSyncDTO = CommentSyncDTO.builder()
+                        .content(comment.getContent())
+                        .mainId(ad.getId())
+                        .creationDate(DateAPI.DateTimeToStringDateTime(comment.getCreationDate()))
+                        .publisherUserEmail(userFLName.getUserEmail())
+                        .publisherUserFirstName(userFLName.getUserFirstName())
+                        .publisherUserLastName(userFLName.getUserLastName())
+                        .build();
+                String commentSyncDTOStr = objectMapper.writeValueAsString(commentSyncDTO);
+                String routingKey = publisherUserFLName.getUserEmail().replace("@", ".") + ".comment";
+                rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, commentSyncDTOStr);
+            }
+        } catch (JsonProcessingException exception) {
+            return 1;
+        }
         return 1;
     }
 

@@ -17,7 +17,7 @@ class RequestService extends HttpBaseClient {
         );
         return response.data;
     };
-    
+
     fetchAllByAgentIdAndStatus = async payload => {
         const response = await this.getApiClient().get(
             FINALPOINTS.REQUEST_BASE + '/publisher-user',
@@ -32,16 +32,20 @@ class RequestService extends HttpBaseClient {
     };
 
     acceptRequest = async payload => {
-        const response = await this.getApiClient().put(
-            FINALPOINTS.REQUEST_BASE,
-            payload,
-            {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8'
+        try {
+            const response = await this.getApiClient().put(
+                FINALPOINTS.REQUEST_BASE,
+                payload,
+                {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
                 }
-            }
-        );
-        return response.data;
+            );
+            return response.data;
+        } catch (error) {
+            return error.response.data;
+        }
     };
 
 };

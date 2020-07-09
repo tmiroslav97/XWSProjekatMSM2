@@ -21,7 +21,13 @@ public class RabbitMQConfiguration {
     public static final String AD_CAR_INFO_QUEUE_NAME = "ad_car_info";
     public static final String ACCEPT_REQUEST_QUEUE_NAME = "accept_request";
     public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
-    public static final String AGENT_SYNC_QUEUE_NAME = "agent_sync";
+    public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
+    public static final String RATE_AD_QUEUE_NAME = "rate_ad";
+
+    @Bean
+    public Queue rateAd() {
+        return new Queue(RATE_AD_QUEUE_NAME, false);
+    }
 
     @Bean
     public TopicExchange topic() {

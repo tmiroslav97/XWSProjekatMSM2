@@ -79,6 +79,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .email(signUpDTO.getEmail())
                     .firstName(signUpDTO.getFirstName())
                     .lastName(signUpDTO.getLastName())
+                    .local(true)
                     .deleted(false)
                     .enabled(true)
                     .password(passwordEncoder.encode(signUpDTO.getPassword()))

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import services.app.carrequestservice.dto.carreq.ReqAcceptDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.CustomPrincipal;
-import services.app.carrequestservice.model.Request;
 import services.app.carrequestservice.service.intf.RequestService;
 
 import java.util.HashMap;
@@ -45,9 +44,11 @@ public class RequestController {
     @RequestMapping(value = "/end-user", method = RequestMethod.PUT)
     public ResponseEntity<?> quitRequest(@RequestBody ReqAcceptDTO reqAcceptDTO) {
         if (reqAcceptDTO.getAction().equals("quit")) {
-            Boolean flag = requestService.quitRequest(reqAcceptDTO.getId());
-            if (flag) {
+            Integer flag = requestService.quitRequest(reqAcceptDTO.getId());
+            if (flag == 1) {
                 return new ResponseEntity<>("Uspjesno odustajanje od zahtjeva", HttpStatus.OK);
+            } else if (flag == 2) {
+                return new ResponseEntity<>("Zahtjev je vec obradjen", HttpStatus.BAD_REQUEST);
             } else {
                 return new ResponseEntity<>("Desila se nepoznata greska", HttpStatus.BAD_REQUEST);
             }
@@ -56,7 +57,7 @@ public class RequestController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @PreAuthorize("hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,7 +84,7 @@ public class RequestController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ROLE_AGENT')")
+    @PreAuthorize("hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_USER')")
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> acceptRequest(@RequestBody ReqAcceptDTO reqAcceptDTO) {
         if (reqAcceptDTO.getAction() != null && (reqAcceptDTO.getAction().equals("accept") || reqAcceptDTO.getAction().equals("reject"))) {

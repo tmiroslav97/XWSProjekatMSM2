@@ -7,7 +7,7 @@ import EndUserRequestsPaidComponent from '../../components/Request/EndUserReques
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
 import { ratingAd, addCommentForAd } from '../../store/ad/actions';
-import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
+import { putSuccessMsg, putErrorMsg, putWarnMsg } from '../../store/common/actions';
 
 const EndUserRequestsContainer = () => {
     const dispatch = useDispatch();
@@ -39,52 +39,14 @@ const EndUserRequestsContainer = () => {
         setIsFetchCanceledRequests(true);
     }
 
-    const [flagComment, setFlagComment] = useState(false);
-    const [adId, setAdId] = useState(false);
-    const [validated, setValidated] = useState(false);
 
-    const addComment = (event) => {
-        setFlagComment(true);
-        console.log(event)
-        setAdId(event);
-    }
-
-
-    const handleCommentForm = (event) => {
-        event.preventDefault();
-        const form = event.target;
-        console.log("komentar");
-        if (form.checkValidity() === false) {
-            event.stopPropagation();
-            setValidated(true);
-        } else {
-            setValidated(false);
-            setFlagComment(false);
-            dispatch(addCommentForAd({
-                "adId": adId,
-                "content": form.content.value
-            }))
-            
-        }
-        
-
-    }
-
-    const handleRatingForm = (adId, newRating) => {
-        console.log("ocena");
-        console.log(adId);
-        console.log(newRating);
-        dispatch(ratingAd({
-            'rating': newRating,
-            'adId': adId
-        }));
-
-    }
 
     const handleQuit = async (reqId) => {
         const result = await RequestService.quitRequest({ "id": reqId, "action": "quit" });
         if (result === "Uspjesno odustajanje od zahtjeva") {
             dispatch(putSuccessMsg(result));
+        } else if (result === "Zahtjev je vec obradjen") {
+            dispatch(putWarnMsg(result));
         } else {
             dispatch(putErrorMsg(result));
         }
@@ -114,14 +76,7 @@ const EndUserRequestsContainer = () => {
                 <Col md={12} xs={12}>
                     {
                         isFetchPaidRequests ?
-                            <EndUserRequestsPaidComponent requests={paidRequests} status="paid"
-                                flagComment={flagComment} setFlagComment={setFlagComment}
-                                addComment={addComment}
-                                adId={adId} setAdId={setAdId}
-                                validated={validated}
-                                handleCommentForm={handleCommentForm}
-                                handleRatingForm={handleRatingForm}
-                            /> : <SpinnerContainer />
+                            <EndUserRequestsPaidComponent requests={paidRequests} status="paid" /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>

@@ -15,4 +15,6 @@ public interface CarCalendarTermRepository extends JpaRepository<CarCalendarTerm
     CarCalendarTerm findByAdAndDate(Long id, DateTime startDate, DateTime endDate);
 
     List<CarCalendarTerm> findAllByAd_MainId(Long mainId);
+
+    List<CarCalendarTerm> findAllByAdId(Long adId);
 }

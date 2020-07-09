@@ -86,21 +86,47 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Boolean quitRequest(Long id) {
+    public Integer quitRequest(Long id) {
         Request request = this.findById(id);
+        if(!request.getStatus().toString().equals("PENDING")){
+            return 2;
+        }
         request.setStatus(RequestStatusEnum.CANCELED);
-        this.save(request);
+        request = this.save(request);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.END_USER_CANCELED_RENT_CNT_QUEUE_NAME, Long.valueOf(cp.getUserId()));
-        return true;
+        try {
+            String userFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, request.getPublisherUserId());
+            UserFLNameDTO userFLName = objectMapper.readValue(userFLNameStr, UserFLNameDTO.class);
+            if (!userFLName.getLocal()) {
+                String routingKey = userFLName.getUserEmail().replace("@", ".") + ".req";
+                String requestStr = objectMapper.writeValueAsString(request);
+                rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+            }
+        } catch (JsonProcessingException exception) {
+            return 3;
+        }
+        return 1;
     }
 
     @Override
     @Scheduled(cron = "${reject.cron}")
     public void autoRejectRequests() {
         List<Request> requests = requestRepository.findAllByStatusAndSubmitDate(RequestStatusEnum.PENDING, DateAPI.DateTimeNow().minusDays(1));
-        requests.stream().forEach(request -> request.setStatus(RequestStatusEnum.CANCELED));
+        requests.stream().forEach(request -> {
+            request.setStatus(RequestStatusEnum.CANCELED);
+            try {
+                String userFLNameStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, request.getPublisherUserId());
+                UserFLNameDTO userFLName = objectMapper.readValue(userFLNameStr, UserFLNameDTO.class);
+                if (!userFLName.getLocal()) {
+                    String routingKey = userFLName.getUserEmail().replace("@", ".") + ".req";
+                    String requestStr = objectMapper.writeValueAsString(request);
+                    rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+                }
+            } catch (JsonProcessingException exception) {
+            }
+        });
         requestRepository.saveAll(requests);
     }
 
@@ -117,6 +143,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public String acceptRequest(Long requestId, String action) {
         Request request = this.findById(requestId);
+        if (!request.getStatus().toString().equals("PENDING")) {
+            return "Zahtjev je vec obradjen";
+        }
         if (action.equals("reject")) {
             request.setStatus(RequestStatusEnum.CANCELED);
             this.save(request);
@@ -225,7 +254,16 @@ public class RequestServiceImpl implements RequestService {
                             .publisherUserLastName(publisherUserFLName.getUserLastName())
                             .publisherUserEmail(publisherUserFLName.getUserEmail())
                             .build();
-                    this.save(request);
+                    request = this.save(request);
+                    if (!publisherUserFLName.getLocal()) {
+                        try {
+                            String routingKey = publisherUserFLName.getUserEmail().replace("@", ".") + ".req";
+                            String requestStr = objectMapper.writeValueAsString(request);
+                            rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+                        } catch (JsonProcessingException exception) {
+
+                        }
+                    }
                 } else {
                     for (AdRequestDTO adRequestDTO : itemSubmitRequestDTO.getAds()) {
                         List<Ad> ads = new ArrayList<>();
@@ -265,7 +303,15 @@ public class RequestServiceImpl implements RequestService {
                                 .publisherUserLastName(publisherUserFLName.getUserLastName())
                                 .publisherUserEmail(publisherUserFLName.getUserEmail())
                                 .build();
-                        this.save(request);
+                        request = this.save(request);
+                        if (!publisherUserFLName.getLocal()) {
+                            try {
+                                String routingKey = publisherUserFLName.getUserEmail().replace("@", ".") + ".req";
+                                String requestStr = objectMapper.writeValueAsString(request);
+                                rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, requestStr);
+                            } catch (JsonProcessingException exception) {
+                            }
+                        }
                     }
                 }
 

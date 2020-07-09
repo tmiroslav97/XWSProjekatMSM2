@@ -15,6 +15,7 @@ import agent.app.service.intf.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -240,6 +241,20 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    @RabbitListener(queues = "#{autoDeleteRateAd.name}")
+    public void rateAd(String msg) {
+        try {
+            AdRatingDTO adRatingDTO = objectMapper.readValue(msg, AdRatingDTO.class);
+            Ad ad = this.findByMainId(adRatingDTO.getMainId());
+            ad.setRatingNum(ad.getRatingNum() + adRatingDTO.getRating());
+            ad.setRatingCnt(ad.getRatingCnt() + 1);
+            ad = this.edit(ad);
+        } catch (JsonProcessingException exception) {
+            return;
+        }
+    }
+
+    @Override
     public Integer addRatingToAd(AdRatingDTO adRatingDTO) {
         Ad ad = this.findById(adRatingDTO.getAdId());
         ad.setRatingNum(ad.getRatingNum() + adRatingDTO.getRating());
@@ -353,10 +368,7 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer syncData(String identifier, String email) {
         Agent agent = agentService.findByEmail(email);
-        if(agent.getIdentifier()==null){
-            agent.setIdentifier(identifier);
-            agent = agentService.save(agent);
-        }else{
+        if (agent.getIdentifier() != null) {
             return 5;
         }
         try {
@@ -376,6 +388,8 @@ public class AdServiceImpl implements AdService {
         } catch (JsonProcessingException exception) {
             return 4;
         }
+        agent.setIdentifier(identifier);
+        agent = agentService.save(agent);
         List<PriceList> pls = priceListService.findAllByPublisherUser(email);
         for (PriceList pl : pls) {
             try {

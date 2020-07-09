@@ -10,4 +10,6 @@ import lombok.*;
 public class AdRatingDTO {
     private Long rating;
     private Long adId;
+    private Long mainId;
+    private Long requestId;
 }

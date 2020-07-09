@@ -156,4 +156,32 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
         }
     }
 
+    @Override
+    public Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate) {
+        CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+        if (carCalendarTerm == null) {
+            return false;
+        } else {
+            CarCalendarTerm newCarCalendarTerm = CarCalendarTerm.builder()
+                    .startDate(endDate)
+                    .endDate(carCalendarTerm.getEndDate())
+                    .ad(carCalendarTerm.getAd())
+                    .build();
+            carCalendarTerm.setEndDate(startDate);
+            this.edit(carCalendarTerm);
+            this.save(newCarCalendarTerm);
+            return true;
+        }
+    }
+
+    @Override
+    public Boolean canSplitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate) {
+        CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+        if (carCalendarTerm == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

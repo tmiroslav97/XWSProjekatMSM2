@@ -35,7 +35,7 @@ const AgentRequestsComponent = (props) => {
                                                             return (
                                                                 <OverlayTrigger key={idx} overlay={<Tooltip id="tooltip-disabled">Klikni za detaljno</Tooltip>}>
                                                                     <span className="d-inline-block">
-                                                                        <ListGroup.Item action onClick={() => { history.push('/ad-detail-view/' + ad.mainId); }}>{ad.adName}</ListGroup.Item>
+                                                                        <ListGroup.Item action onClick={() => { history.push('/agent-firm/ad-detail-view/' + ad.adId); }}>{ad.adName}</ListGroup.Item>
                                                                     </span>
                                                                 </OverlayTrigger>
                                                             );

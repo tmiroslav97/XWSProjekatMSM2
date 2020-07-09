@@ -8,7 +8,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdRatingDTO;
 import services.app.adservice.dto.ad.ReversePricelistDTO;
@@ -79,9 +78,12 @@ public class AdController {
 
         Integer rez = adService.addRatingToAd(adRatingDTO);
         if (rez == 1) {
-            return new ResponseEntity<>("Ocenili ste oglas.", HttpStatus.OK);
+            return new ResponseEntity<>("Uspjesno ste ocijenili oglas.", HttpStatus.OK);
+        } else if (rez == 2) {
+            return new ResponseEntity<>("Vec ste ocijenili oglas.", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/pricelists", method = RequestMethod.GET)

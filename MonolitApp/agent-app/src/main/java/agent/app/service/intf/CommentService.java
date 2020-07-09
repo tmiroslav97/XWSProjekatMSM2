@@ -19,7 +19,7 @@ public interface CommentService {
     List<StatisticCarDTO> getCarsWithMostComments(Long publisherId);
     Integer setApprove(Boolean status, Long id);
     Integer createComment(CommentCreateDTO comment);
-
+    void syncComment(String msg);
     List<CommentDTO> findAllApprovedCommentFromAd(Long id);
     List<CommentDTO> findAllApprovedCommentAndUserCommentFromAd(Long id);
     List<CommentDTO> findAllUnapprovedCommentFromAd();
