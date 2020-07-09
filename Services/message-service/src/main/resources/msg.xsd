@@ -12,9 +12,9 @@
     <xs:complexType name="Conversation">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
-            <xs:element name="participantPublisherUser" type="xs:long"/>
-            <xs:element name="participantEndUser" type="xs:long"/>
-            <xs:element name="adRequest" type="xs:long"/>
+            <xs:element name="participantPublisherUserId" type="xs:long"/>
+            <xs:element name="participantEndUserId" type="xs:long"/>
+            <xs:element name="requestId" type="xs:long"/>
             <xs:element name="convName" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="Message" type="tns:Message"/>
         </xs:sequence>
@@ -23,7 +23,7 @@
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
             <xs:element name="sendDate" type="xs:dateTime"/>
-            <xs:element name="content" type="xs:dateTime"/>
+            <xs:element name="content" type="xs:string"/>
             <xs:element name="senderId" type="xs:long"/>
             <xs:element name="senderFirstName" type="xs:string"/>
             <xs:element name="senderLastName" type="xs:string"/>

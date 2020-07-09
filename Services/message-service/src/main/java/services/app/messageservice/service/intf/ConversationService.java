@@ -1,7 +1,6 @@
 package services.app.messageservice.service.intf;
 
 import services.app.messageservice.model.Conversation;
-import services.app.messageservice.model.Message;
 
 import java.util.List;
 
@@ -11,6 +10,8 @@ public interface ConversationService {
     List<Conversation> findAllByParticipantId(Long participantId);
 
     Conversation save(Conversation conversation);
+
+    Boolean existsByid(Long id);
 
     void deleteById(Long id);
 

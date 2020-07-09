@@ -31,7 +31,12 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public Conversation save(Conversation conversation) {
-        return null;
+        return conversationRepository.save(conversation);
+    }
+
+    @Override
+    public Boolean existsByid(Long id) {
+        return conversationRepository.existsById(id);
     }
 
     @Override
