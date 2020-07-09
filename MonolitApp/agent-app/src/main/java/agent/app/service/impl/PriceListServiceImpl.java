@@ -97,8 +97,8 @@ public class PriceListServiceImpl implements PriceListService {
         PriceList priceList = PriceListConverter.toCreatePriceListFromRequest(priceListCreateDTO);
         PublisherUser publisherUser = publisherUserService.findByEmail(priceListCreateDTO.getPublisherUsername());
         priceList.setPublisherUser(publisherUser);
-
         //soap
+
         String identifier = this.findPriceListPublisherUserIdentifier(priceListCreateDTO.getPublisherUsername());
         Long response = padClient.addPriceListRequest(priceListCreateDTO.getPublisherUsername(),
                 identifier, priceList.getCreationDate(), priceList.getPricePerDay(),

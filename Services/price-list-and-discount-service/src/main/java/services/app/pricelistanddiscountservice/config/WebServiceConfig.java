@@ -24,12 +24,12 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     }
 
     @Bean(name = "pads")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema requestsSchema) {
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema padsSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("RequestsPort");
+        wsdl11Definition.setPortTypeName("PadsPort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://www.app.services/pricelistanddiscountservice/model");
-        wsdl11Definition.setSchema(requestsSchema);
+        wsdl11Definition.setSchema(padsSchema);
         return wsdl11Definition;
     }
 
