@@ -121,7 +121,7 @@
 <!--				</executions>-->
 <!--				<configuration>-->
 <!--					<sources>-->
-<!--						<source>${project.basedir}/src/main/resources/request.xsd</source>-->
+<!--						<source>${project.basedir}/src/main/resources/pad.xsd</source>-->
 <!--					</sources>-->
 <!--					<xjbSources>-->
 <!--						<xjbSource>${project.basedir}/src/main/resources/type.xjb</xjbSource>-->

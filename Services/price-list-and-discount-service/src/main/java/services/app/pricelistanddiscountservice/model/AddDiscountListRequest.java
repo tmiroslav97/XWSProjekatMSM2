@@ -8,36 +8,31 @@
 
 package services.app.pricelistanddiscountservice.model;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import lombok.*;
 import org.w3._2001.xmlschema.Adapter2;
-import org.w3._2001.xmlschema.Adapter5;
 import org.w3._2001.xmlschema.Adapter6;
-import services.app.pricelistanddiscountservice.common.db.DbColumnConstants;
-import services.app.pricelistanddiscountservice.common.db.DbTableConstants;
 
 
 /**
- * <p>Java class for DiscountList complex type.
+ * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="DiscountList"&gt;
+ * &lt;complexType&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="publisherUserEmail" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="identifier" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="dayNum" type="{http://www.w3.org/2001/XMLSchema}int"/&gt;
  *         &lt;element name="discount" type="{http://www.w3.org/2001/XMLSchema}float"/&gt;
- *         &lt;element name="agent" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -46,69 +41,75 @@ import services.app.pricelistanddiscountservice.common.db.DbTableConstants;
  * 
  * 
  */
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-@Entity
-@Table(name = DbTableConstants.DISCOUNTLIST)
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DiscountList", propOrder = {
-    "id",
+@XmlType(name = "", propOrder = {
+    "publisherUserEmail",
+    "identifier",
     "dayNum",
-    "discount",
-    "agent"
+    "discount"
 })
-public class DiscountList {
+@XmlRootElement(name = "addDiscountListRequest")
+public class AddDiscountListRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
-    @XmlSchemaType(name = "long")
-    protected Long id;
-
-    @Column(name = DbColumnConstants.DAYNUM, nullable = false)
+    @XmlElement(required = true)
+    protected String publisherUserEmail;
+    @XmlElement(required = true)
+    protected String identifier;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter6 .class)
     @XmlSchemaType(name = "int")
     protected Integer dayNum;
-
-    @Column(name = DbColumnConstants.DISCOUNT, nullable = false)
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter2 .class)
     @XmlSchemaType(name = "float")
     protected Float discount;
 
-    @Column(name = DbColumnConstants.AGENT, nullable = false)
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
-    @XmlSchemaType(name = "long")
-    protected Long agent;
-
     /**
-     * Gets the value of the id property.
+     * Gets the value of the publisherUserEmail property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public Long getId() {
-        return id;
+    public String getPublisherUserEmail() {
+        return publisherUserEmail;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the publisherUserEmail property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(Long value) {
-        this.id = value;
+    public void setPublisherUserEmail(String value) {
+        this.publisherUserEmail = value;
+    }
+
+    /**
+     * Gets the value of the identifier property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * Sets the value of the identifier property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIdentifier(String value) {
+        this.identifier = value;
     }
 
     /**
@@ -157,30 +158,6 @@ public class DiscountList {
      */
     public void setDiscount(Float value) {
         this.discount = value;
-    }
-
-    /**
-     * Gets the value of the agent property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Long getAgent() {
-        return agent;
-    }
-
-    /**
-     * Sets the value of the agent property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAgent(Long value) {
-        this.agent = value;
     }
 
 }

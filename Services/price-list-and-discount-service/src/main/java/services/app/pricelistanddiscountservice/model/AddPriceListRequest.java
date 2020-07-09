@@ -4,44 +4,38 @@
 // Any modifications to this file will be lost upon recompilation of the source schema. 
 // Generated on: 2020.07.09 at 06:56:51 PM CEST 
 //
+
+
 package services.app.pricelistanddiscountservice.model;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.w3._2001.xmlschema.Adapter2;
 import org.w3._2001.xmlschema.Adapter4;
-import org.w3._2001.xmlschema.Adapter5;
-import services.app.pricelistanddiscountservice.common.db.DbColumnConstants;
-import services.app.pricelistanddiscountservice.common.db.DbTableConstants;
-import services.app.pricelistanddiscountservice.converter.DateAPI;
 
 
 /**
- * <p>Java class for PriceList complex type.
+ * <p>Java class for anonymous complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="PriceList"&gt;
+ * &lt;complexType&gt;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
+ *         &lt;element name="publisherUserEmail" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="identifier" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="creationDate" type="{http://www.w3.org/2001/XMLSchema}dateTime"/&gt;
  *         &lt;element name="pricePerDay" type="{http://www.w3.org/2001/XMLSchema}float"/&gt;
  *         &lt;element name="pricePerKm" type="{http://www.w3.org/2001/XMLSchema}float"/&gt;
  *         &lt;element name="pricePerKmCDW" type="{http://www.w3.org/2001/XMLSchema}float"/&gt;
- *         &lt;element name="publisherUser" type="{http://www.w3.org/2001/XMLSchema}long"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -50,93 +44,85 @@ import services.app.pricelistanddiscountservice.converter.DateAPI;
  * 
  * 
  */
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-@Entity
-@Builder
-@Table(name = DbTableConstants.PRICELIST)
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PriceList", propOrder = {
-    "id",
+@XmlType(name = "", propOrder = {
+    "publisherUserEmail",
+    "identifier",
     "creationDate",
     "pricePerDay",
     "pricePerKm",
-    "pricePerKmCDW",
-    "publisherUser"
+    "pricePerKmCDW"
 })
-public class PriceList {
+@XmlRootElement(name = "addPriceListRequest")
+public class AddPriceListRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
-    @XmlSchemaType(name = "long")
-    protected Long id;
-
-    @Temporal(TemporalType.DATE)
-    @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
-            @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),
-            @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
-    })
-    @Column(name = DbColumnConstants.CREATIONDATE, nullable = false)
+    @XmlElement(required = true)
+    protected String publisherUserEmail;
+    @XmlElement(required = true)
+    protected String identifier;
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter4 .class)
     @XmlSchemaType(name = "dateTime")
     protected DateTime creationDate;
-
-    @Column(name = DbColumnConstants.PRICEPERDAY, nullable = false)
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter2 .class)
     @XmlSchemaType(name = "float")
     protected Float pricePerDay;
-
-    @Column(name = DbColumnConstants.PRICEPERKM)
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter2 .class)
     @XmlSchemaType(name = "float")
     protected Float pricePerKm;
-
-    @Column(name = DbColumnConstants.PRICEPERCWD)
     @XmlElement(required = true, type = String.class)
     @XmlJavaTypeAdapter(Adapter2 .class)
     @XmlSchemaType(name = "float")
     protected Float pricePerKmCDW;
 
-    @Column(name = DbColumnConstants.PUBLISHERUSER, nullable = false)
-    @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
-    @XmlSchemaType(name = "long")
-    protected Long publisherUser;
-
-    @JsonProperty("creationDate")
-    public String getTheCreationDate() {
-        return DateAPI.DateTimeToStringDateTime(creationDate);
-    }
-
     /**
-     * Gets the value of the id property.
+     * Gets the value of the publisherUserEmail property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public Long getId() {
-        return id;
+    public String getPublisherUserEmail() {
+        return publisherUserEmail;
     }
 
     /**
-     * Sets the value of the id property.
+     * Sets the value of the publisherUserEmail property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setId(Long value) {
-        this.id = value;
+    public void setPublisherUserEmail(String value) {
+        this.publisherUserEmail = value;
+    }
+
+    /**
+     * Gets the value of the identifier property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    /**
+     * Sets the value of the identifier property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setIdentifier(String value) {
+        this.identifier = value;
     }
 
     /**
@@ -233,30 +219,6 @@ public class PriceList {
      */
     public void setPricePerKmCDW(Float value) {
         this.pricePerKmCDW = value;
-    }
-
-    /**
-     * Gets the value of the publisherUser property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public Long getPublisherUser() {
-        return publisherUser;
-    }
-
-    /**
-     * Sets the value of the publisherUser property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPublisherUser(Long value) {
-        this.publisherUser = value;
     }
 
 }

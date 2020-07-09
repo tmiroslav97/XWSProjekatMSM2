@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.app.services/pricelistanddiscountservice/model"
+    xmlns:tns="http://www.app.services/pricelistanddiscountservice/model">
+    <xs:complexType name="PriceList">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="creationDate" type="xs:dateTime"/>
+            <xs:element name="pricePerDay" type="xs:float"/>
+            <xs:element name="pricePerKm" type="xs:float"/>
+            <xs:element name="pricePerKmCDW" type="xs:float"/>
+            <xs:element name="publisherUser" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="addPriceListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="creationDate" type="xs:dateTime"/>
+                <xs:element name="pricePerDay" type="xs:float"/>
+                <xs:element name="pricePerKm" type="xs:float"/>
+                <xs:element name="pricePerKmCDW" type="xs:float"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addPriceListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="editPriceListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="pricePerDay" type="xs:float"/>
+                <xs:element name="pricePerKm" type="xs:float"/>
+                <xs:element name="pricePerKmCDW" type="xs:float"/>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="editPriceListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deletePriceListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deletePriceListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="DiscountList">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="dayNum" type="xs:int"/>
+            <xs:element name="discount" type="xs:float"/>
+            <xs:element name="agent" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="addDiscountListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="dayNum" type="xs:int"/>
+                <xs:element name="discount" type="xs:float"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addDiscountListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="editDiscountListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="dayNum" type="xs:int"/>
+                <xs:element name="discount" type="xs:float"/>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="editDiscountListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deleteDiscountListRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="deleteDiscountListResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addDiscountListToAdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainIdDiscount" type="xs:long"/>
+                <xs:element name="mainIdAd" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addDiscountListToAdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="removeDiscountListFromAdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainIdDiscount" type="xs:long"/>
+                <xs:element name="mainIdAd" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="removeDiscountListFromAdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
