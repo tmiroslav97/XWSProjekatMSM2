@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
 import services.app.adservice.dto.ad.AdCreateDTO;
 import services.app.adservice.dto.ad.AdRatingDTO;
+import services.app.adservice.dto.ad.ReversePricelistDTO;
 import services.app.adservice.model.CustomPrincipal;
 import services.app.adservice.service.intf.AdService;
 
@@ -66,6 +67,8 @@ public class AdController {
                                                         @RequestParam(value = "size", required = false) Integer size) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        System.out.println(principal.getUserId());
+        System.out.println(nextPage + " dfas " + size);
         return new ResponseEntity<>(adService.findAll(nextPage, size, principal.getUserId()), HttpStatus.OK);
     }
 
@@ -81,4 +84,38 @@ public class AdController {
         return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/pricelists", method = RequestMethod.GET)
+    public ResponseEntity<?> getPricelistsFromAds() {
+        return new ResponseEntity<>(adService.findPricelistsFromAds(), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/reverse-pricelist", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> reversePricelist(@RequestBody ReversePricelistDTO reversePricelistDTO) {
+
+        Integer rez = adService.reversePricelist(reversePricelistDTO);
+        if (rez == 1) {
+            return new ResponseEntity<>("Izmenili ste cenovnik oglasa.", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Greska.", HttpStatus.BAD_REQUEST);
+    }
+
+    @RequestMapping(value = "/ads-from-discount", method = RequestMethod.GET)
+    public ResponseEntity<?> getAdsFromDiscount(@RequestParam("discountId") Long discountId) {
+        return new ResponseEntity<>(adService.findAdsFromDiscount(discountId), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/add-discount", method = RequestMethod.GET)
+    public ResponseEntity<?> addDiscount(@RequestParam("discountId") Long discountId) {
+        return new ResponseEntity<>(adService.addDiscount(discountId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/add-discount-to-ad", method = RequestMethod.GET)
+    public ResponseEntity<?> addDiscountToAd(@RequestParam("discountId") Long discountId, @RequestParam("adId") Long adId) {
+        return new ResponseEntity<>(adService.addDiscountToAd(discountId, adId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/remove-discount-from-ad", method = RequestMethod.GET)
+    public ResponseEntity<?> removeDiscountToAd(@RequestParam("discountId") Long discountId, @RequestParam("adId") Long adId) {
+        return new ResponseEntity<>(adService.removeDiscountToAd(discountId, adId), HttpStatus.OK);
+    }
 }

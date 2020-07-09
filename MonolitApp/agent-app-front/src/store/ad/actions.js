@@ -23,7 +23,16 @@ import{
     FETCH_ALL_COMMENTS_FROM_USER,
     FETCH_BEST_GRADE,
     FETCH_MAX_MILEAGE,
-    FETCH_MAX_COMMENTS
+    FETCH_MAX_COMMENTS,
+    PUT_DISCOUNTS,
+    FETCH_DISCOUNTS,
+    FETCH_DISCOUNTS_FROM_AGENT,
+    FETCH_DISCOUNTS_FROM_AD,
+    ADD_DISCOUNT,
+    EDIT_DISCOUNT,
+    DELETE_DISCOUNT,
+    ADD_DISCOUNT_TO_AD,
+    REMOVE_DISCOUNT_FROM_AD
 } from './constants';
 
 
@@ -152,3 +161,41 @@ export const fetchMaxComments = payload => ({
     payload
 });
 
+export const putDiscounts = payload => ({
+    type: PUT_DISCOUNTS,
+    payload
+});
+
+export const fetchDiscounts = payload => ({
+    type: FETCH_DISCOUNTS,
+    payload
+});
+
+export const fetchDiscountsFromAgent = payload => ({
+    type: FETCH_DISCOUNTS_FROM_AGENT,
+    payload
+});
+
+
+export const addDiscount = payload => ({
+    type: ADD_DISCOUNT,
+    payload
+});
+export const editDiscount = payload => ({
+    type: EDIT_DISCOUNT,
+    payload
+});
+export const deleteDiscount = payload => ({
+    type: DELETE_DISCOUNT,
+    payload
+});
+
+export const addDiscountToAd = payload => ({
+    type: ADD_DISCOUNT_TO_AD,
+    payload
+});
+
+export const removeDiscountFromAd = payload => ({
+    type: REMOVE_DISCOUNT_FROM_AD,
+    payload
+});

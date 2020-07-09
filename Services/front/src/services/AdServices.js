@@ -5,7 +5,8 @@ const FINALPOINTS = {
     AD_BASE: '/ad/ad',
     IMAGE_BASE: '/ad/image',
     CALENDAR_BASE: 'ad/calendar',
-    COMMENT_BASE: 'ad/comment'
+    COMMENT_BASE: 'ad/comment',
+    
 
 };
 
@@ -236,6 +237,16 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    reversePricelist = async payload =>{
+        console.log("REVERSE PRICELIST") 
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/reverse-pricelist",
+            payload
+        );
+        return response.data;
+    };
+
+    
 }
 
 

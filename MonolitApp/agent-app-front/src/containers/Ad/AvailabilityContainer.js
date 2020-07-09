@@ -21,6 +21,10 @@ const AvailabilityContainer = (props) => {
     const [endDate, setEndDate] = useState(null);
     const [flag, setFlag] = useState(true);
 
+    //occupation
+    const [occupationStart, setOccupationStart] = useState(null);
+    const [occupationEnd, setOccupationEnd] = useState(null);
+
     useEffect(() => {
         dispatch(
             fetchCalendar({
@@ -69,49 +73,6 @@ const AvailabilityContainer = (props) => {
         }
         return list;
     }
-
-
-    // const addTerm = (event) => {
-    //     event.preventDefault();
-    //     const form = event.target;
-
-    //     if (form.checkValidity() === false) {
-    //         event.stopPropagation();
-    //         setValidated(true);
-    //     } else {
-    //         let flag = false;
-    //         if (calendar.isFetch) {
-    //             if (calendar.data != "") {
-    //                 calendar.data.map((temp) => {
-    //                     if (temp.startDate <= startDate && startDate <= temp.endDate) {
-    //                         flag = true;
-    //                         console.log("start date je izmedju")
-    //                     } else if (temp.startDate <= endDate && endDate <= temp.endDate) {
-    //                         flag = true;
-    //                         console.log("end date je izmedju")
-    //                     }
-    //                 });
-    //             }
-    //         }
-
-    //         if (flag === true) {
-    //             console.log("ne mozes da dodas datum.");
-    //             alert("Datumi se ne smeju preklapati.");
-    //         } else {
-
-    //             console.log("DODAJ DATUM.");
-    //             let temp = {
-    //                 'adId': props.adId,
-    //                 'startDate': startDate,
-    //                 'endDate': endDate
-    //             };
-    //             console.log(temp);
-    //             add(temp);
-    //             setValidated(false);
-    //         }
-
-    //     }
-    // }
 
     const addTermToCalendar = () => {
         if (startDate != null && endDate != null) {
@@ -182,6 +143,15 @@ const AvailabilityContainer = (props) => {
     const handleEndDate = (event) => {
         setEndDate(event.target.value);
     }
+    const handleOccupationStart = (event)=> {
+
+    }
+    const handleOccupationEnd = (event)=> {
+        
+    }
+    const addOccupation =(event) => {
+        
+    }
 
     return (
         <Container >
@@ -204,6 +174,13 @@ const AvailabilityContainer = (props) => {
                         flag={flag}
                         validated={validated}
                         carCalendarTermList={carCalendarTermList}
+
+                        //occupation
+                        occupationStart={occupationStart}
+                        occupationEnd={occupationEnd}
+                        handleOccupationStart={handleOccupationStart}
+                        handleOccupationEnd={handleOccupationEnd}
+                        addOccupation={addOccupation}
                     />
 
                 </Col>

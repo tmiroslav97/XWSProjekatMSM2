@@ -20,7 +20,16 @@ import{
     FETCH_COMMENTS,
     APPROVED_COMMENT,
     FETCH_ALL_COMMENTS,
-    FETCH_ALL_COMMENTS_FROM_USER
+    FETCH_ALL_COMMENTS_FROM_USER,
+    PUT_DISCOUNTS,
+    FETCH_DISCOUNTS,
+    FETCH_DISCOUNTS_FROM_AGENT,
+    FETCH_DISCOUNTS_FROM_AD,
+    ADD_DISCOUNT,
+    EDIT_DISCOUNT,
+    DELETE_DISCOUNT,
+    ADD_DISCOUNT_TO_AD,
+    REMOVE_DISCOUNT_FROM_AD
 } from './constants';
 
 export const putSearchData = payload => ({
@@ -129,5 +138,44 @@ export const fetchAllCommentsFromUser = payload => ({
 
 export const approvedComment = payload => ({
     type: APPROVED_COMMENT,
+    payload
+});
+
+export const putDiscounts = payload => ({
+    type: PUT_DISCOUNTS,
+    payload
+});
+
+export const fetchDiscounts = payload => ({
+    type: FETCH_DISCOUNTS,
+    payload
+});
+
+export const fetchDiscountsFromAgent = payload => ({
+    type: FETCH_DISCOUNTS_FROM_AGENT,
+    payload
+});
+
+
+export const addDiscount = payload => ({
+    type: ADD_DISCOUNT,
+    payload
+});
+export const editDiscount = payload => ({
+    type: EDIT_DISCOUNT,
+    payload
+});
+export const deleteDiscount = payload => ({
+    type: DELETE_DISCOUNT,
+    payload
+});
+
+export const addDiscountToAd = payload => ({
+    type: ADD_DISCOUNT_TO_AD,
+    payload
+});
+
+export const removeDiscountFromAd = payload => ({
+    type: REMOVE_DISCOUNT_FROM_AD,
     payload
 });

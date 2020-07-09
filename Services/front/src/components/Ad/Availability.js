@@ -11,34 +11,52 @@ const Availability = (props) => {
             >
                 <Form.Row>
                     <Col>
+                        <Form.Label>Unesi slobodan termin:</Form.Label>
+                    </Col>
+                    <Col>
+                        <Form.Control required name="startDate" id="startDate" type="datetime-local"
+                            min={props.getCurrentDate()}
+                            onChange={props.handleOccupationStart}
+                            placeholder="Datum pocetka"
+                        />
+                    </Col>
+                    <Col>
+                        <Form.Control required name="endDate" id="endDate" type="datetime-local"
+                            min={props.occupationStart}
+                            onChange={props.handleOccupationEnd}
+                            placeholder="Datum kraja"
+                        />
+                    </Col>
+                    <Col>
+                        <Button 
+                        onClick={props.addOccupation}
+                         >Dodaj</Button>
+                    </Col>
+                </Form.Row>
+                <Form.Row>
+                    <Col>
                         <Form.Label>Unesi zauzece:</Form.Label>
                     </Col>
                     <Col>
                         <Form.Control required name="startDate" id="startDate" type="datetime-local"
                             min={props.getCurrentDate()}
-                            onChange={props.handleStartDate}
+                            // onChange={props.handleStartDate}
                             placeholder="Datum pocetka"
                         />
                     </Col>
                     <Col>
                         <Form.Control required name="endDate" id="endDate" type="datetime-local"
                             min={props.startDate}
-                            onChange={props.handleEndDate}
-
+                            // onChange={props.handleEndDate}
                             placeholder="Datum kraja"
                         />
                     </Col>
                     <Col>
                         <Button //type="submit"
-                        onClick={props.addTermToCalendar}
+                        // onClick={props.addTermToCalendar}
                          >Dodaj</Button>
                     </Col>
                 </Form.Row>
-
-                {/* {props.flag === 0 ?
-                    <label style={{color:"red"}}>Unesite bar jedan termin</label>
-                    :null
-                } */}
 
                 <br />
                 <Form.Row>

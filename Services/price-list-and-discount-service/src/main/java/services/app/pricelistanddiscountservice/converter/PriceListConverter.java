@@ -16,6 +16,16 @@ public class PriceListConverter extends AbstractConverter{
                 .build();
     }
 
+    public static PriceList toEditPriceListFromRequest(PriceListCreateDTO priceListCreateDTO){
+        return PriceList.builder()
+                .id(priceListCreateDTO.getId())
+                .pricePerKm(priceListCreateDTO.getPricePerKm())
+                .pricePerKmCDW(priceListCreateDTO.getPricePerKmCDW())
+                .pricePerDay(priceListCreateDTO.getPricePerDay())
+                .publisherUser(priceListCreateDTO.getPublisherUserId())
+                .build();
+    }
+
     public static PriceListCreateDTO toCreatePriceListCreateDTOFromPriceList(PriceList priceList){
         return PriceListCreateDTO.builder()
                 .id(priceList.getId())

@@ -30,7 +30,15 @@ public interface AdService {
     Integer addRatingToAd(AdRatingDTO adRatingDTO);
 
     AdDetailViewDTO getAdDetailView(Long ad_id);
+    List<Long> findPricelistsFromAds();
+    List<Ad> findAllFromPublisher(Long publisherId);
+    Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
     String findAdCarInfoById(Long id);
+    List<Long> findAdsFromDiscount(Long discountId);
+    Integer addDiscountToAd(Long discountId, Long adId);
+    Integer removeDiscountToAd(Long discountId, Long adId);
+    Integer addDiscount(Long discountId);
+
 
 
 }
