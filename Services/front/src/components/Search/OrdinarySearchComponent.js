@@ -5,18 +5,20 @@ import Nouislider from 'react-nouislider';
 import 'nouislider/distribute/nouislider.css';
 import 'nouislider/src/nouislider.tooltips.less';
 import 'nouislider/src/nouislider.pips.less';
+import Slider from '@material-ui/core/Slider';
+
 
 const OrdinarySearchComponent = (props) => {
 
     return (
-        <Card >
+        <Card >            
             <Card.Body>
                 <Form id="search" onSubmit={props.onSubmit} noValidate validated={props.validated}>
                     <Row>
                         <Col>
                             <Form.Group controlId="formBasicLokacija">
                                 <Form.Label>Lokacija</Form.Label>
-                                <Form.Control type="text" required name="location" defaultValue={props.location} onChange={props.hanleLocation} placeholder="Unesite naziv lokacije..." />
+                                <Form.Control type="text" required name="location" defaultValue={props.location} placeholder="Unesite naziv lokacije..." />
                                 <Form.Text className="text-muted">
                                 </Form.Text>
                             </Form.Group>
@@ -91,30 +93,40 @@ const OrdinarySearchComponent = (props) => {
                                 <Col>
                                     <Form.Group>
                                         <Form.Label>Predjeni kilometri</Form.Label>
-                                        <Form.Control required name="mileage" id="numMileage" type="number" onChange={props.handleKm1} placeholder="Predjeni kilometri" defaultValue="0" />
+                                        <Form.Control required name="mileage" id="numMileage" type="number" placeholder="Predjeni kilometri" defaultValue="0" />
                                     </Form.Group>
                                     <Form.Group>
                                         <Form.Label>Planirana kilometraza</Form.Label>
-                                        <Form.Control required name="mileageKM" id="numMileageKM" type="number" onChange={props.handleKm2} placeholder="Predjeni kilometri" defaultValue="0" />
+                                        <Form.Control required name="mileageKM" id="numMileageKM" type="number" placeholder="Predjeni kilometri" defaultValue="0" />
                                     </Form.Group>
                                     <Form.Group >
                                         <Form.Label>Broj sedista za decu</Form.Label>
-                                        <Form.Control required name="childrenSeatNum" id="numChildrenSeatNum" type="number" onChange={props.handleSeat} pattern=".{0,8}" placeholder="Broj sedista za decu" defaultValue="3" />
+                                        <Form.Control required name="childrenSeatNum" id="numChildrenSeatNum" type="number" pattern=".{0,8}" placeholder="Broj sedista za decu" defaultValue="3" />
                                         <Form.Control.Feedback type="invalid">
                                             min 0 max 8 sedista
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                     <Form.Group >
-                                        <Form.Label>Unesi opseg cijene</Form.Label>
+                                        <Form.Label>Unesi opseg cijene (RSD)</Form.Label>
                                         <br />
                                         <br />
                                         <br />
                                         <Nouislider
-                                            range={{ min: 0, max: 10000 }}
-                                            start={[props.lowValue, props.highValue]}
+                                            range={{ min: 0, max: 10000}}
+                                            start={[parseInt(props.lowValue), parseInt(props.highValue)]}
                                             connect={true}
+                                            step={100}
                                             onChange={props.handleChangePrice}
                                             tooltips />
+
+                                    {/* <Slider
+                                    value={[props.lowValue, props.highValue]}
+                                    onChange={props.handleChangePrice}
+                                    defaultValue={{ min: 0, max: 10000 }}
+                                    valueLabelDisplay="auto"
+                                    aria-labelledby="range-slider"
+                                    getAriaValueText={valuetext}
+                                    /> */}
 
                                     </Form.Group>
 

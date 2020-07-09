@@ -6,7 +6,8 @@ import{
     PUT_PRICE_LIST,
     ADD_PRICE_LIST,
     EDIT_PRICE_LIST,
-    DELETE_PRICE_LIST
+    DELETE_PRICE_LIST,
+    REVERSE_PRICE_LIST
 } from './constants';
 
 export const fetchPriceLists = payload => ({
@@ -46,5 +47,10 @@ export const editPriceList = payload => ({
 
 export const deletePriceList = payload => ({
     type: DELETE_PRICE_LIST,
+    payload
+});
+
+export const reversePricelist = payload => ({
+    type: REVERSE_PRICE_LIST,
     payload
 });

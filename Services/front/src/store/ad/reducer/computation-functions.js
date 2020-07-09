@@ -43,3 +43,10 @@ export function putComments(state, payload) {
         comments: payload
     };
 }
+
+export function putDiscounts(state, payload){
+    return {
+        ...state,
+        discounts: payload
+    };
+}

@@ -29,4 +29,6 @@ public class DbColumnConstants {
     public static final String CDW = "cdw";
     public static final String TOKEN = "token";
     public static final String REPORT = "report";
+    public static final String AMOUNT = "amount";
+    public static final String EMAIL = "email";
 }

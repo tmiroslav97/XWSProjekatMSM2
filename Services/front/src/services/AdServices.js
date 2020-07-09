@@ -5,7 +5,8 @@ const FINALPOINTS = {
     AD_BASE: '/ad/ad',
     IMAGE_BASE: '/ad/image',
     CALENDAR_BASE: 'ad/calendar',
-    COMMENT_BASE: 'ad/comment'
+    COMMENT_BASE: 'ad/comment',
+    
 
 };
 
@@ -81,7 +82,8 @@ class AdServices extends HttpBaseClient {
             FINALPOINTS.AD_SEARCH_BASE + '/ad', {
             params: {
                 nextPage: payload.nextPage,
-                size: payload.size
+                size: payload.size,
+                sort: payload.sort
             }
         }
         );
@@ -120,8 +122,21 @@ class AdServices extends HttpBaseClient {
                 location: payload.location,
                 startDate: payload.startDate,
                 endDate: payload.endDate,
+                carManufacturer: payload.carManufacturer,
+                carModel: payload.carModel,
+                carType: payload.carType,
+                mileage: payload.mileage,
+                mileageKM: payload.mileageKM,
+                gearboxType: payload.gearboxType,
+                fuelType: payload.fuelType,
+                childrenSeatNum: payload.childrenSeatNum,
+                cdw: payload.cdw,
+                startPrice: payload.startPrice,
+                endPrice: payload.endPrice,
+                advancedSearch: payload.advancedSearch,
                 nextPage: payload.nextPage,
-                size: payload.size
+                size: payload.size,
+                sort: payload.sort
             }
         }
         );
@@ -231,6 +246,16 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
+    reversePricelist = async payload =>{
+        console.log("REVERSE PRICELIST") 
+        const response = await this.getApiClient().post(
+            FINALPOINTS.AD_BASE + "/reverse-pricelist",
+            payload
+        );
+        return response.data;
+    };
+
+    
 }
 
 

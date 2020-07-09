@@ -91,6 +91,12 @@ public class Report {
     @XmlSchemaType(name = "long")
     protected Long adId;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = DbTableConstants.REPORTINVOICE,
+            joinColumns = @JoinColumn(name = "report_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "invoice_id", referencedColumnName = "id"))
+    protected Invoice invoice;
+
     /**
      * Gets the value of the id property.
      * 
