@@ -575,4 +575,88 @@ public class AdServiceImpl implements AdService {
         return discountListService.addDiscount(discountId);
     }
 
+    @Override
+    public List<Ad> findMyAds(Long publisher_id) {
+
+        return adRepository.findAllByDeletedAndPublisherUserId(false, publisher_id);
+    }
+
+    @Override
+    public AdStatisticsDTO findBestAverageGrade(Long publisher_id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        System.out.println(principal.getEmail());
+        Ad adT = null;
+        double averageGrade = 0.0;
+        double max = 0.0;
+        System.out.println("Average method");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+                averageGrade = 0.0;
+                max = averageGrade;
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                averageGrade = ad.getRatingNum() / ad.getRatingCnt();
+                System.out.println("Izracunata ocjena: " + averageGrade);
+                if (averageGrade > max) {
+                    System.out.println("Average: " + averageGrade);
+                    max = averageGrade;
+                    adT = ad;
+                }
+            }
+        }
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        System.out.println("Konacna ocj " + adPage.getAverageGrade());
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxMileage(Long publisher_id) {
+        Ad adT = null;
+        float max = 0;
+        System.out.println("Average method za kilometrazu");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                if (ad.getCar().getMileage() > max) {
+                    System.out.println("Max km: " + ad.getCar().getMileage());
+                    max = ad.getCar().getMileage();
+                    adT = ad;
+                }
+            }
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxComment(Long publisher_id) {
+        Ad adT = null;
+        int max = 0;
+        System.out.println("Average method za komentare");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                if (ad.getComments().size() >= max) {
+                    System.out.println("Komentari "  + ad.getComments().size());
+                    max = ad.getComments().size();
+                    adT = ad;
+                }
+            }
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
 }

@@ -1,10 +1,7 @@
 package services.app.adservice.converter;
 
 import org.apache.commons.io.FileUtils;
-import services.app.adservice.dto.ad.AdCreateDTO;
-import services.app.adservice.dto.ad.AdDetailViewDTO;
-import services.app.adservice.dto.ad.AdPageDTO;
-import services.app.adservice.dto.ad.AdSynchronizeDTO;
+import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
 import services.app.adservice.model.Image;
@@ -130,6 +127,19 @@ public class AdConverter extends AbstractConverter {
                 .ratingCnt(adSyncDTO.getRatingCnt())
                 .ratingNum(adSyncDTO.getRatingNum())
                 .comments(new HashSet<>())
+                .build();
+    }
+
+    public static AdStatisticsDTO toCreateAdStatisticsDTOFromAd(Ad ad) {
+        return AdStatisticsDTO.builder()
+                .id(ad.getId())
+                .name(ad.getName())
+                .location(ad.getLocation())
+                .carManufacturer(ad.getCar().getCarManufacturer())
+                .carModel(ad.getCar().getCarModel())
+                .mileage(ad.getCar().getMileage())
+                .averageGrade((float) (ad.getRatingNum() * 1.0 / ad.getRatingCnt()))
+                .comment(ad.getComments().size())
                 .build();
     }
 }
