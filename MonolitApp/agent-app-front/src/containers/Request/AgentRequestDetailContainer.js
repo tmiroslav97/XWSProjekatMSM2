@@ -37,20 +37,23 @@ const AgentRequestDetailContainer = (props) => {
     const handleSubmitReport = (event) => {
         console.log(selectedAd);
         event.preventDefault();
+     
         const form = event.target;
-        const data = new FormData(event.target);
-
+        let data = null;
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);
         } else {
-            const data = {
-                "distanceTraveled": data.get('distanceTraveled'),
-                "description": data.get('description'),
-                "adId": selectedAd
+             data = {
+                "distanceTraveled": form.distanceTraveled.value,
+                "description": form.description.value,
+                "adId": selectedAd,
+                "email": request.endUserEmail
             };
+            console.log(data)
             submitReport(data);
             setValidated(false);
+            fetchRequest();
         }
     }
 
