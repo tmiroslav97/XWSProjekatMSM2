@@ -8,6 +8,8 @@ import AgentRequestDetailComponent from '../../components/Request/AgentRequestDe
 import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 import ReportSubmitComponent from '../../components/Report/ReportSubmitComponent';
 import FormModalContainer from '../Common/FormModalContainer';
+import ReportService from '../../services/ReportService';
+
 
 const AgentRequestDetailContainer = (props) => {
     const id = props.match.params.id;
@@ -26,7 +28,7 @@ const AgentRequestDetailContainer = (props) => {
     }
 
     const submitReport = async (payload) => {
-        const result = await RequestService.submitReport(payload);
+        const result = await ReportService.submitReport(payload);
         fetchRequest();
     }
 
@@ -53,6 +55,7 @@ const AgentRequestDetailContainer = (props) => {
             console.log(data)
             submitReport(data);
             setValidated(false);
+            setShowForm(false);
             fetchRequest();
         }
     }

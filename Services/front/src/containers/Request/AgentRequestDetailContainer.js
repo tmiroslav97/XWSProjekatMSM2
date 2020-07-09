@@ -55,6 +55,8 @@ const AgentRequestDetailContainer = (props) => {
             console.log(data)
             submitReport(data);
             setValidated(false);
+            setShowForm(false);
+
             fetchRequest();
         }
     }

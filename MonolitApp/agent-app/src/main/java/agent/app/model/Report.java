@@ -4,7 +4,6 @@ import agent.app.common.db.DbColumnConstants;
 import agent.app.common.db.DbTableConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CollectionId;
 
 import javax.persistence.*;
 
@@ -36,6 +35,7 @@ public class Report {
             inverseJoinColumns = @JoinColumn(name = "invoice_id", referencedColumnName = "id"))
     protected Invoice invoice;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private PublisherUser publisherUser;
 
