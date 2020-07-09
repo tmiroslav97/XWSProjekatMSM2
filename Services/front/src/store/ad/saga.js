@@ -73,6 +73,8 @@ export function* createdAdPhotos() {
 
 export function* fetchAds() {
     const { payload } = yield take(FETCH_ADS);
+    console.log(payload)
+
     yield put(putAds({ 'isFetch': false }));
     const data = yield call(AdServices.fetchAdsPaginated, payload);
     yield put(putAds({
@@ -80,6 +82,7 @@ export function* fetchAds() {
         'totalPageCnt': data.totalPageCnt,
         'nextPage': payload.nextPage,
         'size': payload.size,
+        'sort': payload.sort,
         'isFetch': true
     }));
 }
@@ -130,6 +133,7 @@ export function* searchAd() {
         'totalPageCnt': data.totalPageCnt,
         'nextPage': payload.data.nextPage,
         'size': payload.data.size,
+        'sort': payload.data.sort,
         'isFetch': true
     }));
 

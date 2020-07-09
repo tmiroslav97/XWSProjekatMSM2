@@ -3,6 +3,8 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 import AgentRequestsComponent from '../../components/Request/AgentRequestsComponent';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
+import ReportService from '../../services/ReportService';
+
 import { useDispatch } from 'react-redux';
 import AgentRequestDetailComponent from '../../components/Request/AgentRequestDetailComponent';
 import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
@@ -26,7 +28,7 @@ const AgentRequestDetailContainer = (props) => {
     }
 
     const submitReport = async (payload) => {
-        const result = await RequestService.submitReport(payload);
+        const result = await ReportService.submitReport(payload);
         fetchRequest();
     }
 
@@ -37,20 +39,23 @@ const AgentRequestDetailContainer = (props) => {
     const handleSubmitReport = (event) => {
         console.log(selectedAd);
         event.preventDefault();
+     
         const form = event.target;
-        const data = new FormData(event.target);
-
+        let data = null;
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);
         } else {
-            const data = {
-                "distanceTraveled": data.get('distanceTraveled'),
-                "description": data.get('description'),
-                "adId": selectedAd
+             data = {
+                "distanceTraveled": form.distanceTraveled.value,
+                "description": form.description.value,
+                "adId": selectedAd,
+                "email": request.endUserEmail
             };
+            console.log(data)
             submitReport(data);
             setValidated(false);
+            fetchRequest();
         }
     }
 

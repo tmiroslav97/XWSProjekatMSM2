@@ -54,6 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers("/ad/search/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterAfter(authenticationTokenFilterBean(),

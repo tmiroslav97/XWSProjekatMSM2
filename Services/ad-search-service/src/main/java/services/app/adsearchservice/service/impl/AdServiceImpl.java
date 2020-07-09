@@ -97,12 +97,24 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+    public AdPageContentDTO findAllOrdinarySearch(Integer page, Integer size, String location, String startDate, String endDate, String sort) {
+        Pageable pageable = null;
+        String[] parts = sort.split(" ");
+        String sortParam = parts[0];
+        String sortType = parts[1];
+        if (sortParam.equals("mileage")) {
+            pageable = PageRequest.of(page, size);
+        } else {
+            if(sortType.equals("asc"))
+                pageable = PageRequest.of(page, size, Sort.by(sortParam).ascending());
+            else
+                pageable = PageRequest.of(page, size, Sort.by(sortParam).descending());
+        }
         Page<Ad> ads;
         if (location.equals("") || startDate.equals("") || endDate.equals("")) {
             ads = adRepository.findAllByDeleted(false, pageable);
         } else {
+
             DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
             DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
             ads = adRepository.findByDeletedAndLocationAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startD, endD, pageable);
@@ -121,7 +133,67 @@ public class AdServiceImpl implements AdService {
             adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
             ret.add(adPageDTO);
         }
+        if (sortParam.equals("mileage")) {
+            if(sortType.equals("asc"))
+                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o1.getMileage() - o2.getMileage()));
+            else
+                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o2.getMileage() -  o1.getMileage()));
+        }
+        AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
+                .totalPageCnt(ads.getTotalPages())
+                .ads(ret)
+                .build();
 
+        return adPageContentDTO;
+    }
+
+    @Override
+    public AdPageContentDTO findAllAdvancedSearch(Integer page, Integer size, String location, String startDate, String endDate,
+                                                  String carManufacturer, String carModel, String carType, Float mileage,
+                                                  Float mileageKM, String gearboxType, String fuelType, Integer childrenSeatNum,
+                                                  Boolean cdw, Float startPrice, Float endPrice, String sort) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).ascending());
+        Pageable pageable;
+
+        String[] parts = sort.split(" ");
+        String sortParam = parts[0];
+        String sortType = parts[1];
+
+        if (sortParam.equals("mileage")) {
+            pageable = PageRequest.of(page, size);
+        } else {
+            if(sortType.equals("asc"))
+                pageable = PageRequest.of(page, size, Sort.by(sortParam).ascending());
+            else
+                pageable = PageRequest.of(page, size, Sort.by(sortParam).descending());
+        }
+        Page<Ad> ads;
+        DateTime startD = DateAPI.DateTimeStringToDateTimeFromFronted(startDate);
+        DateTime endD = DateAPI.DateTimeStringToDateTimeFromFronted(endDate);
+        ads = adRepository.findByDeletedAndCarCalendarTermsStartDateBeforeAndCarCalendarTermsEndDateAfter(false, location, startD, endD, carManufacturer, carModel,
+                carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum, cdw, startPrice, endPrice, pageable);
+
+        List<AdPageDTO> ret = new ArrayList<>();
+        for (Ad ad : ads) {
+            String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, ad.getPublisherUser());
+            UserFLNameDTO userFLNameDTO;
+            try {
+                userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
+            } catch (JsonProcessingException exception) {
+                userFLNameDTO = new UserFLNameDTO();
+            }
+            AdPageDTO adPageDTO = AdConverter.toCreateAdPageDTOFromAd(ad, appConfig.getPhotoDir());
+            adPageDTO.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
+            adPageDTO.setPublisherUserLastName(userFLNameDTO.getUserLastName());
+            ret.add(adPageDTO);
+        }
+
+        if (sortParam.equals("mileage")) {
+            if(sortType.equals("asc"))
+                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o1.getMileage() - o2.getMileage()));
+            else
+                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o2.getMileage() -  o1.getMileage()));
+        }
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
                 .ads(ret)
@@ -155,11 +227,6 @@ public class AdServiceImpl implements AdService {
         } catch (JsonProcessingException exception) {
             return null;
         }
-    }
-
-    @Override
-    public AdPageDTO advancedSearch() {
-        return null;
     }
 
     @Override

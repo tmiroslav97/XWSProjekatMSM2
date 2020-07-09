@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import AdComponent from '../../components/Ad/AdComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
@@ -12,6 +12,7 @@ import { loadImage } from '../../store/ad/saga';
 import jwt_decode from 'jwt-decode';
 import { putSuccessMsg, putWarnMsg } from '../../store/common/actions';
 import { putAds } from '../../store/ad/actions';
+import Form from 'react-bootstrap/Form'
 
 
 const AdListContainer = () => {
@@ -23,7 +24,7 @@ const AdListContainer = () => {
     const [size, setSize] = useState(ads.size);
     const [namePhoto, setNamePhoto] = useState();
     const token = localStorage.getItem('token');
-
+    const [sort, setSort] = useState(ads.sort);
 
     useEffect(() => {
         dispatch(
@@ -32,12 +33,25 @@ const AdListContainer = () => {
                     'location': searchData.location,
                     'startDate': searchData.startDate,
                     'endDate': searchData.endDate,
+                    'carManufacturer': searchData.carManufacturer,
+                    'carModel': searchData.carModel,
+                    'carType': searchData.carType,
+                    'mileage': searchData.mileage,
+                    'mileageKM': searchData.mileageKM,
+                    'gearboxType': searchData.gearboxType,
+                    'fuelType': searchData.fuelType,
+                    'childrenSeatNum': searchData.childrenSeatNum,
+                    'cdw': searchData.cdw,
+                    'startPrice': searchData.startPrice,
+                    'endPrice': searchData.endPrice,
+                    'advancedSearch': searchData.advancedSearch,
                     'nextPage': nextPage,
-                    'size': size
+                    'size': size,
+                    'sort': sort
                 }
             })
         );
-    }, [nextPage, size]);
+    }, [nextPage, size, sort]);
 
     const hasRole = (accessRole) => {
 
@@ -92,7 +106,36 @@ const AdListContainer = () => {
         <Container>
             <Row>
                 <Col>
-                    <OrdinarySearchContainer></OrdinarySearchContainer>
+                    <OrdinarySearchContainer sort={sort}></OrdinarySearchContainer>
+                </Col>
+            </Row>
+            <Row>
+                <Col md={12} xs={12}>
+                    <Container>
+                        <Row>
+                            
+                               <Col md={{ span: 6 }} xs={12}>
+                                    <Form.Row>
+                                        <Form.Label >Sortiraj rezultate po: </Form.Label>
+                                        <Form.Group as={Col} md={7} xs={12}>
+                                            <Form.Control as="select" id="sort" value={sort} onChange={({ currentTarget }) => {
+                                                setSort(currentTarget.value);
+                                            }}>
+                                                <option key="1" value="name desc">imenu opadajuce</option>
+                                                <option key="2" value="name asc">imenu rastuce</option>
+                                                <option key="3" value="pricePerDay desc">cijeni opadajuce</option>
+                                                <option key="4" value="pricePerDay asc">cijeni rastuce</option>
+                                                <option key="5" value="mileage desc">kilometrazi opadajuce</option>
+                                                <option key="6" value="mileage asc">kilometrazi rastuce</option>
+                                            </Form.Control> 
+                                        </Form.Group>
+                                    </Form.Row>
+
+                                </Col>
+                                
+
+                        </Row>
+                    </Container>
                 </Col>
             </Row>
             <Row>
@@ -102,7 +145,6 @@ const AdListContainer = () => {
             </Row>
             <Row>
                 <Col >
-
                     {
                         isFetchAds ? <AdComponent ads={ads.data} token={token} addToCart={addToCart} hasRole={hasRole} handleCoverPh={handleCoverPh} /> : <SpinnerContainer />
                     }

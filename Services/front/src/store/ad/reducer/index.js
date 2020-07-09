@@ -18,6 +18,7 @@ const initialState = {
         totalPageCnt: 0,
         nextPage: 0,
         size: 10,
+        sort:  'name asc',
         isFetch: false
     },
     imageName: {
@@ -42,8 +43,21 @@ const initialState = {
         location: '',
         startDate: '',
         endDate: '',
+        carManufacturer: '',
+        carModel: '',
+        carType: '',
+        mileage: '',
+        mileageKM: '',
+        gearboxType: '',
+        fuelType: '',
+        childrenSeatNum: 0,
+        cdw: false,
+        startPrice: 0,
+        endPrice: 0,
+        advancedSearch: false,
         nextPage: 0,
-        size : 10
+        size : 10,
+        sort: 'name asc'
     },
     comments:{
         data: [],
