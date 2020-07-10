@@ -33,6 +33,11 @@ public class ConversationServiceImpl implements ConversationService {
         return conversationRepository.findById(id).orElseThrow(() -> new NotFoundException("Konverzacija ne postoji"));
     }
 
+    @Override
+    public Conversation findByMainId(Long mainId) {
+        return conversationRepository.findByMainId(mainId);
+    }
+
 
     @Override
     public List<ConversationDTO> findAllConversationDTOByParticipantId(String email) {

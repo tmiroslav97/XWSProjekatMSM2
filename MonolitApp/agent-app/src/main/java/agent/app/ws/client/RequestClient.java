@@ -6,8 +6,6 @@ import services.app.carrequestservice.model.AcceptResponse;
 
 public class RequestClient extends WebServiceGatewaySupport {
 
-
-
     public String acceptRequest(String email, String identifier, Long id, String action) {
         AcceptRequest request = new AcceptRequest();
         request.setPublisherUserEmail(email);

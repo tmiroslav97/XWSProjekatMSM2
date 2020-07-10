@@ -12,6 +12,8 @@ public interface MessageService {
 
     void setAllConversationMessagesFromRecieverToSeen(Long conversationId, String recieverEmail);
 
+    String sendMessageSyncAgent(Message message, Long publisherUserId);
+
     Integer sendFirstMessage(MessageRequestDTO messageRequestDTO);
 
     Integer sendMessage(Message message, Long senderUserId);
@@ -23,4 +25,7 @@ public interface MessageService {
     void deleteById(Long id);
 
     void delete(Message message);
+
+    Long authAgent(String email, String identifier);
+
 }

@@ -9,6 +9,7 @@ import services.app.messageservice.config.RabbitMQConfiguration;
 import services.app.messageservice.converter.ConversationConverter;
 import services.app.messageservice.converter.DateAPI;
 import services.app.messageservice.converter.MessageConverter;
+import services.app.messageservice.dto.AgentFirmIdentificationDTO;
 import services.app.messageservice.dto.conversation.ConvMsgSyncDTO;
 import services.app.messageservice.dto.message.MessageRequestDTO;
 import services.app.messageservice.dto.user.UserFLNameDTO;
@@ -48,6 +49,24 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void setAllConversationMessagesFromRecieverToSeen(Long conversationId, String recieverEmail) {
         messageRepository.setAllConversationMessagesFromRecieverToSeen(conversationId, recieverEmail);
+    }
+
+    @Override
+    public String sendMessageSyncAgent(Message message, Long publisherUserId) {
+        try {
+            Conversation conversation = conversationService.findById(message.getConversationId());
+            String senderUserStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, publisherUserId);
+            UserFLNameDTO senderUser = objectMapper.readValue(senderUserStr, UserFLNameDTO.class);
+            message.setSenderId(senderUser.getUserId());
+            message.setSenderFirstName(senderUser.getUserFirstName());
+            message.setSenderLastName(senderUser.getUserLastName());
+            message = this.save(message);
+            conversation.getMessage().add(message);
+            conversationService.save(conversation);
+            return "Poruka uspjesno poslata";
+        } catch (JsonProcessingException exception) {
+            return "Poruka nije poslata";
+        }
     }
 
     @Override
@@ -111,6 +130,11 @@ public class MessageServiceImpl implements MessageService {
             message = this.save(message);
             conversation.getMessage().add(message);
             conversationService.save(conversation);
+            if (!recieverUser.getLocal()) {
+                String msgStr = objectMapper.writeValueAsString(message);
+                String routingKey = recieverUser.getUserEmail().replace("@", ".") + ".msg";
+                rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, msgStr);
+            }
             return 1;
         } catch (JsonProcessingException exception) {
             return 2;
@@ -136,5 +160,20 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void delete(Message message) {
         messageRepository.delete(message);
+    }
+
+    @Override
+    public Long authAgent(String email, String identifier) {
+        AgentFirmIdentificationDTO agentFirmIdentificationDTO = AgentFirmIdentificationDTO.builder()
+                .email(email)
+                .identifier(identifier)
+                .build();
+        try {
+            String agentFirmIdentificationDTOStr = objectMapper.writeValueAsString(agentFirmIdentificationDTO);
+            Long publisherUserId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, agentFirmIdentificationDTOStr);
+            return publisherUserId;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
     }
 }

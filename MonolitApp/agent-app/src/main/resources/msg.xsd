@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www.app.services/messageservice/model"
-    xmlns:tns="http://www.app.services/messageservice/model">
+           targetNamespace="http://www.app.services/messageservice/model"
+           xmlns:tns="http://www.app.services/messageservice/model">
     <xs:element name="sendMessageRequest">
         <xs:complexType>
             <xs:sequence>

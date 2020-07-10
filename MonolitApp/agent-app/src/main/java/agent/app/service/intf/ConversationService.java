@@ -9,6 +9,8 @@ import java.util.List;
 public interface ConversationService {
     Conversation findById(Long id);
 
+    Conversation findByMainId(Long mainId);
+
     List<ConversationDTO> findAllConversationDTOByParticipantId(String email);
 
     List<Message> findAllConversationMessages(Long id, String email);

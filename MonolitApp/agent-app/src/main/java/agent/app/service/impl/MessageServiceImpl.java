@@ -4,16 +4,13 @@ import agent.app.converter.DateAPI;
 import agent.app.dto.SignUpDTO;
 import agent.app.dto.conversation.ConvMsgSyncDTO;
 import agent.app.exception.NotFoundException;
-import agent.app.model.Conversation;
-import agent.app.model.EndUser;
-import agent.app.model.Message;
-import agent.app.model.PublisherUser;
+import agent.app.model.*;
 import agent.app.repository.MessageRepository;
 import agent.app.service.intf.*;
+import agent.app.ws.client.MsgClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,13 +30,16 @@ public class MessageServiceImpl implements MessageService {
     private EndUserService endUserService;
 
     @Autowired
+    private AgentService agentService;
+
+    @Autowired
     private PublisherUserService publisherUserService;
 
     @Autowired
     private AuthenticationService authenticationService;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private MsgClient msgClient;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -61,11 +61,34 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Integer sendMessage(Message message, String email) {
-//        Conversation conversation = conversationService.findById(message.getConversationId());
-//        if(conversation.getMainId()!=null){
-//            
-//        }
-        return 2;
+        Conversation conversation = conversationService.findById(message.getConversationId());
+        PublisherUser senderUser = publisherUserService.findByEmail(email);
+        Long recieverUserId;
+        if (conversation.getParticipantEndUserId() == senderUser.getId()) {
+            recieverUserId = conversation.getParticipantPublisherUserId();
+        } else {
+            recieverUserId = conversation.getParticipantEndUserId();
+        }
+        message.setRecieverSeen(false);
+        message.setSendDate(DateAPI.DateTimeNow());
+        message.setSenderId(senderUser.getId());
+        message.setSenderEmail(senderUser.getEmail());
+        message.setSenderFirstName(senderUser.getFirstName());
+        message.setSenderLastName(senderUser.getLastName());
+        message = this.save(message);
+        conversation.getMessage().add(message);
+        conversationService.save(conversation);
+        if (conversation.getMainId() != null) {
+            Agent agent = agentService.findByEmail(email);
+            services.app.messageservice.model.Message msgReq = new services.app.messageservice.model.Message();
+            msgReq.setSenderEmail(message.getSenderEmail());
+            msgReq.setSendDate(message.getSendDate());
+            msgReq.setConversationId(conversation.getMainId());
+            msgReq.setRecieverSeen(message.getRecieverSeen());
+            msgReq.setContent(message.getContent());
+            msgClient.sendMessage(msgReq, agent.getEmail(), agent.getIdentifier());
+        }
+        return 1;
     }
 
     @Override
@@ -134,6 +157,20 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @RabbitListener(queues = "#{autoDeleteMsg.name}")
     public void msgSync(String msg) {
-
+        try {
+            Message message = objectMapper.readValue(msg, Message.class);
+            Conversation conversation = conversationService.findByMainId(message.getConversationId());
+            message.setConversationId(conversation.getId());
+            message.setId(null);
+            EndUser endUser = endUserService.findByEmail(message.getSenderEmail());
+            message.setSenderId(endUser.getId());
+            message.setSenderEmail(endUser.getEmail());
+            message.setSenderFirstName(endUser.getFirstName());
+            message.setSenderLastName(endUser.getLastName());
+            message = this.save(message);
+            conversation.getMessage().add(message);
+            conversationService.save(conversation);
+        } catch (JsonProcessingException exception) {
+        }
     }
 }
