@@ -32,8 +32,6 @@ public class PublisherUser extends User {
     @OneToMany(mappedBy = "publisherUser", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private Set<Message> inbox = new HashSet<>();
 
     @OneToMany(mappedBy = "publisherUser", fetch = FetchType.LAZY)
     private Set<Report> reports = new HashSet<>();
@@ -45,14 +43,12 @@ public class PublisherUser extends User {
     public PublisherUser(Long id, String email, String password, String firstName,
                          String lastName, Boolean local, DateTime lastPasswordResetDate,
                          List<Authority> authorities, Boolean deleted, Set<Ad> ads,
-                         Set<PriceList> priceLists, Set<Comment> comments,
-                         Set<Message> inbox, Set<Report> reports, Set<Request> publisherUserRequests) {
+                         Set<PriceList> priceLists, Set<Comment> comments, Set<Report> reports, Set<Request> publisherUserRequests) {
         super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities);
         this.deleted = deleted;
         this.ads = ads;
         this.priceLists = priceLists;
         this.comments = comments;
-        this.inbox = inbox;
         this.reports = reports;
         this.publisherUserRequests = publisherUserRequests;
     }

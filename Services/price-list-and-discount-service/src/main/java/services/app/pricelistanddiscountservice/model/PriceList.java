@@ -8,14 +8,6 @@
 
 package services.app.pricelistanddiscountservice.model;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlSchemaType;
-import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -27,12 +19,16 @@ import services.app.pricelistanddiscountservice.common.db.DbColumnConstants;
 import services.app.pricelistanddiscountservice.common.db.DbTableConstants;
 import services.app.pricelistanddiscountservice.converter.DateAPI;
 
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 
 /**
  * <p>Java class for PriceList complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="PriceList"&gt;
  *   &lt;complexContent&gt;
@@ -49,8 +45,6 @@ import services.app.pricelistanddiscountservice.converter.DateAPI;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @Builder
 @AllArgsConstructor
@@ -58,22 +52,22 @@ import services.app.pricelistanddiscountservice.converter.DateAPI;
 @Setter
 @Getter
 @Entity
-@Table(name = DbTableConstants.DISCOUNTLIST)
+@Table(name = DbTableConstants.PRICELIST)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "PriceList", propOrder = {
-    "id",
-    "creationDate",
-    "pricePerDay",
-    "pricePerKm",
-    "pricePerKmCDW",
-    "publisherUser"
+        "id",
+        "creationDate",
+        "pricePerDay",
+        "pricePerKm",
+        "pricePerKmCDW",
+        "publisherUser"
 })
 public class PriceList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long id;
 
@@ -84,31 +78,31 @@ public class PriceList {
     })
     @Column(name = DbColumnConstants.CREATIONDATE, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter4 .class)
+    @XmlJavaTypeAdapter(Adapter4.class)
     @XmlSchemaType(name = "dateTime")
     protected DateTime creationDate;
 
     @Column(name = DbColumnConstants.PRICEPERDAY, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "float")
     protected Float pricePerDay;
 
     @Column(name = DbColumnConstants.PRICEPERKM)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "float")
     protected Float pricePerKm;
 
     @Column(name = DbColumnConstants.PRICEPERCWD)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter2 .class)
+    @XmlJavaTypeAdapter(Adapter2.class)
     @XmlSchemaType(name = "float")
     protected Float pricePerKmCDW;
 
     @Column(name = DbColumnConstants.PUBLISHERUSER, nullable = false)
     @XmlElement(required = true, type = String.class)
-    @XmlJavaTypeAdapter(Adapter5 .class)
+    @XmlJavaTypeAdapter(Adapter5.class)
     @XmlSchemaType(name = "long")
     protected Long publisherUser;
 
@@ -117,13 +111,16 @@ public class PriceList {
         return DateAPI.DateTimeToStringDateTime(creationDate);
     }
 
+    @JsonProperty("creationDate")
+    public void setTheCreationDate(String creationDate) {
+        this.creationDate = DateAPI.DateTimeStringToDateTime(creationDate);
+    }
+
     /**
      * Gets the value of the id property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getId() {
         return id;
@@ -131,11 +128,9 @@ public class PriceList {
 
     /**
      * Sets the value of the id property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setId(Long value) {
         this.id = value;
@@ -143,11 +138,9 @@ public class PriceList {
 
     /**
      * Gets the value of the creationDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public DateTime getCreationDate() {
         return creationDate;
@@ -155,11 +148,9 @@ public class PriceList {
 
     /**
      * Sets the value of the creationDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setCreationDate(DateTime value) {
         this.creationDate = value;
@@ -167,11 +158,9 @@ public class PriceList {
 
     /**
      * Gets the value of the pricePerDay property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Float getPricePerDay() {
         return pricePerDay;
@@ -179,11 +168,9 @@ public class PriceList {
 
     /**
      * Sets the value of the pricePerDay property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPricePerDay(Float value) {
         this.pricePerDay = value;
@@ -191,11 +178,9 @@ public class PriceList {
 
     /**
      * Gets the value of the pricePerKm property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Float getPricePerKm() {
         return pricePerKm;
@@ -203,11 +188,9 @@ public class PriceList {
 
     /**
      * Sets the value of the pricePerKm property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPricePerKm(Float value) {
         this.pricePerKm = value;
@@ -215,11 +198,9 @@ public class PriceList {
 
     /**
      * Gets the value of the pricePerKmCDW property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Float getPricePerKmCDW() {
         return pricePerKmCDW;
@@ -227,11 +208,9 @@ public class PriceList {
 
     /**
      * Sets the value of the pricePerKmCDW property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPricePerKmCDW(Float value) {
         this.pricePerKmCDW = value;
@@ -239,11 +218,9 @@ public class PriceList {
 
     /**
      * Gets the value of the publisherUser property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public Long getPublisherUser() {
         return publisherUser;
@@ -251,11 +228,9 @@ public class PriceList {
 
     /**
      * Sets the value of the publisherUser property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUser(Long value) {
         this.publisherUser = value;

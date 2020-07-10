@@ -12,6 +12,24 @@ const FINALPOINTS = {
 
 class AdServices extends HttpBaseClient {
 
+    addOccupationTerm = async payload => {
+        try {
+            const response = await this.getApiClient().post(
+                FINALPOINTS.CALENDAR_BASE + "/occupation",
+                payload,
+                {
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
+
+            );
+            return response.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    };
+
     syncData = async payload => {
         try {
             const response = await this.getApiClient().post(

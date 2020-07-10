@@ -21,6 +21,8 @@ public interface PriceListService {
 
     PriceList save(PriceList priceList);
 
+    PriceList savePriceList(PriceList priceList);
+
     void delete(PriceList priceList);
 
     PriceList createPriceList(PriceListCreateDTO priceListCreateDTO);

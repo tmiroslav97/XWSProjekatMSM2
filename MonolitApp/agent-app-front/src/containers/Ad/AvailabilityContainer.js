@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
-
 import PaginationContainer from '../Pagination/PaginationContainer';
 import PaginationSize from '../../components/Pagination/PaginationSize';
 import { calendarSelector } from '../../store/ad/selectors';
 import { fetchCalendar, addTerm } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import Availability from '../../components/Ad/Availability';
-
+import AdServices from '../../services/AdServices';
+import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 
 const AvailabilityContainer = (props) => {
     const dispatch = useDispatch();
@@ -104,7 +103,7 @@ const AvailabilityContainer = (props) => {
     }
 
     const add = () => {
-        
+
         let temp = {
             'adId': props.adId,
             'startDate': startDate,
@@ -137,20 +136,48 @@ const AvailabilityContainer = (props) => {
         rez = year + "-" + month + "-" + date + "T" + hours + ":" + minutes;
         return rez;
     }
+
     const handleStartDate = (event) => {
         setStartDate(event.target.value);
     }
+
     const handleEndDate = (event) => {
         setEndDate(event.target.value);
     }
-    const handleOccupationStart = (event)=> {
 
+    const handleOccupationStart = (event) => {
+        setOccupationStart(event.target.value);
     }
-    const handleOccupationEnd = (event)=> {
-        
+
+    const handleOccupationEnd = (event) => {
+        setOccupationEnd(event.target.value);
     }
-    const addOccupation =(event) => {
-        
+
+    const addOccupationTerm = async () => {
+        const result = await AdServices.addOccupationTerm({
+            'adId': props.adId,
+            'startDate': occupationStart,
+            'endDate': occupationEnd
+        });
+
+        if (result === "Uspjesno ubacen termin zauzeca") {
+            dispatch(putSuccessMsg(result));
+            dispatch(
+                fetchCalendar({
+                    'id': props.adId
+                })
+            );
+        } else {
+            dispatch(putErrorMsg(result));
+        }
+    };
+
+    const addOccupation = (event) => {
+        if (occupationStart != null && occupationEnd != null) {
+            addOccupationTerm();
+        } else {
+            alert("Niste uneli sva polja.");
+        }
     }
 
     return (

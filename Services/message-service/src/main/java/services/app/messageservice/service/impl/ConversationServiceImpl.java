@@ -1,13 +1,20 @@
 package services.app.messageservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import services.app.messageservice.converter.ConversationConverter;
+import services.app.messageservice.dto.conversation.ConversationDTO;
 import services.app.messageservice.exception.NotFoundException;
 import services.app.messageservice.model.Conversation;
+import services.app.messageservice.model.CustomPrincipal;
+import services.app.messageservice.model.Message;
 import services.app.messageservice.repository.ConversationRepository;
 import services.app.messageservice.service.intf.ConversationService;
 import services.app.messageservice.service.intf.MessageService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,12 +33,37 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public List<Conversation> findAllByParticipantId(Long participantId) {
-        return null;
+        return conversationRepository.findAllByParticipantId(participantId);
+    }
+
+    @Override
+    public List<ConversationDTO> findAllConversationDTOByParticipantId(Long participantId) {
+        List<Conversation> conversations = conversationRepository.findAllByParticipantId(participantId);
+        List<ConversationDTO> conversationDTOS = new ArrayList<>();
+        conversations.forEach(conversation -> {
+            Integer unseenNum = messageService.unsSeenMessages(conversation.getId(), participantId);
+            ConversationDTO conversationDTO = ConversationConverter.toCreateConversationDTOFromConversationAndUnseenNum(conversation, unseenNum);
+            conversationDTOS.add(conversationDTO);
+        });
+        return conversationDTOS;
+    }
+
+    @Override
+    public List<Message> findAllConversationMessages(Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
+        messageService.setAllConversationMessagesFromRecieverToSeen(id, cp.getEmail());
+        return this.findById(id).getMessage();
     }
 
     @Override
     public Conversation save(Conversation conversation) {
-        return null;
+        return conversationRepository.save(conversation);
+    }
+
+    @Override
+    public Boolean existsByid(Long id) {
+        return conversationRepository.existsById(id);
     }
 
     @Override
