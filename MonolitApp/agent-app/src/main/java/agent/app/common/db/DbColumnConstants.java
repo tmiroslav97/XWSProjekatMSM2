@@ -56,4 +56,7 @@ public class DbColumnConstants {
     public static final String REVIEW = "review";
     public static final String ADID = "adId";
     public static final String LOCAL = "local";
+    public static final String RECIEVERSEEN = "recieverSeen";
+    public static final String CONVERSATIONID = "conversationId";
+    public static final String CONVNAME = "convName";
 }

@@ -32,8 +32,14 @@ public class PublisherUser extends User {
     @OneToMany(mappedBy = "publisherUser", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
-    private Set<Message> inbox = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = DbTableConstants.PUBLISHERUSERCONV,
+            joinColumns = @JoinColumn(name = "publ_user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "conv_id", referencedColumnName = "id"))
+    private Set<Conversation> conversations = new HashSet<>();
+
+    @OneToMany(mappedBy = "senderUser", fetch = FetchType.LAZY)
+    private Set<Message> messages = new HashSet<>();
 
     @OneToMany(mappedBy = "publisherUser", fetch = FetchType.LAZY)
     private Set<Report> reports = new HashSet<>();
@@ -46,13 +52,14 @@ public class PublisherUser extends User {
                          String lastName, Boolean local, DateTime lastPasswordResetDate,
                          List<Authority> authorities, Boolean deleted, Set<Ad> ads,
                          Set<PriceList> priceLists, Set<Comment> comments,
-                         Set<Message> inbox, Set<Report> reports, Set<Request> publisherUserRequests) {
+                         Set<Conversation> conversations, Set<Message> messages, Set<Report> reports, Set<Request> publisherUserRequests) {
         super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities);
         this.deleted = deleted;
         this.ads = ads;
         this.priceLists = priceLists;
         this.comments = comments;
-        this.inbox = inbox;
+        this.conversations = conversations;
+        this.messages = messages;
         this.reports = reports;
         this.publisherUserRequests = publisherUserRequests;
     }
