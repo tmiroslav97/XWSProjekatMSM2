@@ -3,8 +3,10 @@ import { Container, Row, Col, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import RequestService from '../../services/RequestService';
+import MessageService from '../../services/MessageService';
 import EndUserRequestDetailComponent from '../../components/Request/EndUserRequestDetailComponent';
 import { ratingAd, addCommentForAd } from '../../store/ad/actions';
+import { putErrorMsg, putSuccessMsg } from '../../store/common/actions';
 
 
 const EndUserRequestDetailContainer = (props) => {
@@ -13,8 +15,10 @@ const EndUserRequestDetailContainer = (props) => {
     const [isFetch, setIsFetch] = useState(false);
     const [request, setRequest] = useState();
     const [flagComment, setFlagComment] = useState(false);
+    const [flagMessage, setFlagMessage] = useState(false);
     const [adId, setAdId] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [validatedMessage, setValidatedMessage] = useState(false);
 
     const fetchRequest = async () => {
         setIsFetch(false);
@@ -24,10 +28,15 @@ const EndUserRequestDetailContainer = (props) => {
 
     }
 
-    const submitReport = async (payload) => {
-        const result = await RequestService.submitReport(payload);
-        fetchRequest();
+    const sendFirstMessage = async (payload) => {
+        const result = await MessageService.sendFirstMessage(payload);
+        if(result==='Uspjesno poslata poruka'){
+            dispatch(putSuccessMsg(result));
+        }else{
+            dispatch(putErrorMsg(result));
+        }
     }
+
 
     useEffect(() => {
         fetchRequest();
@@ -37,8 +46,38 @@ const EndUserRequestDetailContainer = (props) => {
 
     const addComment = (event) => {
         setFlagComment(true);
-        console.log(event)
         setAdId(event);
+    }
+
+    const sendMessage = (event) => {
+        setFlagMessage(true);
+    }
+
+    const handleMessageForm = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const data = new FormData(event.target);
+        if (form.checkValidity() === false) {
+            event.stopPropagation();
+            setValidatedMessage(true);
+        } else {
+            const payload = {
+                "convName": data.get('convName'),
+                "content": data.get('content'),
+                "requestId": request.id,
+                "publisherUserId": request.publisherUserId,
+                "publisherUserFirstName": request.publisherUserFirstName,
+                "publisherUserLastName": request.publisherUserLastName,
+                "publisherUserEmail": request.publisherUserEmail,
+                "endUserId": request.endUserId,
+                "endUserFirstName": request.endUserFirstName,
+                "endUserLastName": request.endUserLastName,
+                "endUserEmail": request.endUserEmail,
+            };
+            sendFirstMessage(payload);
+            setValidatedMessage(false);
+            setFlagMessage(false);
+        }
     }
 
 
@@ -57,8 +96,6 @@ const EndUserRequestDetailContainer = (props) => {
             }))
 
         }
-
-
     }
 
     const handleRatingForm = (requestId, adId, mainId, newRating) => {
@@ -79,9 +116,13 @@ const EndUserRequestDetailContainer = (props) => {
                     {
                         isFetch ? <EndUserRequestDetailComponent request={request}
                             flagComment={flagComment} setFlagComment={setFlagComment}
+                            flagMessage={flagMessage} setFlagMessage={setFlagMessage}
+                            sendMessage={sendMessage}
                             addComment={addComment}
                             adId={adId} setAdId={setAdId}
                             validated={validated}
+                            validatedMessage={validatedMessage}
+                            handleMessageForm={handleMessageForm}
                             handleCommentForm={handleCommentForm}
                             handleRatingForm={handleRatingForm} /> : <SpinnerContainer />
                     }

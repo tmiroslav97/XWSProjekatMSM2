@@ -24,7 +24,7 @@ public class PadClientConfig {
     @Bean
     public PadClient padClient(@Qualifier("marshallerPad") Jaxb2Marshaller marshallerPad) {
         PadClient client = new PadClient();
-        client.setDefaultUri("http://" + appConfig.getZuul() + ":8088/pad/ws");
+        client.setDefaultUri("http://" + appConfig.getZuul() + ":8082/pad/ws");
         client.setMarshaller(marshallerPad);
         client.setUnmarshaller(marshallerPad);
         return client;

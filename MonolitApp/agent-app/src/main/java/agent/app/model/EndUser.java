@@ -39,10 +39,10 @@ public class EndUser extends PublisherUser {
                    String lastName, Boolean local, DateTime lastPasswordResetDate,
                    List<Authority> authorities, Boolean deleted, Set<Ad> ads,
                    Set<PriceList> priceLists, Set<Comment> comments,
-                   Set<Message> inbox, Set<Report> reports, Set<Request> publisherUserRequests, Integer adLimitNum,
+                   Set<Report> reports, Set<Request> publisherUserRequests, Integer adLimitNum,
                    Boolean enabled, Boolean obliged, Integer canceledCnt,
                    Set<Request> requests) {
-        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, inbox, reports, publisherUserRequests);
+        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, reports, publisherUserRequests);
         this.adLimitNum = adLimitNum;
         this.enabled = enabled;
         this.obliged = obliged;

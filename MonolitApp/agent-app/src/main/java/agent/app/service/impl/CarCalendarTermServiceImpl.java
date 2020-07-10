@@ -1,6 +1,7 @@
 package agent.app.service.impl;
 
 import agent.app.converter.CarCalendarTermConverter;
+import agent.app.converter.DateAPI;
 import agent.app.dto.car.CarCalendarTermCreateDTO;
 import agent.app.dto.car.CarCalendarTermDTO;
 import agent.app.dto.cct.CarCalendarTermSynchronizeDTO;
@@ -18,10 +19,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CarCalendarTermServiceImpl implements CarCalendarTermService {
@@ -153,6 +151,16 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
             return;
         } catch (JsonProcessingException exception) {
             return;
+        }
+    }
+
+    @Override
+    public Integer addCarCalendarTermOccupation(CarCalendarTermDTO carCalendarTermDTO) {
+        Boolean flag = this.splitCarCalendarTerm(carCalendarTermDTO.getAdId(), DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getStartDate()), DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getEndDate()));
+        if (flag) {
+            return 1;
+        } else {
+            return 2;
         }
     }
 

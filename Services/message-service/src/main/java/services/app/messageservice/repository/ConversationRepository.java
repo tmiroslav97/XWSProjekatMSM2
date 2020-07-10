@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface ConversationRepository extends JpaRepository<Conversation, Long> {
 
-    @Query("SELECT conv FROM Conversation conv where conv.participantEndUser=(?1) or conv.participantPublisherUser=(?1)")
+    @Query("SELECT conv FROM Conversation conv where conv.participantEndUserId=(?1) or conv.participantPublisherUserId=(?1)")
     List<Conversation> findAllByParticipantId(Long participantId);
+
+    boolean existsById(Long id);
+
 }

@@ -1,13 +1,13 @@
 import React from 'react';
-import { Form, Col, Container, Button, Table } from 'react-bootstrap';
+import { Form, Col, Container, Button, Table, Row } from 'react-bootstrap';
 import { Typography } from '@material-ui/core';
 
 const Availability = (props) => {
     return (
         <Container>
-            <Form id="availability"
-            // onSubmit={props.addTerm} 
-            noValidate validated={props.validated}
+            <Form id="availability" className="mt-3"
+                // onSubmit={props.addTerm} 
+                noValidate validated={props.validated}
             >
                 <Form.Row>
                     <Col>
@@ -30,11 +30,16 @@ const Availability = (props) => {
                     </Col>
                     <Col>
                         <Button //type="submit"
-                        onClick={props.addTermToCalendar}
-                         >Dodaj</Button>
+                            onClick={props.addTermToCalendar}
+                        >Dodaj</Button>
                     </Col>
                 </Form.Row>
+            </Form >
 
+            <Form id="availability" className="mt-3"
+                // onSubmit={props.addTerm} 
+                noValidate validated={props.validated}
+            >
                 <Form.Row>
                     <Col>
                         <Form.Label>Unesi zauzece:</Form.Label>
@@ -54,45 +59,41 @@ const Availability = (props) => {
                         />
                     </Col>
                     <Col>
-                        <Button 
-                        onClick={props.addOccupation}
-                         >Dodaj</Button>
-                    </Col>
-                </Form.Row>
-
-                <br />
-                <Form.Row>
-                    <Col>
-                        <Table striped bordered hover>
-                            <thead>
-                                <tr>
-                                    <th>Rbr.</th>
-                                    <th className="text-right">Datum pocetka</th>
-                                    <th className="text-right">Datum kraja</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                {props.previewCalendar()}
-
-                            </tbody>
-                        </Table>
-
-                    </Col>
-                </Form.Row>
-                <Form.Row>
-                    <Col>
                         <Button
-                            onClick={props.handleBack}
-                            className="float-right"
-                        >
-                            Vrati se 
-                        </Button>
+                            onClick={props.addOccupation}
+                        >Dodaj</Button>
                     </Col>
-                </Form.Row >
-
-
+                </Form.Row>
             </Form >
+            <Row>
+                <Col>
+                    <Table striped bordered hover className="mt-3">
+                        <thead>
+                            <tr>
+                                <th>Rbr.</th>
+                                <th className="text-right">Datum pocetka</th>
+                                <th className="text-right">Datum kraja</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {props.previewCalendar()}
+
+                        </tbody>
+                    </Table>
+
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Button
+                        onClick={props.handleBack}
+                        className="float-right"
+                    >
+                        Vrati se
+                        </Button>
+                </Col>
+            </Row >
         </Container >
     );
 }

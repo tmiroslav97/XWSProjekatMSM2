@@ -84,7 +84,6 @@ public class PublisherUserServiceImpl implements PublisherUserService {
                 .ads(new HashSet<>())
                 .priceLists(new HashSet<>())
                 .comments(new HashSet<>())
-                .inbox(new HashSet<>())
                 .reports(new HashSet<>())
                 .build();
         return publisherUser;

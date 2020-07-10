@@ -4,7 +4,8 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import services.app.carrequestservice.model.*;
+import services.app.carrequestservice.model.AcceptRequest;
+import services.app.carrequestservice.model.AcceptResponse;
 import services.app.carrequestservice.service.intf.RequestService;
 
 @Endpoint
