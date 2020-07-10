@@ -23,4 +23,7 @@ public interface PriceListService {
     Long authAgent(String email, String identifier);
     Long createPriceListFromAgent(Long publisherUser, DateTime creationDate, Float pricePerDay,
                                   Float pricePerKm, Float pricePerKmCDW);
+    Long editPriceListFromAgent(Float pricePerDay, Float pricePerKm,
+                                Float pricePerKmCDW, Long mainId);
+    Long deletePriceListFromAgent(Long mainId);
 }

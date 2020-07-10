@@ -187,5 +187,23 @@ public class PriceListServiceImpl implements PriceListService {
         return priceList.getId();
     }
 
+    @Override
+    public Long editPriceListFromAgent(Float pricePerDay, Float pricePerKm, Float pricePerKmCDW, Long mainId) {
+        PriceList priceList = this.findById(mainId);
+        priceList.setPricePerDay(pricePerDay);
+        priceList.setPricePerKm(pricePerKm);
+        priceList.setPricePerKmCDW(pricePerKmCDW);
+        priceList = this.priceListRepository.save(priceList);
+        return priceList.getId();
+    }
+
+    @Override
+    public Long deletePriceListFromAgent(Long mainId) {
+        PriceList priceList = this.findById(mainId);
+        System.out.println("ne sadrzi cenovnik mozes obrisati.");
+        this.delete(priceList);
+        return mainId;
+    }
+
 
 }
