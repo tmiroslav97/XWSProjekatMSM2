@@ -1,7 +1,8 @@
 import HttpBaseClient from './HttpBaseClient';
 
 const FINALPOINTS = {
-    MSG_BASE: '/msg'
+    MSG_BASE: '/msg',
+    CONV_BASE: '/conv'
 };
 
 class MessageService extends HttpBaseClient {
@@ -27,7 +28,7 @@ class MessageService extends HttpBaseClient {
     fetchConversationMessages = async payload => {
         try {
             const response = await this.getApiClient().get(
-                FINALPOINTS.MSG_BASE + '/conv/' + payload + '/msg'
+                FINALPOINTS.CONV_BASE + '/' + payload + '/msg'
             );
             return response.data;
         } catch (error) {
@@ -38,7 +39,7 @@ class MessageService extends HttpBaseClient {
     fetchConversations = async payload => {
         try {
             const response = await this.getApiClient().get(
-                FINALPOINTS.MSG_BASE + '/conv/user'
+                FINALPOINTS.CONV_BASE + '/user'
             );
             return response.data;
         } catch (error) {

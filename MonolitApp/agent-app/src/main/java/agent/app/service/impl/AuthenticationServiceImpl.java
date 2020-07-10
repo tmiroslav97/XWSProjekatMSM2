@@ -80,8 +80,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .authorities(auths)
                     .priceLists(new HashSet<>())
                     .comments(new HashSet<>())
-                    .conversations(new HashSet<>())
-                    .messages(new HashSet<>())
                     .reports(new HashSet<>())
                     .build();
             userService.save(endUser);

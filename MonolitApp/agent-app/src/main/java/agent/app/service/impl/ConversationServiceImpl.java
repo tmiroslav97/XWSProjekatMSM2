@@ -5,17 +5,14 @@ import agent.app.dto.conversation.ConversationDTO;
 import agent.app.exception.NotFoundException;
 import agent.app.model.Conversation;
 import agent.app.model.Message;
+import agent.app.model.PublisherUser;
 import agent.app.repository.ConversationRepository;
 import agent.app.service.intf.ConversationService;
 import agent.app.service.intf.MessageService;
 import agent.app.service.intf.PublisherUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +36,8 @@ public class ConversationServiceImpl implements ConversationService {
 
     @Override
     public List<ConversationDTO> findAllConversationDTOByParticipantId(String email) {
-        List<Conversation> conversations = new ArrayList<>(publisherUserService.findByEmail(email).getConversations());
+        PublisherUser publisherUser = publisherUserService.findByEmail(email);
+        List<Conversation> conversations = conversationRepository.findAllByParticipantId(publisherUser.getId());
         List<ConversationDTO> conversationDTOS = new ArrayList<>();
         conversations.forEach(conversation -> {
             Integer unseenNum = messageService.unsSeenMessages(conversation.getId(), email);
@@ -50,10 +48,8 @@ public class ConversationServiceImpl implements ConversationService {
     }
 
     @Override
-    public List<Message> findAllConversationMessages(Long id) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Principal cp = (Principal) auth.getPrincipal();
-        messageService.setAllConversationMessagesFromRecieverToSeen(id, cp.getName());
+    public List<Message> findAllConversationMessages(Long id, String email) {
+        messageService.setAllConversationMessagesFromRecieverToSeen(id, email);
         return this.findById(id).getMessage();
     }
 

@@ -9,6 +9,7 @@ import services.app.messageservice.config.RabbitMQConfiguration;
 import services.app.messageservice.converter.ConversationConverter;
 import services.app.messageservice.converter.DateAPI;
 import services.app.messageservice.converter.MessageConverter;
+import services.app.messageservice.dto.conversation.ConvMsgSyncDTO;
 import services.app.messageservice.dto.message.MessageRequestDTO;
 import services.app.messageservice.dto.user.UserFLNameDTO;
 import services.app.messageservice.exception.NotFoundException;
@@ -60,6 +61,27 @@ public class MessageServiceImpl implements MessageService {
             message = this.save(message);
             conversation.getMessage().add(message);
             conversation = conversationService.save(conversation);
+            try {
+                String recieverUserStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, messageRequestDTO.getPublisherUserId());
+                UserFLNameDTO recieverUser = objectMapper.readValue(recieverUserStr, UserFLNameDTO.class);
+                if (!recieverUser.getLocal()) {
+                    ConvMsgSyncDTO convMsgSyncDTO = ConvMsgSyncDTO.builder()
+                            .convMainId(conversation.getId())
+                            .convName(conversation.getConvName())
+                            .requestMainId(conversation.getRequestId())
+                            .recieverEmail(recieverUser.getUserEmail())
+                            .content(message.getContent())
+                            .senderEmail(message.getSenderEmail())
+                            .senderFristName(message.getSenderFirstName())
+                            .senderLastName(message.getSenderLastName())
+                            .build();
+                    String convMsgStr = objectMapper.writeValueAsString(convMsgSyncDTO);
+                    String routingKey = recieverUser.getUserEmail().replace("@", ".") + ".first.msg";
+                    rabbitTemplate.convertAndSend(RabbitMQConfiguration.AGENT_SYNC_QUEUE_NAME, routingKey, convMsgStr);
+                }
+            } catch (JsonProcessingException exception) {
+                return 3;
+            }
             return 1;
         } else {
             return 2;

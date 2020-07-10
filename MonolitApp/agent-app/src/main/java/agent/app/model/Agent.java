@@ -32,10 +32,9 @@ public class Agent extends PublisherUser {
                  String lastName, Boolean local, DateTime lastPasswordResetDate,
                  List<Authority> authorities, Boolean deleted, Set<Ad> ads,
                  Set<PriceList> priceLists, Set<Comment> comments,
-                 Set<Conversation> conversations, Set<Message> messages,
                  Set<Report> reports, Set<Request> publisherUserRequests, String identifier,
                  Set<DiscountList> discountLists) {
-        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, conversations, messages, reports, publisherUserRequests);
+        super(id, email, password, firstName, lastName, local, lastPasswordResetDate, authorities, deleted, ads, priceLists, comments, reports, publisherUserRequests);
         this.discountLists = discountLists;
         this.identifier = identifier;
     }

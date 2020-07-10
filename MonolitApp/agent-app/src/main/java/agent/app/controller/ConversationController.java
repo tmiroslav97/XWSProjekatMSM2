@@ -5,8 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,7 +31,8 @@ public class ConversationController {
 
     @PreAuthorize("hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_USER')")
     @RequestMapping(value = "/{id}/msg", method = RequestMethod.GET)
-    public ResponseEntity<?> getConversationMessages(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(conversationService.findAllConversationMessages(id), HttpStatus.OK);
+    public ResponseEntity<?> getConversationMessages(@PathVariable("id") Long id, Principal principal) {
+        String email = principal.getName();
+        return new ResponseEntity<>(conversationService.findAllConversationMessages(id, email), HttpStatus.OK);
     }
 }

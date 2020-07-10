@@ -21,4 +21,8 @@ public interface MessageService {
     void deleteById(Long id);
 
     void delete(Message message);
+
+    void firstMsgSync(String msg);
+
+    void msgSync(String msg);
 }

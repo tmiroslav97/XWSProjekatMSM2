@@ -11,7 +11,7 @@ public interface ConversationService {
 
     List<ConversationDTO> findAllConversationDTOByParticipantId(String email);
 
-    List<Message> findAllConversationMessages(Long id);
+    List<Message> findAllConversationMessages(Long id, String email);
 
     Conversation save(Conversation conversation);
 

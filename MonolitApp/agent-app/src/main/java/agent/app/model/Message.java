@@ -27,7 +27,7 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected Long id;
+    private Long id;
 
     @Temporal(TemporalType.DATE)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
@@ -35,19 +35,28 @@ public class Message {
             @org.hibernate.annotations.Parameter(name = "javaZone", value = "UTC")
     })
     @Column(name = DbColumnConstants.SENDDATE, nullable = false)
-    protected DateTime sendDate;
+    private DateTime sendDate;
 
     @Column(name = DbColumnConstants.CONTENT, nullable = false)
-    protected String content;
+    private String content;
 
     @Column(name = DbColumnConstants.RECIEVERSEEN, nullable = false)
-    protected Boolean recieverSeen;
+    private Boolean recieverSeen;
 
     @Column(name = DbColumnConstants.CONVERSATIONID, nullable = false)
-    protected Long conversationId;
+    private Long conversationId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private PublisherUser senderUser;
+    @Column(name = DbColumnConstants.SENDERID, nullable = false)
+    private Long senderId;
+
+    @Column(name = DbColumnConstants.SENDERFIRSTNAME, nullable = false)
+    private String senderFirstName;
+
+    @Column(name = DbColumnConstants.SENDERLASTNAME, nullable = false)
+    private String senderLastName;
+
+    @Column(name = DbColumnConstants.SENDEREMAIL, nullable = false)
+    private String senderEmail;
 
     @JsonProperty("sendDate")
     public String getTheSendDate() {

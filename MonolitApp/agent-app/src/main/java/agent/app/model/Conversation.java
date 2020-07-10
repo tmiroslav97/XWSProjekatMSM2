@@ -32,9 +32,14 @@ public class Conversation {
     @Column(name = DbColumnConstants.CONVNAME, nullable = false)
     private String convName;
 
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "conversations")
-    private Set<PublisherUser> publisherUsers;
+    @Column(name = DbColumnConstants.REQUESTID, nullable = false, unique = true)
+    private Long requestId;
+
+    @Column(name = DbColumnConstants.PARTICIPANTPUBLISHERUSERID, nullable = false)
+    private Long participantPublisherUserId;
+
+    @Column(name = DbColumnConstants.PARTICIPANTENDUSERID, nullable = false)
+    private Long participantEndUserId;
 
     @JsonIgnore
     @OneToMany(fetch = FetchType.EAGER)
