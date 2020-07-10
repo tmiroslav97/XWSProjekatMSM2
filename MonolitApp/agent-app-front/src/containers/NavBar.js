@@ -21,7 +21,7 @@ const NavBar = () => {
     };
 
     return (
-        <Navbar bg="dark" variant="dark" collapseOnSelect expand="lg">
+        <Navbar bg="light" variant="light" collapseOnSelect expand="lg">
             <Navbar.Brand onClick={() => { history.push('/') }}>Rent A Car - Agnet </Navbar.Brand>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
             <Navbar.Collapse id="responsive-navbar-nav">

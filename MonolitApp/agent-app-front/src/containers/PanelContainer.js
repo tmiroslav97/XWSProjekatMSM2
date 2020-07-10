@@ -40,7 +40,7 @@ const PanelContainer = ({ match }) => {
         <Container fluid>
             <Row>
                 <Col sm={2} md={2} xs={12} className="pl-0">
-                    <Nav variant="dark"  className="flex-column bg-dark">
+                    <Nav variant="light"  className="flex-column bg-light">
                         {hasRole(['ROLE_ADMIN', 'ROLE_USER', 'ROLE_AGENT']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="home" onClick={() => { history.push("/panel/home"); }}>

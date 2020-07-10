@@ -7,6 +7,7 @@ import { signOut } from '../store/user/actions';
 import jwt_decode from 'jwt-decode';
 import AppsIcon from '@material-ui/icons/Apps';
 import LocalMallIcon from '@material-ui/icons/LocalMall';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 const NavBar = () => {
     const token = useSelector(tokenSelector);
@@ -37,7 +38,7 @@ const NavBar = () => {
                     <Nav.Link onClick={() => { history.push('/') }}>{' '}Početna stranica</Nav.Link>
                 </Nav>
                 <Nav className="ml-auto">
-                    {token != null && roles.includes('ROLE_USER') && <Nav.Link href="#" onClick={() => { history.push('/cart') }}><LocalMallIcon/>Korpa</Nav.Link>}
+                    {token != null && roles.includes('ROLE_USER') && <Nav.Link href="#" onClick={() => { history.push('/cart') }}><ShoppingCartIcon/></Nav.Link>}
                     {token != null && <Nav.Link href="#" onClick={() => { history.push('/panel') }}><AppsIcon/> Radni panel</Nav.Link>}
                     {token == null && <Nav.Link href="#" onClick={() => { history.push('/login') }}>Prijava</Nav.Link>}
                     {token == null && <Nav.Link href="#" onClick={() => { history.push('/sign-up') }}>Registracija</Nav.Link>}

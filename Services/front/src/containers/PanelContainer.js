@@ -43,6 +43,31 @@ import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import CreditCardIcon from '@material-ui/icons/CreditCard';
+import { makeStyles } from '@material-ui/core/styles';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import StarBorder from '@material-ui/icons/StarBorder';
+
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.palette.background.paper,
+    },
+    nested: {
+      paddingLeft: theme.spacing(4),
+    },
+  }));
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -58,12 +83,167 @@ const PanelContainer = ({ match }) => {
         }
     };
 
+
+    const classes = useStyles();
+    const [open, setOpen] = React.useState(true);
+  
+    const handleClick = () => {
+      setOpen(!open);
+    };
+  
+
     return (
         <Container fluid>
             <Row>
-                <Col sm={2} md={2} xs={12} className="pl-0 ">
-                    <Nav variant="pills" className="flex-column bg-light">
-                        {hasRole(['ROLE_ADMIN', 'ROLE_USER', 'ROLE_AGENT']) &&
+                <Col sm={5} md={2} xs={12} className="pl-0 ">
+
+
+                    <List
+                        component="nav"
+                        aria-labelledby="nested-list-subheader"
+                
+                        className={classes.root}
+                        >
+                        {hasRole(['ROLE_ADMIN', 'ROLE_USER', 'ROLE_AGENT']) &&   
+                        <ListItem button onClick={() => { history.push("/panel/home"); }}>
+                            <ListItemIcon>
+                            <PagesIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Panel pocetna" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                        <ListItem button onClick={() => { history.push("/panel/create-ad"); }}> 
+                            <ListItemIcon>
+                            <AddBoxIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Dodaj oglas" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&    
+                        <ListItem button onClick={handleClick}>
+                            <ListItemIcon>
+                            <InboxIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Sifrarnici" />
+                            {open ? <ExpandLess /> : <ExpandMore />}
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&    
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                        
+                            <ListItem button className={classes.nested} onClick={() => { history.push("/panel/car-man"); }}>
+                                <ListItemIcon>
+                                <BrandingWatermarkIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Proizvođači automobila" />
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => { history.push("/panel/car-type"); }}>
+                                <ListItemIcon>
+                                <DriveEtaIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Tipovi automobila" />
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => { history.push("/panel/car-model"); }}>
+                                <ListItemIcon>
+                                <CommuteIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Modeli automoibila" />
+                            </ListItem>
+                            <ListItem button className={classes.nested}  onClick={() => { history.push("/panel/fuel-type"); }}>
+                                <ListItemIcon>
+                                <LocalGasStationIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Tipovi goriva" />
+                            </ListItem>
+                            <ListItem button className={classes.nested} onClick={() => { history.push("/panel/gb-type"); }}>
+                                <ListItemIcon>
+                                <AccountTreeIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Tipovi mjenjača" />
+                            </ListItem>
+                            </List>
+                        </Collapse>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&
+                        <ListItem button  onClick={() => { history.push("/panel/man-end-users"); }}>
+                            <ListItemIcon>
+                            <GroupIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Krajnji korisnici" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                        <ListItem button onClick={() => { history.push("/panel/my-ads"); }}>
+                            <ListItemIcon>
+                            <StorageIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Moji oglasi" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_USER']) &&
+                        <ListItem button  onClick={() => { history.push("/panel/end-user-reqs"); }}>
+                            <ListItemIcon>
+                            <DynamicFeedIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Moji zahtjevi" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                        <ListItem button  onClick={() => { history.push("/panel/publisher-user-reqs"); }}>
+                            <ListItemIcon>
+                            <AllInboxIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Zahtjevi za moje oglase" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&
+                        <ListItem button onClick={() => { history.push("/panel/comments"); }}>
+                            <ListItemIcon>
+                            <CommentIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Komentari" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&
+                        <ListItem button onClick={() => { history.push("/panel/man-agent"); }}>
+                            <ListItemIcon>
+                            <PermIdentityIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Agenti" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_ADMIN']) &&
+                        <ListItem button   onClick={() => { history.push("/panel/man-firm"); }}>
+                            <ListItemIcon>
+                            <SupervisedUserCircleIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Firme" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                        <ListItem button  onClick={() => { history.push("/panel/pricelist"); }}>
+                            <ListItemIcon>
+                            <CreditCardIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Cenovnici" />
+                        </ListItem>
+                        }
+                        {hasRole(['ROLE_AGENT']) &&
+                        <ListItem button onClick={() => { history.push("/panel/discount-list"); }}>
+                            <ListItemIcon>
+                            <LocalOfferIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Popusti" />
+                        </ListItem>
+                        }
+                    </List>
+
+
+
+                   {/* <Nav variant="pills" className="flex-column bg-light" button>
+                         {hasRole(['ROLE_ADMIN', 'ROLE_USER', 'ROLE_AGENT']) &&
                             <Nav.Item>
                           
                            
@@ -187,7 +367,7 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
-                    </Nav>
+                    </Nav> */}
                 </Col>
                 <Col sm={10} md={10} xs={12}>
                     <PrivateRoute exact path={`${match.path}/home`} component={PanelHomeContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN", "ROLE_USER", "ROLE_AGENT"]} />

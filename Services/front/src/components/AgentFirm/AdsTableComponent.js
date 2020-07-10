@@ -21,11 +21,11 @@ const AdsTableComponent = (props) => {
   }else if(props.flag===3){
     kom=props.flag;
   }
- 
   return (
 
     <Container>
-
+          {props.ad.name}
+          
             <Table responsive  className="mt-5">
               <thead>
                 <tr>
@@ -40,12 +40,12 @@ const AdsTableComponent = (props) => {
               <tbody>
 
                 <tr > 
-                  <td>{props.ad.name}</td>
-                  <td>{props.ad.carManufacturer}</td>
-                  <td>{props.ad.carModel}</td>
-                  <td>{props.ad.averageGrade}</td>
-                  <td>{props.ad.mileage}</td>
-                  <td>{props.ad.comment}</td>
+                  <td>{props.ad.data.name}</td>
+                  <td>{props.ad.data.carManufacturer}</td>
+                  <td>{props.ad.data.carModel}</td>
+                  <td>{props.ad.data.averageGrade}</td>
+                  <td>{props.ad.data.mileage}</td>
+                  <td>{props.ad.data.comment}</td>
                 </tr>
 
               </tbody>

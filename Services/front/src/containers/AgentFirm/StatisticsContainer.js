@@ -7,6 +7,7 @@ import { tokenSelector } from '../../store/user/selectors';
 import jwt_decode from 'jwt-decode';
 import { Container, Row, Col } from 'react-bootstrap';
 import { putAd } from '../../store/ad/actions';
+import PanelHomeContainer from '../PanelHomeContainer';
 
 const StatisticsContainer = () => {
     const token = useSelector(tokenSelector);
@@ -56,7 +57,7 @@ const StatisticsContainer = () => {
             <Row>
                 <Col >
 
-                   <StatisticsComponent
+                   <PanelHomeContainer
                             ad={ad.data}
                             isFetchAd={isFetchAd}
                             handleGrade={handleGrade}

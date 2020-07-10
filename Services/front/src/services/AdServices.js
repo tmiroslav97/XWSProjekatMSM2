@@ -13,9 +13,7 @@ const FINALPOINTS = {
 class AdServices extends HttpBaseClient {
     
     createdAdPhotos = async payload => {
-        console.log("********************")
-        console.log(payload);
-        console.log("********************")
+
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE + "/withImages", 
             // payload,
@@ -39,8 +37,7 @@ class AdServices extends HttpBaseClient {
     };
 
     createdAd = async payload => {
-        console.log("********************")
-        console.log(payload);
+
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE,
             payload,
@@ -105,8 +102,7 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAd = async payload => {
-        console.log("SERVICE AD")
-        console.log(payload)
+ 
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE + "/" + payload
 
@@ -144,8 +140,7 @@ class AdServices extends HttpBaseClient {
     };
 
     loadImage = async payload => {
-        console.log("SERVICEEE LOAD SRC")
-        console.log(payload);
+
         const response = await this.getApiClient().get(
             FINALPOINTS.IMAGE_BASE + "/getSrc", {
             params: {
@@ -155,13 +150,11 @@ class AdServices extends HttpBaseClient {
             }
         }
         );
-        console.log(response);
         return response.data;
     };
 
     fetchCalendar = async payload => {
-        console.log("FETCH AD")
-        console.log(payload)
+
         const response = await this.getApiClient().get(
             FINALPOINTS.CALENDAR_BASE + "/" + payload
         );
@@ -169,8 +162,7 @@ class AdServices extends HttpBaseClient {
     };
 
     addTerm = async payload => {
-        console.log("********* DODAVANJE TERM-A ***********")
-        console.log(payload);
+ 
         const response = await this.getApiClient().post(
             FINALPOINTS.CALENDAR_BASE,
             payload,
@@ -215,7 +207,6 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllUnapprovedCommentForAd = async payload => {
-        console.log("FETCH COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/all-unapproved"
         );
@@ -223,7 +214,6 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllCommentForAd = async payload => {
-        console.log("FETCH COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/"+ payload.id
         );
@@ -231,7 +221,6 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllCommentForAdAndUser = async payload => {
-        console.log("FETCH COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/from-user/" + payload.id
         );
@@ -239,7 +228,6 @@ class AdServices extends HttpBaseClient {
     };
 
     approvedCommentForAd = async payload => {
-        console.log("APPROVED COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/approved/" + payload.id
         );
@@ -247,7 +235,6 @@ class AdServices extends HttpBaseClient {
     };
 
     reversePricelist = async payload =>{
-        console.log("REVERSE PRICELIST") 
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE + "/reverse-pricelist",
             payload
@@ -256,8 +243,7 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchBestGradeAd = async payload => {
-        console.log("Best grade ad service")
-        console.log(payload)
+
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE + "/best-average-grade", {
             params: {
@@ -265,13 +251,11 @@ class AdServices extends HttpBaseClient {
             }
         }
         );
-        console.log(response);
         return response.data;
     };
 
     fetchMaxMileageAd = async payload => {
-        console.log("Max mileage service")
-        console.log(payload)
+
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE + "/max-mileage", {
             params: {
@@ -279,13 +263,11 @@ class AdServices extends HttpBaseClient {
             }
         }
         );
-        console.log(response);
         return response.data;
     };
 
     fetchMaxCommentsAd = async payload => {
-        console.log("Max comments service")
-        console.log(payload)
+
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE + "/max-comments", {
             params: {
@@ -293,7 +275,6 @@ class AdServices extends HttpBaseClient {
             }
         }
         );
-        console.log(response);
         return response.data;
     };
 }
