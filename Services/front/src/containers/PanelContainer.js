@@ -42,6 +42,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import PermIdentityIcon from '@material-ui/icons/PermIdentity';
 import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -174,14 +175,15 @@ const PanelContainer = ({ match }) => {
                         {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="pricelist" onClick={() => { history.push("/panel/pricelist"); }}>
-                                   <LocalOfferIcon/> Cenovnici
+                                   <CreditCardIcon/> Cenovnici
+                                   
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_AGENT']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="discount-list" onClick={() => { history.push("/panel/discount-list"); }}>
-                                    Moji popusti
+                                <LocalOfferIcon/> Moji popusti
                                 </Nav.Link>
                             </Nav.Item>
                         }
