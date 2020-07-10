@@ -25,6 +25,23 @@ import RegFirmContainer from '../containers/Authorization/RegFirmContainer';
 import PricelistContainer from '../containers/Pricelists/PricelistContainer';
 import DiscountsContainer from '../containers/Discount/DiscountsContainer';
 import StatisticsContainer from '../containers/AgentFirm/StatisticsContainer';
+import HomeIcon from '@material-ui/icons/Home';
+import PagesIcon from '@material-ui/icons/Pages';
+import AddBoxIcon from '@material-ui/icons/AddBox';
+import StorageIcon from '@material-ui/icons/Storage';
+import GroupIcon from '@material-ui/icons/Group';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import LocalGasStationIcon from '@material-ui/icons/LocalGasStation';
+import DriveEtaIcon from '@material-ui/icons/DriveEta';
+import CommuteIcon from '@material-ui/icons/Commute';
+import BrandingWatermarkIcon from '@material-ui/icons/BrandingWatermark';
+import DynamicFeedIcon from '@material-ui/icons/DynamicFeed';
+import CommentIcon from '@material-ui/icons/Comment';
+import PermIdentityIcon from '@material-ui/icons/PermIdentity';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import AllInboxIcon from '@material-ui/icons/AllInbox';
 
 const PanelContainer = ({ match }) => {
     const token = useSelector(tokenSelector);
@@ -43,117 +60,121 @@ const PanelContainer = ({ match }) => {
     return (
         <Container fluid>
             <Row>
-                <Col sm={2} md={2} xs={12} className="pl-0">
+                <Col sm={2} md={2} xs={12} className="pl-0 ">
                     <Nav variant="pills" className="flex-column bg-light">
                         {hasRole(['ROLE_ADMIN', 'ROLE_USER', 'ROLE_AGENT']) &&
                             <Nav.Item>
+                          
+                           
+                      
                                 <Nav.Link eventKey="home" onClick={() => { history.push("/panel/home"); }}>
-                                    Panel pocetna
+                                <PagesIcon />  Panel pocetna
                                 </Nav.Link>
                             </Nav.Item>
+                            
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="car-man" onClick={() => { history.push("/panel/car-man"); }}>
-                                    Proizvođači automobila
+                                  <BrandingWatermarkIcon/>  Proizvođači automobila
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="car-model" onClick={() => { history.push("/panel/car-model"); }}>
-                                    Modeli automobila
+                                   <CommuteIcon/> Modeli automobila
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item >
                                 <Nav.Link eventKey="car-type" onClick={() => { history.push("/panel/car-type"); }}>
-                                    Tipovi automobila
+                                   <DriveEtaIcon/> Tipovi automobila
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="fuel-type" onClick={() => { history.push("/panel/fuel-type"); }}>
-                                    Tipovi goriva
+                                <LocalGasStationIcon/>   Tipovi goriva
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="gb-type" onClick={() => { history.push("/panel/gb-type"); }}>
-                                    Tipovi mjenjača
+                                  <AccountTreeIcon/>   Tipovi mjenjača
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="end-users" onClick={() => { history.push("/panel/man-end-users"); }}>
-                                    Krajnji korisnici
+                                   <GroupIcon/>  Krajnji korisnici
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="create-ad" onClick={() => { history.push("/panel/create-ad"); }}>
-                                    Dodaj oglas
+                                   <AddBoxIcon/> Dodaj oglas
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="my-ads" onClick={() => { history.push("/panel/my-ads"); }}>
-                                    Moji oglasi
+                                  <StorageIcon/>  Moji oglasi
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="end-user-reqs" onClick={() => { history.push("/panel/end-user-reqs"); }}>
-                                    Moji zahtjevi
+                                <DynamicFeedIcon/>  Moji zahtjevi
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="publisher-user-reqs" onClick={() => { history.push("/panel/publisher-user-reqs"); }}>
-                                    Zahtjevi za moje oglase
+                                  <AllInboxIcon/>  Zahtjevi za moje oglase
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_AGENT']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="statistics" onClick={() => { history.push("/panel/statistics"); }}>
-                                    Statistika
+                                   <EqualizerIcon/> Statistika
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="comments" onClick={() => { history.push("/panel/comments"); }}>
-                                    Komentari
+                                   <CommentIcon/> Komentari
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="man-agent" onClick={() => { history.push("/panel/man-agent"); }}>
-                                    Agenti
+                                  <PermIdentityIcon/>  Agenti
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_ADMIN']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="man-firm" onClick={() => { history.push("/panel/man-firm"); }}>
-                                    Firme
+                                   <SupervisedUserCircleIcon/> Firme
                                 </Nav.Link>
                             </Nav.Item>
                         }
                         {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
                             <Nav.Item>
                                 <Nav.Link eventKey="pricelist" onClick={() => { history.push("/panel/pricelist"); }}>
-                                    Moji cenovnici
+                                   <LocalOfferIcon/> Cenovnici
                                 </Nav.Link>
                             </Nav.Item>
                         }
