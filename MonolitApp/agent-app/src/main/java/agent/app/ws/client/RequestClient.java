@@ -16,4 +16,6 @@ public class RequestClient extends WebServiceGatewaySupport {
         AcceptResponse response = (AcceptResponse) getWebServiceTemplate().marshalSendAndReceive(request);
         return response.getMsg();
     }
+
+
 }

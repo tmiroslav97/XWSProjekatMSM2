@@ -55,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/pricelist/find-price-per-day/{id}").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
+                .antMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterAfter(authenticationTokenFilterBean(),
@@ -64,6 +65,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(HttpMethod.GET, "/pricelist/find-price-per-day/{id}");
+        web.ignoring().antMatchers(HttpMethod.GET, "/ws/**");
+        web.ignoring().antMatchers(HttpMethod.POST, "/ws/**");
+        web.ignoring().antMatchers(HttpMethod.PUT, "/ws/**");
+        web.ignoring().antMatchers(HttpMethod.DELETE, "/ws/**");
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/ws/**");
 
     }
 

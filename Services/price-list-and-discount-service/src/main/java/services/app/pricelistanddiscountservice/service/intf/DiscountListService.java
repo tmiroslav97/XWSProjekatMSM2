@@ -21,4 +21,11 @@ public interface DiscountListService {
     Integer createDiscount(DiscountListCreateDTO discountListCreateDTO);
     Integer addDiscountToAd(Long discountId, Long adId);
     Integer deleteDiscountFromAd(Long discountId, Long adId);
+    Long authAgent(String email, String identifier);
+    Long addDiscountListFromAgent(Long publisherId, Integer dayNum, Float discount );
+    Long editDiscountListFromAgent(Long publisherId, Integer dayNum, Float discount, Long mainId);
+    Long deleteDiscountListFromAgent(Long publisherId, Long mainId);
+    Long addDiscountListToAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd);
+    Long removeDiscountListFromAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd);
+
 }
