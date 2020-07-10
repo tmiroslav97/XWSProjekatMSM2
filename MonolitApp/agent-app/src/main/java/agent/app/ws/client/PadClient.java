@@ -30,7 +30,7 @@ public class PadClient extends WebServiceGatewaySupport {
         request.setPricePerKmCDW(pricePerKmCDW);
 
         EditPriceListResponse response = (EditPriceListResponse) getWebServiceTemplate().marshalSendAndReceive(request);
-        return (Long) response.getMainId();
+        return response.getMainId();
     }
 
     public Long deletePriceListRequest(String publisherUserEmail, String identifier, Long mainId){
@@ -82,6 +82,17 @@ public class PadClient extends WebServiceGatewaySupport {
         request.setMainIdAd(mainIdAd);
         request.setMainIdDiscount(mainIdDiscount);
         AddDiscountListToAdResponse response = (AddDiscountListToAdResponse) getWebServiceTemplate().marshalSendAndReceive(request);
+        return response.getMainId();
+    }
+
+    public Long removeDiscountListFromAdRequest(String publisherUserEmail, String identifier, Long mainIdDiscount,
+                                                Long mainIdAd){
+        RemoveDiscountListFromAdRequest request = new RemoveDiscountListFromAdRequest();
+        request.setPublisherUserEmail(publisherUserEmail);
+        request.setIdentifier(identifier);
+        request.setMainIdAd(mainIdAd);
+        request.setMainIdDiscount(mainIdDiscount);
+        RemoveDiscountListFromAdResponse response = (RemoveDiscountListFromAdResponse) getWebServiceTemplate().marshalSendAndReceive(request);
         return response.getMainId();
     }
 }

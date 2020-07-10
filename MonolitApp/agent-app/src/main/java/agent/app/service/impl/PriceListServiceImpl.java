@@ -117,6 +117,12 @@ public class PriceListServiceImpl implements PriceListService {
         priceList1.setPricePerKm(priceList.getPricePerKm());
         priceList1.setPricePerKmCDW(priceList.getPricePerKmCDW());
         priceList1 = priceListRepository.save(priceList1);
+        //soap
+        String identifier = this.findPriceListPublisherUserIdentifier(priceList.getPublisherUser().getEmail());
+        Long response = padClient.editPriceListRequest(priceList.getPublisherUser().getEmail(),
+                identifier, priceList.getPricePerDay(),
+                priceList.getPricePerKm(), priceList.getPricePerKmCDW(), priceList.getMainId());
+        System.out.println("main id: " + response);
         return 1;
     }
 
@@ -126,6 +132,12 @@ public class PriceListServiceImpl implements PriceListService {
         List<Long> usedPricelists = this.findPricelistsFromAds(publisher);
         if(!usedPricelists.contains(id)){
             System.out.println("ne sadrzi cenovnik mozes obrisati.");
+            //soap
+            String identifier = this.findPriceListPublisherUserIdentifier(priceList.getPublisherUser().getEmail());
+            Long response = padClient.deletePriceListRequest(priceList.getPublisherUser().getEmail(),
+                    identifier, priceList.getMainId());
+            System.out.println("main id: " + response);
+
             this.delete(priceList);
             return 1;
         }
