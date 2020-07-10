@@ -86,3 +86,8 @@ INSERT INTO image(id, name, ad_id)
 VALUES (19, 'slika15.jpg', 5);
 INSERT INTO image(id, name, ad_id)
 VALUES (20, 'slika16.jfif', 5);
+
+INSERT INTO comment(id, approved, content, creation_date, publisher_user, ad_id)
+VALUES (1, true, 'Auto je odlican, preporuke.', STR_TO_DATE('12:00 06-07-2020', '%H:%i %d-%m-%Y'), 5, 2);
+INSERT INTO comment(id, approved, content, creation_date, publisher_user, ad_id)
+VALUES (2, true, 'Auto je okej.', STR_TO_DATE('12:00 12-07-2020', '%H:%i %d-%m-%Y'), 5, 2);

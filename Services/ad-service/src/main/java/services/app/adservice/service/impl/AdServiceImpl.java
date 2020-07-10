@@ -646,11 +646,16 @@ public class AdServiceImpl implements AdService {
                 ad.setRatingCnt(1L); //zbog djeljenja sa 0
                 adT = ad;
             } else {
-                if (ad.getComments().size() >= max) {
-                    System.out.println("Komentari "  + ad.getComments().size());
-                    max = ad.getComments().size();
-                    adT = ad;
+                for(Comment comment : ad.getComments()){
+                    if(comment.getApproved()){
+                        if (ad.getComments().size() >= max) {
+                            System.out.println("Komentari "  + ad.getComments().size());
+                            max = ad.getComments().size();
+                            adT = ad;
+                        }
+                    }
                 }
+
             }
 
         }
