@@ -4,10 +4,7 @@ import agent.app.common.db.DbColumnConstants;
 import agent.app.common.db.DbTableConstants;
 import agent.app.converter.DateAPI;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 import org.w3._2001.xmlschema.Adapter1;
@@ -19,6 +16,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
