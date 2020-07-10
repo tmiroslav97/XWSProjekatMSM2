@@ -10,7 +10,7 @@ import services.app.pricelistanddiscountservice.service.intf.DiscountListService
 @Endpoint
 public class DiscountListEndpoint {
 
-    private static final String NAMESPACE_URI = "http://www.app.services/carrequestservice/model";
+    private static final String NAMESPACE_URI = "http://www.app.services/pricelistanddiscountservice/model";
 
     private final DiscountListService discountListService;
 

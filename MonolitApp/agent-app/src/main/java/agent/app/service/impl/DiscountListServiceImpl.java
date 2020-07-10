@@ -58,11 +58,11 @@ public class DiscountListServiceImpl implements DiscountListService {
         List<DiscountList> discountLists = this.findAllByAgent(email);
         List<DiscountListDTO> discountListDTOS = new ArrayList<>();
 
-        for(DiscountList dl : discountLists){
+        for (DiscountList dl : discountLists) {
             DiscountListDTO discountListDTO = DiscountListConverter.toDiscountListDTOFromDiscountList(dl);
 
             List<Long> adsId = new ArrayList<>();
-            for(Ad ad : dl.getAds()){
+            for (Ad ad : dl.getAds()) {
                 adsId.add(ad.getId());
             }
             discountListDTO.setAdsId(adsId);
@@ -96,6 +96,7 @@ public class DiscountListServiceImpl implements DiscountListService {
     @Override
     public Integer edit(DiscountList discountList) {
         DiscountList discountList1 = this.findById(discountList.getId());
+        Long mainId = discountList1.getMainId();
         discountList1.setDayNum(discountList.getDayNum());
         discountList1.setDiscount(discountList.getDiscount());
         discountList1 = discountListRepository.save(discountList1);
@@ -104,6 +105,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         Long response = padClient.editDiscountListRequest(discountList1.getAgent().getEmail(),
                 identifier, discountList1.getDayNum(), discountList1.getDiscount(), discountList1.getMainId());
         System.out.println("main id: " + response);
+
         return 1;
     }
 
