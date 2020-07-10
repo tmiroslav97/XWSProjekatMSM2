@@ -23,6 +23,8 @@ public class RabbitMQConfiguration {
     public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
     public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
     public static final String RATE_AD_QUEUE_NAME = "rate_ad";
+    public static final String ADD_DISCOUNT_QUEUE_NAME = "add_discount";
+    public static final String DELETE_DISCOUNT_QUEUE_NAME = "delete_discount";
 
     @Bean
     public Queue rateAd() {
@@ -87,5 +89,14 @@ public class RabbitMQConfiguration {
     @Bean
     public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
+    }
+
+    @Bean
+    public Queue addDiscount() {
+        return new Queue(ADD_DISCOUNT_QUEUE_NAME, false);
+    }
+    @Bean
+    public Queue deleteDiscount() {
+        return new Queue(DELETE_DISCOUNT_QUEUE_NAME, false);
     }
 }

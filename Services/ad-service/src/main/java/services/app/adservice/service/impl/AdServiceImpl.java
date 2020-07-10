@@ -575,4 +575,36 @@ public class AdServiceImpl implements AdService {
         return discountListService.addDiscount(discountId);
     }
 
+    @Override
+    public Integer deleteDiscount(Long discountId) {
+        DiscountList dl = discountListService.findById(discountId);
+        List<Ad> ads = this.findAll();
+        Boolean flag = false;
+        for(Ad ad : ads){
+            if(!ad.getDeleted()){
+                if(ad.getDiscountLists().contains(dl)){
+                    flag = true;
+                }
+            }
+        }
+        if(flag == false){
+            discountListService.deleteDiscount(discountId);
+            return 1;
+        }
+        return 2;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.ADD_DISCOUNT_QUEUE_NAME)
+    public void addDiscountRabbit(Long discountId) {
+        Integer i = this.addDiscount(discountId);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_DISCOUNT_QUEUE_NAME)
+    public void deleteDiscountRabbit(Long discountId) {
+        Integer i = this.deleteDiscount(discountId);
+
+    }
+
 }

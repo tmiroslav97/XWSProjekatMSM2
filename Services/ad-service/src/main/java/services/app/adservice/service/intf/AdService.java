@@ -28,7 +28,6 @@ public interface AdService {
     String generateToken();
     Integer isExistToken(String token);
     Integer addRatingToAd(AdRatingDTO adRatingDTO);
-
     AdDetailViewDTO getAdDetailView(Long ad_id);
     List<Long> findPricelistsFromAds();
     List<Ad> findAllFromPublisher(Long publisherId);
@@ -38,7 +37,9 @@ public interface AdService {
     Integer addDiscountToAd(Long discountId, Long adId);
     Integer removeDiscountToAd(Long discountId, Long adId);
     Integer addDiscount(Long discountId);
-
+    Integer deleteDiscount(Long discountId);
+    void addDiscountRabbit(Long discountId);
+    void deleteDiscountRabbit(Long discountId);
 
 
 }

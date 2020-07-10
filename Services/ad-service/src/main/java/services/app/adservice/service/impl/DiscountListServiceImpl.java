@@ -33,4 +33,11 @@ public class DiscountListServiceImpl implements DiscountListService {
         discountListRepository.save(dl);
         return 1;
     }
+
+    @Override
+    public Integer deleteDiscount(Long id) {
+        DiscountList dl = this.findById(id);
+        discountListRepository.delete(dl);
+        return 1;
+    }
 }

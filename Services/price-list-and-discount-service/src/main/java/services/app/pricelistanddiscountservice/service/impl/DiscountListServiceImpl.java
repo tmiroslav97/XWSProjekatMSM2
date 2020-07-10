@@ -91,9 +91,15 @@ public class DiscountListServiceImpl implements DiscountListService {
     @Override
     public Integer deleteById(Long id) {
         DiscountList discountList = this.findById(id);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        Integer rez = adClient.deleteDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+        if(rez == 2){
+            return 2;
+        }
         this.delete(discountList);
         return 1;
-        //TODO 3: dodati brisanje i u ad servisu
+
     }
 
     @Override
@@ -178,8 +184,8 @@ public class DiscountListServiceImpl implements DiscountListService {
         discountList.setDayNum(dayNum);
         discountList.setDiscount(discount);
         discountList = this.save(discountList);
-        //TODO 1: OVDE TREBA POZVATI AD SERVICE I TAMO DODATI POPUST
-//        Integer i = adClient.addDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.ADD_DISCOUNT_QUEUE_NAME, discountList.getId());
 
         return discountList.getId();
     }
@@ -190,9 +196,6 @@ public class DiscountListServiceImpl implements DiscountListService {
         discountList.setDayNum(dayNum);
         discountList.setDiscount(discount);
         discountList = discountListRepository.save(discountList);
-        //TODO 1: OVDE TREBA POZVATI AD SERVICE I TAMO DODATI POPUST
-//        Integer i = adClient.addDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
-
         return discountList.getId();
     }
 
@@ -200,10 +203,11 @@ public class DiscountListServiceImpl implements DiscountListService {
     public Long deleteDiscountListFromAgent(Long publisherId, Long mainId) {
         DiscountList discountList = this.findById(mainId);
         this.delete(discountList);
-        //TODO 2: dodati brisanje i kod ad servisa
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.DELETE_DISCOUNT_QUEUE_NAME, discountList.getId());
         return discountList.getId();
     }
 
+    
     @Override
     public Long addDiscountListToAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd) {
         DiscountList discountList = this.findById(mainIdDiscount);

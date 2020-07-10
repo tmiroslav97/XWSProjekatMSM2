@@ -10,4 +10,5 @@ public interface DiscountListService {
     DiscountList findById(Long id);
     List<DiscountList> findAll();
     Integer addDiscount(Long id);
+    Integer deleteDiscount(Long id);
 }
