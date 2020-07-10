@@ -1,5 +1,6 @@
 package services.app.pricelistanddiscountservice.service.intf;
 
+import org.joda.time.DateTime;
 import services.app.pricelistanddiscountservice.dto.pricelist.PriceListCreateDTO;
 import services.app.pricelistanddiscountservice.model.PriceList;
 
@@ -19,4 +20,10 @@ public interface PriceListService {
     Integer editPriceList(PriceList priceList);
     Integer deleteById(Long id);
     Long syncPriceList(String msg);
+    Long authAgent(String email, String identifier);
+    Long createPriceListFromAgent(Long publisherUser, DateTime creationDate, Float pricePerDay,
+                                  Float pricePerKm, Float pricePerKmCDW);
+    Long editPriceListFromAgent(Float pricePerDay, Float pricePerKm,
+                                Float pricePerKmCDW, Long mainId);
+    Long deletePriceListFromAgent(Long mainId);
 }

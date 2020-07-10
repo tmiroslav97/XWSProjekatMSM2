@@ -575,4 +575,60 @@ public class AdServiceImpl implements AdService {
         return discountListService.addDiscount(discountId);
     }
 
+    @Override
+    public Integer deleteDiscount(Long discountId) {
+        DiscountList dl = discountListService.findById(discountId);
+        List<Ad> ads = this.findAll();
+        Boolean flag = false;
+        for(Ad ad : ads){
+            if(!ad.getDeleted()){
+                if(ad.getDiscountLists().contains(dl)){
+                    flag = true;
+                }
+            }
+        }
+        if(flag == false){
+            discountListService.deleteDiscount(discountId);
+            return 1;
+        }
+        return 2;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.ADD_DISCOUNT_QUEUE_NAME)
+    public void addDiscountRabbit(Long discountId) {
+        Integer i = this.addDiscount(discountId);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_DISCOUNT_QUEUE_NAME)
+    public void deleteDiscountRabbit(Long discountId) {
+        Integer i = this.deleteDiscount(discountId);
+
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.ADD_DISCOUNT_TO_AD_QUEUE_NAME)
+    public void addDiscountToAdRabbit(String string) {
+        DiscountAndAdDTO discountAndAdDTO = null;
+        try {
+            discountAndAdDTO = objectMapper.readValue(string, DiscountAndAdDTO.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Integer i = this.addDiscountToAd(discountAndAdDTO.getMainIdDiscount(), discountAndAdDTO.getMainIdAd());
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_DISCOUNT_FROM_AD_QUEUE_NAME)
+    public void deleteDiscountFromAdRabbit(String string) {
+        DiscountAndAdDTO discountAndAdDTO = null;
+        try {
+            discountAndAdDTO = objectMapper.readValue(string, DiscountAndAdDTO.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Integer i = this.removeDiscountToAd(discountAndAdDTO.getMainIdDiscount(), discountAndAdDTO.getMainIdAd());
+    }
+
 }
