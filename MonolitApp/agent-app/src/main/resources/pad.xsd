@@ -19,8 +19,8 @@
                 <xs:element name="identifier" type="xs:string"/>
                 <xs:element name="creationDate" type="xs:dateTime"/>
                 <xs:element name="pricePerDay" type="xs:float"/>
-                <xs:element name="pricePerKm" type="xs:float"/>
-                <xs:element name="pricePerKmCDW" type="xs:float"/>
+                <xs:element name="pricePerKm" type="xs:float" minOccurs="0"/>
+                <xs:element name="pricePerKmCDW" type="xs:float" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -37,8 +37,8 @@
                 <xs:element name="publisherUserEmail" type="xs:string"/>
                 <xs:element name="identifier" type="xs:string"/>
                 <xs:element name="pricePerDay" type="xs:float"/>
-                <xs:element name="pricePerKm" type="xs:float"/>
-                <xs:element name="pricePerKmCDW" type="xs:float"/>
+                <xs:element name="pricePerKm" type="xs:float" minOccurs="0"/>
+                <xs:element name="pricePerKmCDW" type="xs:float" minOccurs="0"/>
                 <xs:element name="mainId" type="xs:long"/>
             </xs:sequence>
         </xs:complexType>
@@ -46,7 +46,7 @@
     <xs:element name="editPriceListResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="mainId"/>
+                <xs:element name="mainId" type="xs:long"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
