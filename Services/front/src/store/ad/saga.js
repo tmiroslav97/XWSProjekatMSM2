@@ -153,14 +153,11 @@ export function* loadImage() {
 
 export function* fetchCalendar() {
     const { payload } = yield take(FETCH_CALENDAR);
-    console.log("SAGA " + payload.id)
     // const temp = yield select(calendarSelector);
     const temp = [];
-    console.log(temp);
     yield put(putCalendar({ 'isFetch': false }));
     const data = yield call(AdServices.fetchCalendar, payload.id);
     data.map((term) => {
-        console.log(term);
         temp.push({
             'startDate': term.startDate,
             'endDate': term.endDate

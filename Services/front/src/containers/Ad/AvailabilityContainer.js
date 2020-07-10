@@ -9,6 +9,8 @@ import { calendarSelector } from '../../store/ad/selectors';
 import { fetchCalendar, addTerm } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
 import Availability from '../../components/Ad/Availability';
+import AdServices from '../../services/AdServices';
+import { putErrorMsg, putSuccessMsg } from '../../store/common/actions';
 
 
 const AvailabilityContainer = (props) => {
@@ -45,7 +47,6 @@ const AvailabilityContainer = (props) => {
                 // console.log(carCalendarTermList)
 
                 calendar.data.map((term) => {
-                    console.log(term);
 
                     let ss = term.startDate.substring(0, 10);
                     let ss2 = term.startDate.substring(11, 16);
@@ -101,13 +102,13 @@ const AvailabilityContainer = (props) => {
 
                 // setValidated(false);
             }
-        }else{
+        } else {
             alert("Niste uneli sva polja.");
         }
     }
 
     const add = () => {
-        
+
         let temp = {
             'adId': props.adId,
             'startDate': startDate,
@@ -146,14 +147,38 @@ const AvailabilityContainer = (props) => {
     const handleEndDate = (event) => {
         setEndDate(event.target.value);
     }
-    const handleOccupationStart = (event)=> {
+    const handleOccupationStart = (event) => {
+        setOccupationStart(event.target.value);
+    }
+    const handleOccupationEnd = (event) => {
+        setOccupationEnd(event.target.value);
+    }
 
-    }
-    const handleOccupationEnd = (event)=> {
-        
-    }
-    const addOccupation =(event) => {
-        
+
+    const addOccupationTerm = async () => {
+        const result = await AdServices.addOccupationTerm({
+            'adId': props.adId,
+            'startDate': occupationStart,
+            'endDate': occupationEnd
+        });
+
+        if (result === "Uspjesno ubacen termin zauzeca") {
+            dispatch(putSuccessMsg(result));
+            dispatch(
+                fetchCalendar({
+                    'id': props.adId
+                })
+            );
+        } else {
+            dispatch(putErrorMsg(result));
+        }
+    };
+    const addOccupation = (event) => {
+        if (occupationStart != null && occupationEnd != null) {
+            addOccupationTerm();
+        } else {
+            alert("Niste uneli sva polja.");
+        }
     }
 
     return (
@@ -177,7 +202,7 @@ const AvailabilityContainer = (props) => {
                         flag={flag}
                         validated={validated}
                         carCalendarTermList={carCalendarTermList}
-                        
+
                         //occupation
                         occupationStart={occupationStart}
                         occupationEnd={occupationEnd}
