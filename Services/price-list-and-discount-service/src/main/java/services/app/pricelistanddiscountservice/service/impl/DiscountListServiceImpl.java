@@ -13,6 +13,7 @@ import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.DiscountListConverter;
 import services.app.pricelistanddiscountservice.dto.AgentFirmIdentificationDTO;
+import services.app.pricelistanddiscountservice.dto.discount.DiscountAndAdDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListDTO;
 import services.app.pricelistanddiscountservice.dto.sync.DiscountListSyncDTO;
@@ -207,20 +208,39 @@ public class DiscountListServiceImpl implements DiscountListService {
         return discountList.getId();
     }
 
-    
     @Override
     public Long addDiscountListToAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd) {
         DiscountList discountList = this.findById(mainIdDiscount);
-        //TODO 5: ODRADITI U AD CLIENTU
-//        Integer i = adClient.addDiscountToAd(mainIdDiscount, mainIdAd, principal.getUserId(),principal.getEmail(), principal.getRoles(), principal.getToken());
+
+        DiscountAndAdDTO discountAndAdDTO = new DiscountAndAdDTO();
+        discountAndAdDTO.setMainIdAd(mainIdAd);
+        discountAndAdDTO.setMainIdDiscount(mainIdDiscount);
+        String string = null;
+        try {
+            string = objectMapper.writeValueAsString(discountAndAdDTO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.ADD_DISCOUNT_TO_AD_QUEUE_NAME, string);
+
         return discountList.getId();
     }
 
     @Override
     public Long removeDiscountListFromAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd) {
         DiscountList discountList = this.findById(mainIdDiscount);
-        //TODO 6: ODRADITI U AD CLIENTU
-//        Integer i = adClient.removeDiscountToAd(mainIdDiscount, mainIdAd, principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken() );
+
+        DiscountAndAdDTO discountAndAdDTO = new DiscountAndAdDTO();
+        discountAndAdDTO.setMainIdAd(mainIdAd);
+        discountAndAdDTO.setMainIdDiscount(mainIdDiscount);
+        String string = null;
+        try {
+            string = objectMapper.writeValueAsString(discountAndAdDTO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        rabbitTemplate.convertAndSend(RabbitMQConfiguration.DELETE_DISCOUNT_FROM_AD_QUEUE_NAME, string);
+
         return discountList.getId();
     }
 

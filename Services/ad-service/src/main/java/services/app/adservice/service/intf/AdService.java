@@ -40,6 +40,7 @@ public interface AdService {
     Integer deleteDiscount(Long discountId);
     void addDiscountRabbit(Long discountId);
     void deleteDiscountRabbit(Long discountId);
-
+    void addDiscountToAdRabbit(String string);
+    void deleteDiscountFromAdRabbit(String string);
 
 }

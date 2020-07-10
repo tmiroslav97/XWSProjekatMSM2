@@ -40,4 +40,6 @@ public class DiscountListServiceImpl implements DiscountListService {
         discountListRepository.delete(dl);
         return 1;
     }
+
+
 }
