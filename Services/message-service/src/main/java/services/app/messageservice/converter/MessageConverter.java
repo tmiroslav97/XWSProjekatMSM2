@@ -1,6 +1,6 @@
 package services.app.messageservice.converter;
 
-import services.app.messageservice.dto.MessageRequestDTO;
+import services.app.messageservice.dto.message.MessageRequestDTO;
 import services.app.messageservice.model.Message;
 
 public class MessageConverter extends  AbstractConverter {

@@ -28,7 +28,7 @@ public class ConversationController {
     public ResponseEntity<?> getMyConversations() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
-        return new ResponseEntity<>(conversationService.findAllByParticipantId(Long.valueOf(cp.getUserId())), HttpStatus.OK);
+        return new ResponseEntity<>(conversationService.findAllConversationDTOByParticipantId(Long.valueOf(cp.getUserId())), HttpStatus.OK);
 
     }
 

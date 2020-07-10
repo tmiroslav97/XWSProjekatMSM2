@@ -9,8 +9,8 @@ import services.app.messageservice.config.RabbitMQConfiguration;
 import services.app.messageservice.converter.ConversationConverter;
 import services.app.messageservice.converter.DateAPI;
 import services.app.messageservice.converter.MessageConverter;
-import services.app.messageservice.dto.MessageRequestDTO;
-import services.app.messageservice.dto.UserFLNameDTO;
+import services.app.messageservice.dto.message.MessageRequestDTO;
+import services.app.messageservice.dto.user.UserFLNameDTO;
 import services.app.messageservice.exception.NotFoundException;
 import services.app.messageservice.model.Conversation;
 import services.app.messageservice.model.Message;
@@ -93,6 +93,11 @@ public class MessageServiceImpl implements MessageService {
         } catch (JsonProcessingException exception) {
             return 2;
         }
+    }
+
+    @Override
+    public Integer unsSeenMessages(Long conversationId, Long participantId) {
+        return messageRepository.unsSeenMessages(conversationId, participantId);
     }
 
     @Override

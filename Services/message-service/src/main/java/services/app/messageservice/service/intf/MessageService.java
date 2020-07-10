@@ -1,6 +1,6 @@
 package services.app.messageservice.service.intf;
 
-import services.app.messageservice.dto.MessageRequestDTO;
+import services.app.messageservice.dto.message.MessageRequestDTO;
 import services.app.messageservice.model.Message;
 
 import java.util.List;
@@ -15,6 +15,8 @@ public interface MessageService {
     Integer sendFirstMessage(MessageRequestDTO messageRequestDTO);
 
     Integer sendMessage(Message message, Long senderUserId);
+
+    Integer unsSeenMessages(Long conversationId, Long participantId);
 
     Message save(Message message);
 

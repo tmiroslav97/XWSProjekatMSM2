@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import services.app.messageservice.dto.MessageRequestDTO;
+import services.app.messageservice.dto.message.MessageRequestDTO;
 import services.app.messageservice.model.CustomPrincipal;
 import services.app.messageservice.model.Message;
 import services.app.messageservice.service.intf.MessageService;

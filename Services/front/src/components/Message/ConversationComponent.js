@@ -1,8 +1,8 @@
 import React from 'react';
-import { Form, Button, Container, Row, Col, ListGroup, Tooltip, OverlayTrigger } from 'react-bootstrap'
+import { Form, Button, Container, Row, Col, ListGroup, Tooltip, OverlayTrigger, Badge } from 'react-bootstrap'
 
 const ConversationComponent = (props) => {
-
+    console.log(props.conversation);
     return (
         <div>
             <Row>
@@ -10,9 +10,25 @@ const ConversationComponent = (props) => {
                     <ListGroup variant="flush">
                         {
                             props.conversations.map((conv, idx) => {
-                                return (
-                                    <ListGroup.Item action key={idx} variant="secondary" onClick={() => { props.handleFetchConversationMessages(conv); }}>Razgovor <br />{conv.convName}</ListGroup.Item>
-                                );
+                                if (conv.unseenNum == 0) {
+                                    return (
+                                        <ListGroup.Item action key={idx} onClick={() => { props.handleFetchConversationMessages(conv.conversation); }}>Razgovor: {conv.conversation.convName}</ListGroup.Item>
+                                    );
+                                } else {
+                                    return (
+                                        <ListGroup.Item action key={idx} onClick={() => { props.handleFetchConversationMessages(conv.conversation); }}>
+                                            <Row>
+                                                <Col md={10} xs={10}>
+                                                    Razgovor: {conv.conversation.convName}
+                                                </Col>
+                                                <Col md={2} xs={2}>
+                                                    <Badge className="mr-auto" pill variant="dark">{conv.unseenNum}</Badge>
+                                                </Col>
+                                            </Row>
+                                        </ListGroup.Item>
+                                    );
+                                }
+
                             })
                         }
                     </ListGroup>

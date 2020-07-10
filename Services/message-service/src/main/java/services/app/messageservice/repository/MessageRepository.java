@@ -18,4 +18,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     @Modifying
     @Query("UPDATE Message  msg set msg.recieverSeen=true where msg.recieverSeen=false and msg.conversationId=(?1) and msg.senderEmail<>(?2)")
     void setAllConversationMessagesFromRecieverToSeen(Long conversationId, String recieverEmail);
+
+    @Query("SELECT COUNT(msg) FROM Message msg where msg.conversationId=(?1) and msg.senderId<>(?2) and msg.recieverSeen=false")
+    Integer unsSeenMessages(Long conversationId, Long participantId);
+
 }

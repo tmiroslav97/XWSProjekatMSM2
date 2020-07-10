@@ -1,4 +1,4 @@
-package services.app.messageservice.dto;
+package services.app.messageservice.dto.message;
 
 import lombok.*;
 
