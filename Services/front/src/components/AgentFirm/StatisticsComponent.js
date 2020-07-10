@@ -5,7 +5,6 @@ import AdsTableComponent from '../AgentFirm/AdsTableComponent'
 
 const StatisticsComponent = (props) => {
 
-  console.log(props.ad)
   return (
 
    <Container className="mt-3">
