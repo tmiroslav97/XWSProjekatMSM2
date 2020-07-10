@@ -12,6 +12,7 @@ import services.app.pricelistanddiscountservice.client.AdClient;
 import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.DiscountListConverter;
+import services.app.pricelistanddiscountservice.dto.AgentFirmIdentificationDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListDTO;
 import services.app.pricelistanddiscountservice.dto.sync.DiscountListSyncDTO;
@@ -92,6 +93,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         DiscountList discountList = this.findById(id);
         this.delete(discountList);
         return 1;
+        //TODO 3: dodati brisanje i u ad servisu
     }
 
     @Override
@@ -101,6 +103,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         discountList1.setDiscount(discountList.getDiscount());
         discountList1 = discountListRepository.save(discountList1);
         return 1;
+        //TODO 4: dodati edit i u ad servisu
     }
 
     @Override
@@ -151,6 +154,70 @@ public class DiscountListServiceImpl implements DiscountListService {
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         Integer i = adClient.removeDiscountToAd(discountId, adId,principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken() );
         return i;
+    }
+
+    @Override
+    public Long authAgent(String email, String identifier) {
+        AgentFirmIdentificationDTO agentFirmIdentificationDTO = AgentFirmIdentificationDTO.builder()
+                .email(email)
+                .identifier(identifier)
+                .build();
+        try {
+            String agentFirmIdentificationDTOStr = objectMapper.writeValueAsString(agentFirmIdentificationDTO);
+            Long publisherUserId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, agentFirmIdentificationDTOStr);
+            return publisherUserId;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long addDiscountListFromAgent(Long publisherId, Integer dayNum, Float discount) {
+        DiscountList discountList = new DiscountList();
+        discountList.setAgent(publisherId);
+        discountList.setDayNum(dayNum);
+        discountList.setDiscount(discount);
+        discountList = this.save(discountList);
+        //TODO 1: OVDE TREBA POZVATI AD SERVICE I TAMO DODATI POPUST
+//        Integer i = adClient.addDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+
+        return discountList.getId();
+    }
+
+    @Override
+    public Long editDiscountListFromAgent(Long publisherId, Integer dayNum, Float discount, Long mainId) {
+        DiscountList discountList = this.findById(mainId);
+        discountList.setDayNum(dayNum);
+        discountList.setDiscount(discount);
+        discountList = discountListRepository.save(discountList);
+        //TODO 1: OVDE TREBA POZVATI AD SERVICE I TAMO DODATI POPUST
+//        Integer i = adClient.addDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
+
+        return discountList.getId();
+    }
+
+    @Override
+    public Long deleteDiscountListFromAgent(Long publisherId, Long mainId) {
+        DiscountList discountList = this.findById(mainId);
+        this.delete(discountList);
+        //TODO 2: dodati brisanje i kod ad servisa
+        return discountList.getId();
+    }
+
+    @Override
+    public Long addDiscountListToAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd) {
+        DiscountList discountList = this.findById(mainIdDiscount);
+        //TODO 5: ODRADITI U AD CLIENTU
+//        Integer i = adClient.addDiscountToAd(mainIdDiscount, mainIdAd, principal.getUserId(),principal.getEmail(), principal.getRoles(), principal.getToken());
+        return discountList.getId();
+    }
+
+    @Override
+    public Long removeDiscountListFromAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd) {
+        DiscountList discountList = this.findById(mainIdDiscount);
+        //TODO 6: ODRADITI U AD CLIENTU
+//        Integer i = adClient.removeDiscountToAd(mainIdDiscount, mainIdAd, principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken() );
+        return discountList.getId();
     }
 
 }
