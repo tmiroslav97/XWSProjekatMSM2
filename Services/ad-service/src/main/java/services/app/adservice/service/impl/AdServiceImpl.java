@@ -25,6 +25,7 @@ import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.discountlist.DiscountInfoDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
 import services.app.adservice.dto.pricelist.PriceListDTO;
+import services.app.adservice.dto.pricelist.PriceListUpdateASDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.dto.user.UserFLNameDTO;
 import services.app.adservice.exception.ExistsException;
@@ -509,6 +510,18 @@ public class AdServiceImpl implements AdService {
         Ad ad = this.findById(reversePricelistDTO.getAdId());
         ad.setPriceList(reversePricelistDTO.getPricelistId());
         ad = this.edit(ad);
+        try {
+            String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
+            PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            PriceListUpdateASDTO priceListUpdateASDTO = PriceListUpdateASDTO.builder()
+                    .adId(ad.getId())
+                    .pricePerDay(priceListDTO.getPricePerDay())
+                    .build();
+            String priceListUpdateASDTOStr = objectMapper.writeValueAsString(priceListUpdateASDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_SEARCH_QUEUE_NAME, priceListUpdateASDTOStr);
+        } catch (JsonProcessingException exception) {
+            return 1;
+        }
         return 1;
     }
 
@@ -667,6 +680,7 @@ public class AdServiceImpl implements AdService {
         AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
         return adPage;
     }
+
     public Integer deleteDiscount(Long discountId) {
         DiscountList dl = discountListService.findById(discountId);
         List<Ad> ads = this.findAll();
@@ -780,7 +794,7 @@ public class AdServiceImpl implements AdService {
             rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AD_SEARCH_SYNC_QUEUE_NAME, adSynchronizeDTOStr);
             return ad.getId();
 
-        }catch (JsonProcessingException exception) {
+        } catch (JsonProcessingException exception) {
             return null;
         }
     }

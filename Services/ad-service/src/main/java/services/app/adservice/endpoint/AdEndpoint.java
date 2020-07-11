@@ -19,7 +19,7 @@ public class AdEndpoint {
         this.adService = adService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createAd")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createAdReqest")
     @ResponsePayload
     public CreateAdResponse createAd(@RequestPayload CreateAdRequest request) {
         CreateAdResponse response = new CreateAdResponse();
@@ -33,7 +33,7 @@ public class AdEndpoint {
         }
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "reversePricelist")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "reversePricelistRequest")
     @ResponsePayload
     public ReversePricelistResponse reversePricelist(@RequestPayload ReversePricelistRequest request) {
         ReversePricelistResponse response = new ReversePricelistResponse();
