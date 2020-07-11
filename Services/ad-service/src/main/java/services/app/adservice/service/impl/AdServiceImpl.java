@@ -22,6 +22,7 @@ import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
+import services.app.adservice.dto.discountlist.DiscountInfoDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
 import services.app.adservice.dto.pricelist.PriceListDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
@@ -137,20 +138,6 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdPageContentDTO findAll(Integer page, Integer size) {
-
-//        Pageable pageable;
-//        if(sort.equals("-")){
-//            pageable = PageRequest.of(page, size);
-//        }else{
-//            String par[] = sort.split(" ");
-//            if(par[1].equals("opadajuce")) {
-//                pageable = PageRequest.of(page, size, Sort.by(par[0]).descending());
-//            }else{
-//                pageable = PageRequest.of(page, size, Sort.by(par[0]).ascending());
-//            }
-//
-//        }
-
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
         System.out.println(ads.getSize());
@@ -461,7 +448,7 @@ public class AdServiceImpl implements AdService {
     public AdDetailViewDTO getAdDetailView(Long ad_id) {
 
         AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), appConfig.getPhotoDir());
-
+        Ad ad = this.findById(ad_id);
         try {
             String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, adDV.getPriceId());
             PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
@@ -469,6 +456,14 @@ public class AdServiceImpl implements AdService {
             adDV.setPricePerKm(priceListDTO.getPricePerKm());
             adDV.setPricePerKmCDW(priceListDTO.getPricePerKmCDW());
 
+            List<DiscountInfoDTO> discountInfoDTOS = new ArrayList<>();
+            for (DiscountList discountList : ad.getDiscountLists()) {
+                String discountInfoDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.DISCOUNT_INFO_BY_ID_QUEUE_NAME, discountList.getId());
+                DiscountInfoDTO discountInfoDTO = objectMapper.readValue(discountInfoDTOStr, DiscountInfoDTO.class);
+                discountInfoDTOS.add(discountInfoDTO);
+            }
+
+            adDV.setDiscounts(discountInfoDTOS);
             String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, adDV.getPublisherUserId());
             UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
             adDV.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
@@ -488,10 +483,10 @@ public class AdServiceImpl implements AdService {
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         List<Long> pricelists = new ArrayList<>();
         List<Ad> ads = this.findAllFromPublisher(Long.parseLong(principal.getUserId()));
-        for(Ad ad : ads){
-            if(!pricelists.contains(ad.getPriceList())){
+        for (Ad ad : ads) {
+            if (!pricelists.contains(ad.getPriceList())) {
                 pricelists.add(ad.getPriceList());
-                System.out.println("cenovnik:    "+ad.getPriceList());
+                System.out.println("cenovnik:    " + ad.getPriceList());
             }
         }
         return pricelists;
@@ -501,8 +496,8 @@ public class AdServiceImpl implements AdService {
     public List<Ad> findAllFromPublisher(Long publisherId) {
         List<Ad> ret = new ArrayList<>();
         List<Ad> ads = adRepository.findAll();
-        for(Ad ad : ads){
-            if(ad.getPublisherUser() == publisherId){
+        for (Ad ad : ads) {
+            if (ad.getPublisherUser() == publisherId) {
                 ret.add(ad);
             }
         }
@@ -525,6 +520,12 @@ public class AdServiceImpl implements AdService {
         try {
             String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
             PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            List<DiscountInfoDTO> discountInfoDTOS = new ArrayList<>();
+            for (DiscountList discountList : ad.getDiscountLists()) {
+                String discountInfoDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.DISCOUNT_INFO_BY_ID_QUEUE_NAME, discountList.getId());
+                DiscountInfoDTO discountInfoDTO = objectMapper.readValue(discountInfoDTOStr, DiscountInfoDTO.class);
+                discountInfoDTOS.add(discountInfoDTO);
+            }
             adCarInfoDTO.setToken(car.getToken());
             adCarInfoDTO.setCdw(car.getCdw());
             adCarInfoDTO.setDistanceLimit(car.getDistanceLimit());
@@ -532,6 +533,8 @@ public class AdServiceImpl implements AdService {
             adCarInfoDTO.setPricePerDay(priceListDTO.getPricePerDay());
             adCarInfoDTO.setPricePerKm(priceListDTO.getPricePerKm());
             adCarInfoDTO.setPricePerKmCDW(priceListDTO.getPricePerKmCDW());
+            adCarInfoDTO.setDiscountInfoDTOS(discountInfoDTOS);
+            adCarInfoDTO.setMileage(car.getMileage());
             String adCarInfoDTOStr = objectMapper.writeValueAsString(adCarInfoDTO);
             return adCarInfoDTOStr;
         } catch (JsonProcessingException exception) {
@@ -546,9 +549,9 @@ public class AdServiceImpl implements AdService {
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         List<Long> adsList = new ArrayList<>();
         DiscountList discountList = discountListService.findById(discountId);
-        for(Ad ad : discountList.getAds()){
+        for (Ad ad : discountList.getAds()) {
             adsList.add(ad.getId());
-            System.out.println("oglas od popusta"+ad.getId());
+            System.out.println("oglas od popusta" + ad.getId());
         }
         return adsList;
     }
@@ -577,18 +580,105 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    public List<Ad> findMyAds(Long publisher_id) {
+
+        return adRepository.findAllByDeletedAndPublisherUserId(false, publisher_id);
+    }
+
+    @Override
+    public AdStatisticsDTO findBestAverageGrade(Long publisher_id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        System.out.println(principal.getEmail());
+        Ad adT = null;
+        double averageGrade = 0.0;
+        double max = 0.0;
+        System.out.println("Average method");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+                averageGrade = 0.0;
+                max = averageGrade;
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                averageGrade = ad.getRatingNum() / ad.getRatingCnt();
+                System.out.println("Izracunata ocjena: " + averageGrade);
+                if (averageGrade > max) {
+                    System.out.println("Average: " + averageGrade);
+                    max = averageGrade;
+                    adT = ad;
+                }
+            }
+        }
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        System.out.println("Konacna ocj " + adPage.getAverageGrade());
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxMileage(Long publisher_id) {
+        Ad adT = null;
+        float max = 0;
+        System.out.println("Average method za kilometrazu");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                if (ad.getCar().getMileage() > max) {
+                    System.out.println("Max km: " + ad.getCar().getMileage());
+                    max = ad.getCar().getMileage();
+                    adT = ad;
+                }
+            }
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxComment(Long publisher_id) {
+        Ad adT = null;
+        int max = 0;
+        System.out.println("Average method za komentare");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                for (Comment comment : ad.getComments()) {
+                    if (comment.getApproved()) {
+                        if (ad.getComments().size() >= max) {
+                            System.out.println("Komentari " + ad.getComments().size());
+                            max = ad.getComments().size();
+                            adT = ad;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
     public Integer deleteDiscount(Long discountId) {
         DiscountList dl = discountListService.findById(discountId);
         List<Ad> ads = this.findAll();
         Boolean flag = false;
-        for(Ad ad : ads){
-            if(!ad.getDeleted()){
-                if(ad.getDiscountLists().contains(dl)){
+        for (Ad ad : ads) {
+            if (!ad.getDeleted()) {
+                if (ad.getDiscountLists().contains(dl)) {
                     flag = true;
                 }
             }
         }
-        if(flag == false){
+        if (flag == false) {
             discountListService.deleteDiscount(discountId);
             return 1;
         }

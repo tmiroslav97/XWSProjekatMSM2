@@ -49,7 +49,7 @@ public class PadClient extends WebServiceGatewaySupport {
         request.setIdentifier(identifier);
         request.setDayNum(dayNum);
         request.setDiscount(discount);
-        AddPriceListResponse response = (AddPriceListResponse) getWebServiceTemplate().marshalSendAndReceive(request);
+        AddDiscountListResponse response = (AddDiscountListResponse) getWebServiceTemplate().marshalSendAndReceive(request);
         return response.getMainId();
     }
 

@@ -1,6 +1,9 @@
 package services.app.adservice.dto.ad;
 
 import lombok.*;
+import services.app.adservice.dto.discountlist.DiscountInfoDTO;
+
+import java.util.List;
 
 @Builder
 @Setter
@@ -15,4 +18,6 @@ public class AdCarInfoDTO {
     private Float pricePerDay;
     private Float pricePerKm;
     private Float pricePerKmCDW;
+    private Float mileage;
+    private List<DiscountInfoDTO> discountInfoDTOS;
 }

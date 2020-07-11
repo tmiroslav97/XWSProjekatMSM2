@@ -59,6 +59,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public RequestDTO findRequestDTOById(Long id) {
+        Request request = this.findById(id);
+        return RequestConverter.toRequestDTOFromRequest(request);
+    }
+
+    @Override
     public List<Request> findAll() {
         return requestRepository.findAll();
     }
@@ -163,6 +169,8 @@ public class RequestServiceImpl implements RequestService {
                             .pricePerKmCDW(ad.getPricePerKmCDW())
                             .mainId(ad.getMainId())
                             .adId(adAgent.getId())
+                            .mileage(ad.getMileage())
+                            .discount(ad.getDiscount())
                             .build();
                     adRequest = adRequestService.save(adRequest);
                     adRequests.add(adRequest);
@@ -193,7 +201,7 @@ public class RequestServiceImpl implements RequestService {
                 this.save(requestAgent);
             }
         } catch (JsonProcessingException exception) {
-            System.out.println("Catch");
+            exception.printStackTrace();
         }
     }
 

@@ -33,12 +33,21 @@ const PricelistFromAdContainer = (props) => {
                     );
                     console.log("isteee suuuu");
                 }else{
-                    console.log("razlicito");
-                    dugme.push(
-                        <Button key={pricelist.id} 
-                        onClick={() => { handlerReverse(pricelist.id); }}  
-                        variant="outline-success">Izaberi</Button>
-                    )
+                    if(ad.data.distanceLimitFlag === "LIMITED" && pricelist.pricePerKm === null){
+                        dugme.push(
+                            
+                        )
+                    }else if(ad.data.cdw === true && pricelist.pricePerKmCDW === null){
+                        dugme.push(
+                            
+                            )
+                    }else{
+                        dugme.push(
+                            <Button key={pricelist.id} 
+                            onClick={() => { handlerReverse(pricelist.id); }}  
+                            variant="outline-success">Izaberi</Button>
+                        )
+                    }
                 }
                 let ss = pricelist.creationDate.substring(0, 10);
                 let ss2 = pricelist.creationDate.substring(11, 16);

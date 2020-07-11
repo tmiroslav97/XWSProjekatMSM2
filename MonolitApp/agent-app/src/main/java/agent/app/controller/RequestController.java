@@ -21,6 +21,12 @@ public class RequestController {
         this.requestService = requestService;
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getRequest(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(requestService.findRequestDTOById(id), HttpStatus.OK);
+    }
+
     @PreAuthorize("hasAuthority('ROLE_AGENT')")
     @RequestMapping(value = "/publisher-user", method = RequestMethod.GET)
     public ResponseEntity<?> getPublisherUserRequests(@RequestHeader(value = "status", required = false) String status, Principal principal) {

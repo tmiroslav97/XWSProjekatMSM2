@@ -8,6 +8,8 @@ import java.util.List;
 public interface RequestService {
     Request findById(Long id);
 
+    RequestDTO findRequestDTOById(Long id);
+
     List<Request> findAll();
 
     Integer deleteById(Long id);

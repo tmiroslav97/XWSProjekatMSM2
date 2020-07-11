@@ -11,12 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import services.app.carrequestservice.dto.carreq.SubmitReportDTO;
-import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.model.CustomPrincipal;
-import services.app.carrequestservice.model.SubmitReport;
 import services.app.carrequestservice.service.intf.ReportService;
-
-import java.util.HashMap;
 
 @RestController
 @RequestMapping(value = "/rep", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -35,7 +31,7 @@ public class ReportController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal cp = (CustomPrincipal) auth.getPrincipal();
         reportService.submitReport(submitReportDTO, Long.valueOf(cp.getUserId()));
-        return new ResponseEntity<>("Zahtjev uspjesno kreiran.", HttpStatus.OK);
+        return new ResponseEntity<>("Izvjestaj uspjesno dodat.", HttpStatus.OK);
 
     }
 }

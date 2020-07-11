@@ -37,9 +37,7 @@ const MyAdsContainer = () => {
     }, [nextPage, size]);
 
     const definingAvailability = (event) => {
-        console.log(event);
         setAdId(event);
-        console.log("definisanje dostupnosti");
         setFlagAvailability(true);
 
     }
@@ -50,20 +48,16 @@ const MyAdsContainer = () => {
         setFlagDiscountlist(false);
     }
     const viewAd = (event) => {
-        console.log(event);
         setAdId(event);
-        console.log("definisanje dostupnosti");
         setFlagAdView(true);
     }
     const editPricelist = (event) => {
-        console.log(event);
         setAdId(event);
 
         setFlagEditPricelist(true);
     }
 
     const definedDiscountList = (event) => {
-        console.log(event);
         setAdId(event);
         setFlagDiscountlist(true);
     }    

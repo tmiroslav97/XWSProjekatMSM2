@@ -8,7 +8,6 @@ const Form5CreateAdContainer = (props) => {
     const dispatch = useDispatch();
     const [validated, setValidated] = useState(false);
 
-    // const [flagCover, setFlagCover] = useState();
     const [flag1, setFlag1] = useState();
     const [flag2, setFlag2] = useState();
 
@@ -17,7 +16,6 @@ const Form5CreateAdContainer = (props) => {
         const form = event.target;
         if (props.brPhotos === 4 && props.flagCover != null) {
             let dto = [];
-            // console.log(props.formData);
             console.log("FORMA 5")
             setValidated(false);
             props.handleNext();

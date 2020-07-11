@@ -14,7 +14,7 @@ const EditDiscountComponent = (props) => {
                                     <Form.Label>*Popust</Form.Label>
                                     <InputGroup className="mb-3">
                                         <Form.Control name="discount" required
-                                            type="number" placeholder="Popust"
+                                            type="number" placeholder="Popust" max="100"
                                             defaultValue={props.data.discount}
                                         />
                                         <InputGroup.Append>

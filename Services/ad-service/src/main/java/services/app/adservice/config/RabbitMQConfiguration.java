@@ -28,6 +28,14 @@ public class RabbitMQConfiguration {
     public static final String ADD_DISCOUNT_TO_AD_QUEUE_NAME = "add_discount_to_ad";
     public static final String DELETE_DISCOUNT_FROM_AD_QUEUE_NAME = "delete_discount_from_ad";
     public static final String AGENT_ID_BY_EMAIL_ID_QUEUE_NAME = "agent_id_by_email_id";
+    public static final String DISCOUNT_INFO_BY_ID_QUEUE_NAME = "discount_info_by_id";
+
+
+    @Bean
+    public Queue discountInfoById() {
+        return new Queue(DISCOUNT_INFO_BY_ID_QUEUE_NAME, false);
+    }
+
 
     @Bean
     public Queue rateAd() {
