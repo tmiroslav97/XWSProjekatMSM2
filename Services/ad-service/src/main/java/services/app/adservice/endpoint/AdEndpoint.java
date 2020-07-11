@@ -19,7 +19,7 @@ public class AdEndpoint {
         this.adService = adService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createAdReqest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "createAdRequest")
     @ResponsePayload
     public CreateAdResponse createAd(@RequestPayload CreateAdRequest request) {
         CreateAdResponse response = new CreateAdResponse();
