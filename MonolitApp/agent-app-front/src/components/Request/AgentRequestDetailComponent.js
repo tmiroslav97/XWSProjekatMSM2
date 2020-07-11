@@ -34,8 +34,8 @@ const AgentRequestDetailComponent = (props) => {
                 {
                     props.request.ads.map((ad, idx) => {
                         return (
-                            <div>
-                                <Row key={idx}>
+                            <div key={idx}>
+                                <Row >
                                     <Col md={5} xs={12}>
                                         <ListGroup variant="flush">
                                             <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Klikni za detaljno</Tooltip>}>
@@ -54,7 +54,7 @@ const AgentRequestDetailComponent = (props) => {
                                     </Col>
                                 </Row>
                                 {ad.token == null ?
-                                    <MapsComponent /> : null
+                                    <MapsComponent token={ad.token} /> : null
                                 }
                             </div>
                         );
