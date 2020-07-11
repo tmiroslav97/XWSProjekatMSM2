@@ -17,6 +17,7 @@ import services.app.adservice.config.AppConfig;
 import services.app.adservice.config.RabbitMQConfiguration;
 import services.app.adservice.converter.*;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
+import services.app.adservice.dto.AgentFirmIdentificationDTO;
 import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
@@ -629,6 +630,69 @@ public class AdServiceImpl implements AdService {
             e.printStackTrace();
         }
         Integer i = this.removeDiscountToAd(discountAndAdDTO.getMainIdDiscount(), discountAndAdDTO.getMainIdAd());
+    }
+
+    @Override
+    public Long authAgent(String email, String identifier) {
+        AgentFirmIdentificationDTO agentFirmIdentificationDTO = AgentFirmIdentificationDTO.builder()
+                .email(email)
+                .identifier(identifier)
+                .build();
+        try {
+            String agentFirmIdentificationDTOStr = objectMapper.writeValueAsString(agentFirmIdentificationDTO);
+            Long publisherUserId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, agentFirmIdentificationDTOStr);
+            return publisherUserId;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long createAdFromAgent(AdSync adSync) {
+        try {
+            Ad ad = AdConverter.toAdFromAdSync(adSync);
+            Car car = CarConverter.toCarFromCarSync(adSync.getCarSyncDTO());
+            car = carService.save(car);
+            List<CarCalendarTerm> carCalendarTerms = CarCalendarTermConverter.toEntityList(adSync.getCarCalendarTermSyncDTOList(), CarCalendarTermConverter::toCarCalendarTermFromCarCalendarTermSync);
+            for (CarCalendarTerm carCalendarTerm : carCalendarTerms) {
+                carCalendarTerm = carCalendarTermService.save(carCalendarTerm);
+            }
+            Long userId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_ID_QUEUE_NAME, adSync.getEmail());
+            Set<Image> images = new HashSet<>();
+            for (String image : adSync.getImages()) {
+                String imgStr = imageService.saveImageBase64(image);
+                Image img = imageService.findByName(imgStr);
+                images.add(img);
+            }
+            String coverPhotoStr = imageService.saveImageBase64(adSync.getCoverPhoto());
+            Image coverPhotoImg = imageService.findByName(coverPhotoStr);
+            images.add(coverPhotoImg);
+            ad.setCoverPhoto(coverPhotoStr);
+            ad.setImages(images);
+            ad.setCar(car);
+            ad.setCarCalendarTerms(new HashSet<>(carCalendarTerms));
+            ad.setPublisherUser(userId);
+            ad = this.save(ad);
+            for (CarCalendarTerm carCalendarTerm : carCalendarTerms) {
+                carCalendarTerm.setAd(ad);
+                carCalendarTerm = carCalendarTermService.edit(carCalendarTerm);
+            }
+            for (Image img : ad.getImages()) {
+                img.setAd(ad);
+                img = imageService.editImage(img);
+            }
+            //sihronizacija sa search servisom
+            AdSynchronizeDTO adSynchronizeDTO = AdConverter.toAdSynchronizeDTOFromAd(ad);
+            adSynchronizeDTO.setPricePerDay(adSync.getPricePerDay());
+            List<ImagesSynchronizeDTO> imagesSynchronizeDTOS = ImageConverter.fromEntityList(ad.getImages().stream().collect(Collectors.toList()), ImageConverter::toImagesSynchronizeDTOFromImage);
+            adSynchronizeDTO.setImagesSynchronizeDTOS(imagesSynchronizeDTOS);
+            String adSynchronizeDTOStr = objectMapper.writeValueAsString(adSynchronizeDTO);
+            rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AD_SEARCH_SYNC_QUEUE_NAME, adSynchronizeDTOStr);
+            return ad.getId();
+
+        }catch (JsonProcessingException exception) {
+            return null;
+        }
     }
 
 }

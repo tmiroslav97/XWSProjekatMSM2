@@ -5,6 +5,7 @@ import services.app.adservice.dto.ad.*;
 
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.model.Ad;
+import services.app.adservice.model.AdSync;
 
 import java.util.List;
 
@@ -42,5 +43,8 @@ public interface AdService {
     void deleteDiscountRabbit(Long discountId);
     void addDiscountToAdRabbit(String string);
     void deleteDiscountFromAdRabbit(String string);
+    Long authAgent(String email, String identifier);
+    Long createAdFromAgent(AdSync adSync);
+
 
 }

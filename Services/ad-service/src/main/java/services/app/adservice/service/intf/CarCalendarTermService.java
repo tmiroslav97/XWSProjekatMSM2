@@ -35,4 +35,8 @@ public interface CarCalendarTermService {
     Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate);
 
     Boolean canSplitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate);
+
+    Long authAgent(String email, String identifier);
+
+
 }

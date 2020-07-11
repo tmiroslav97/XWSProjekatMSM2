@@ -7,6 +7,7 @@ import services.app.adservice.dto.ad.AdPageDTO;
 import services.app.adservice.dto.ad.AdSynchronizeDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
+import services.app.adservice.model.AdSync;
 import services.app.adservice.model.Image;
 
 import java.io.File;
@@ -129,6 +130,21 @@ public class AdConverter extends AbstractConverter {
                 .rentCnt(adSyncDTO.getRentCnt())
                 .ratingCnt(adSyncDTO.getRatingCnt())
                 .ratingNum(adSyncDTO.getRatingNum())
+                .comments(new HashSet<>())
+                .build();
+    }
+
+    public static Ad toAdFromAdSync(AdSync adSync){
+        return Ad.builder()
+                .name(adSync.getName())
+                .location(adSync.getLocation())
+                .publishedDate(DateAPI.DateTimeStringToDateTime(adSync.getPublishedDate()))
+                .priceList(adSync.getPriceList())
+                .deleted(false)
+                .enabled(true)
+                .rentCnt(adSync.getRentCnt())
+                .ratingCnt(adSync.getRatingCnt())
+                .ratingNum(adSync.getRatingNum())
                 .comments(new HashSet<>())
                 .build();
     }
