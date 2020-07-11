@@ -66,32 +66,7 @@ const Form3CreateAdContainer = (props) => {
 
                                     
                             }
-                            {/* {props.distanceLimitFlag === true && pricelist.pricePerKm === null ?
-                                 <td align="right">
-                                </td> 
-
-                                :  
-                                
-                                <td align="right">
-                                    <Button variant="outline-primary"
-                                        onClick={() => { handlePriceListChooseId(pricelist.id); }}
-                                    >Izaberi</Button>
-                                </td> 
-                            }
-                            {props.cdw === true && pricelist.pricePerKmCDW === null ?
-                                 <td align="right">
-                                </td> 
-
-                                :  
-                                
-                                <td align="right">
-                                    <Button variant="outline-primary"
-                                        onClick={() => { handlePriceListChooseId(pricelist.id); }}
-                                    >Izaberi</Button>
-                                </td> 
-                            } */}
                             
-    
     
                         </tr>);
                 })
