@@ -54,7 +54,6 @@ import org.w3._2001.xmlschema.Adapter5;
  * 
  * 
  */
-@Builder
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AdSync", propOrder = {
     "email",

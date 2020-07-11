@@ -168,7 +168,7 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
     @Override
     public Integer addCarCalendarTermOccupation(CarCalendarTermDTO carCalendarTermDTO) {
-        Boolean flag = this.splitCarCalendarTerm(carCalendarTermDTO.getAdId(), DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getStartDate()), DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getEndDate()));
+        Boolean flag = this.splitCarCalendarTermSync(carCalendarTermDTO.getAdId(), DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getStartDate()), DateAPI.DateTimeStringToDateTimeFromFronted(carCalendarTermDTO.getEndDate()));
         if (flag) {
             return 1;
         } else {
@@ -178,6 +178,26 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
     @Override
     public Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate) {
+        CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+
+        if (carCalendarTerm == null) {
+            return false;
+        } else {
+            CarCalendarTerm newCarCalendarTerm = CarCalendarTerm.builder()
+                    .startDate(endDate)
+                    .endDate(carCalendarTerm.getEndDate())
+                    .ad(carCalendarTerm.getAd())
+                    .build();
+            carCalendarTerm.setEndDate(startDate);
+            this.edit(carCalendarTerm);
+            this.save(newCarCalendarTerm);
+            Ad ad = adService.findById(adId);
+            return true;
+        }
+    }
+
+    @Override
+    public Boolean splitCarCalendarTermSync(Long adId, DateTime startDate, DateTime endDate) {
         CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
 
         if (carCalendarTerm == null) {
