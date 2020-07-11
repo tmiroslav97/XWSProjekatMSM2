@@ -12,6 +12,11 @@ const Form3CreateAdContainer = (props) => {
 
     const pricelists = useSelector(pricelistsSelector);
 
+
+
+    console.log("TRECA FORMAAAAAAAAAAAAAAAAAA ------------------");
+    console.log(props)
+
     useEffect(() => {
         dispatch(
             fetchPriceListsFromPublisher()
@@ -35,6 +40,7 @@ const Form3CreateAdContainer = (props) => {
                             <td>{pricelist.pricePerDay}</td>
                             <td>{pricelist.pricePerKm}</td>
                             <td>{pricelist.pricePerKmCDW}</td>
+
                             {props.id === pricelist.id ?
                                 <td align="right">
                                     <Button variant="outline-success"
@@ -42,12 +48,49 @@ const Form3CreateAdContainer = (props) => {
                                     >Ukloni</Button>
                                 </td>
                                 :
+                                    props.distanceLimitFlag === true && pricelist.pricePerKm === null ?
+                                        <td align="right">
+                                        </td> 
+                                    :
+                                    props.cdw === true && pricelist.pricePerKmCDW === null ?
+                                    <td align="right">
+                                    </td> 
+
+                                    :  
+                                
+                                        <td align="right">
+                                            <Button variant="outline-primary"
+                                                onClick={() => { handlePriceListChooseId(pricelist.id); }}
+                                            >Izaberi</Button>
+                                        </td> 
+
+                                    
+                            }
+                            {/* {props.distanceLimitFlag === true && pricelist.pricePerKm === null ?
+                                 <td align="right">
+                                </td> 
+
+                                :  
+                                
                                 <td align="right">
                                     <Button variant="outline-primary"
                                         onClick={() => { handlePriceListChooseId(pricelist.id); }}
                                     >Izaberi</Button>
-                                </td>
+                                </td> 
                             }
+                            {props.cdw === true && pricelist.pricePerKmCDW === null ?
+                                 <td align="right">
+                                </td> 
+
+                                :  
+                                
+                                <td align="right">
+                                    <Button variant="outline-primary"
+                                        onClick={() => { handlePriceListChooseId(pricelist.id); }}
+                                    >Izaberi</Button>
+                                </td> 
+                            } */}
+                            
     
     
                         </tr>);
