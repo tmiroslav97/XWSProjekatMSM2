@@ -163,6 +163,8 @@ public class RequestServiceImpl implements RequestService {
                             .pricePerKmCDW(ad.getPricePerKmCDW())
                             .mainId(ad.getMainId())
                             .adId(adAgent.getId())
+                            .mileage(ad.getMileage())
+                            .discount(ad.getDiscount())
                             .build();
                     adRequest = adRequestService.save(adRequest);
                     adRequests.add(adRequest);
@@ -193,7 +195,7 @@ public class RequestServiceImpl implements RequestService {
                 this.save(requestAgent);
             }
         } catch (JsonProcessingException exception) {
-            System.out.println("Catch");
+            exception.printStackTrace();
         }
     }
 

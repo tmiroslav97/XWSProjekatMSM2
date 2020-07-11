@@ -27,7 +27,7 @@ public class DiscountListEndpoint {
         if (publisherUser == null) {
             response.setMainId(null);
             return response;
-        }else{
+        } else {
             response.setMainId(discountListService.addDiscountListFromAgent(publisherUser, request.getDayNum(), request.getDiscount()));
             return response;
         }
@@ -41,7 +41,7 @@ public class DiscountListEndpoint {
         if (publisherUser == null) {
             response.setMainId(null);
             return response;
-        }else{
+        } else {
             response.setMainId(discountListService.editDiscountListFromAgent(publisherUser, request.getDayNum(), request.getDiscount(), request.getMainId()));
             return response;
         }
@@ -55,42 +55,38 @@ public class DiscountListEndpoint {
         if (publisherUser == null) {
             response.setMainId(null);
             return response;
-        }else{
+        } else {
             response.setMainId(discountListService.deleteDiscountListFromAgent(publisherUser, request.getMainId()));
             return response;
         }
     }
 
-//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addDiscountListToAdRequest")
-//    @ResponsePayload
-//    public AddDiscountListToAdResponse addDiscountListToAdRequest(@RequestPayload AddDiscountListToAdRequest request) {
-//        AddDiscountListToAdResponse response = new AddDiscountListToAdResponse();
-//
-//        Long publisherUser = discountListService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
-//        if (publisherUser == null) {
-//            response.setMainId(null);
-//            return response;
-//        }else{
-//            response.setMainId(discountListService.addDiscountListToAdFromAgent(publisherUser, request.getMainIdDiscount(), request.getMainIdAd()));
-//            return response;
-//        }
-//    }
-//
-//    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeDiscountListFromAdRequest")
-//    @ResponsePayload
-//    public RemoveDiscountListFromAdResponse removeDiscountListFromAdRequest(@RequestPayload RemoveDiscountListFromAdRequest request) {
-//        RemoveDiscountListFromAdResponse response = new RemoveDiscountListFromAdResponse();
-//        Long publisherUser = discountListService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
-//        if (publisherUser == null) {
-//            response.setMainId(null);
-//            return response;
-//        }else{
-//            response.setMainId(discountListService.removeDiscountListFromAdFromAgent(publisherUser, request.getMainIdDiscount(), request.getMainIdAd()));
-//            return response;
-//        }
-//    }
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addDiscountListToAdRequest")
+    @ResponsePayload
+    public AddDiscountListToAdResponse addDiscountListToAdRequest(@RequestPayload AddDiscountListToAdRequest request) {
+        AddDiscountListToAdResponse response = new AddDiscountListToAdResponse();
 
+        Long publisherUser = discountListService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
+        if (publisherUser == null) {
+            response.setMainId(null);
+            return response;
+        } else {
+            response.setMainId(discountListService.addDiscountListToAdFromAgent(publisherUser, request.getMainIdDiscount(), request.getMainIdAd()));
+            return response;
+        }
+    }
 
-
-
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "removeDiscountListFromAdRequest")
+    @ResponsePayload
+    public RemoveDiscountListFromAdResponse removeDiscountListFromAdRequest(@RequestPayload RemoveDiscountListFromAdRequest request) {
+        RemoveDiscountListFromAdResponse response = new RemoveDiscountListFromAdResponse();
+        Long publisherUser = discountListService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
+        if (publisherUser == null) {
+            response.setMainId(null);
+            return response;
+        } else {
+            response.setMainId(discountListService.removeDiscountListFromAdFromAgent(publisherUser, request.getMainIdDiscount(), request.getMainIdAd()));
+            return response;
+        }
+    }
 }

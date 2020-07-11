@@ -36,6 +36,12 @@ public class AdRequest {
     @Column(name = DbColumnConstants.REVIEW)
     private Integer review;
 
+    @Column(name = DbColumnConstants.DISCOUNT)
+    private Float discount;
+
+    @Column(name = DbColumnConstants.MILEAGE, nullable = false)
+    private Float mileage;
+
     @Temporal(TemporalType.DATE)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime", parameters = {
             @org.hibernate.annotations.Parameter(name = "databaseZone", value = "UTC"),

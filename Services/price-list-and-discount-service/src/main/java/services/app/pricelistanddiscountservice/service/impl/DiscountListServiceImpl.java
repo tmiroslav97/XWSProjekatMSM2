@@ -14,6 +14,7 @@ import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.DiscountListConverter;
 import services.app.pricelistanddiscountservice.dto.AgentFirmIdentificationDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountAndAdDTO;
+import services.app.pricelistanddiscountservice.dto.discount.DiscountInfoDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListDTO;
 import services.app.pricelistanddiscountservice.dto.sync.DiscountListSyncDTO;
@@ -70,7 +71,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         List<DiscountList> discountLists = this.findAllByAgent();
         List<DiscountListDTO> discountListDTOS = new ArrayList<>();
 
-        for(DiscountList dl : discountLists){
+        for (DiscountList dl : discountLists) {
             DiscountListDTO discountListDTO = DiscountListConverter.toDiscountListDTOFromDiscountList(dl);
             List<Long> adsId = adClient.getAdsFromDiscount(dl.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
             discountListDTO.setAdsId(adsId);
@@ -95,7 +96,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         Integer rez = adClient.deleteDiscount(discountList.getId(), principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
-        if(rez == 2){
+        if (rez == 2) {
             return 2;
         }
         this.delete(discountList);
@@ -122,6 +123,7 @@ public class DiscountListServiceImpl implements DiscountListService {
             Long userId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_ID_QUEUE_NAME, discountListSyncDTO.getEmail());
             discountList.setAgent(userId);
             discountList = this.save(discountList);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.ADD_DISCOUNT_QUEUE_NAME, discountList.getId());
             return discountList.getId();
         } catch (JsonProcessingException exception) {
             return null;
@@ -147,7 +149,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         DiscountList discountList = this.findById(discountId);
-        Integer i = adClient.addDiscountToAd(discountId, adId, principal.getUserId(),principal.getEmail(), principal.getRoles(), principal.getToken());
+        Integer i = adClient.addDiscountToAd(discountId, adId, principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
         System.out.println("USPESNOO DODAVANJE");
         return i;
     }
@@ -159,7 +161,7 @@ public class DiscountListServiceImpl implements DiscountListService {
         DiscountList discountList = this.findById(discountId);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
-        Integer i = adClient.removeDiscountToAd(discountId, adId,principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken() );
+        Integer i = adClient.removeDiscountToAd(discountId, adId, principal.getUserId(), principal.getEmail(), principal.getRoles(), principal.getToken());
         return i;
     }
 
@@ -242,6 +244,23 @@ public class DiscountListServiceImpl implements DiscountListService {
         rabbitTemplate.convertAndSend(RabbitMQConfiguration.DELETE_DISCOUNT_FROM_AD_QUEUE_NAME, string);
 
         return discountList.getId();
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DISCOUNT_INFO_BY_ID_QUEUE_NAME)
+    public String discountInfoById(Long id) {
+        DiscountList discountList = this.findById(id);
+        DiscountInfoDTO discountInfoDTO = DiscountInfoDTO.builder()
+                .dayNum(discountList.getDayNum())
+                .discount(discountList.getDiscount())
+                .build();
+        try {
+            String discountInfoDTOStr = objectMapper.writeValueAsString(discountInfoDTO);
+            return discountInfoDTOStr;
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+            return null;
+        }
     }
 
 }
