@@ -65,7 +65,32 @@ const AdDetailViewComponent = (props) => {
                         </ListGroup>
                     </Col>
                 </Row>
-
+                {props.ad.discounts.length > 0 ?
+                    <Row>
+                        <Col md={5} xs={12}>
+                            <Table striped bordered hover>
+                                <thead>
+                                    <tr>
+                                        <th>Popust u %</th>
+                                        <th>Broj potrebnih dana rentiranja</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        props.ad.discounts.map((discount, idx) => {
+                                            return (
+                                                <tr key={idx}>
+                                                    <td>{discount.discount}</td>
+                                                    <td>{discount.dayNum}</td>
+                                                </tr>
+                                            );
+                                        })
+                                    }
+                                </tbody>
+                            </Table>
+                        </Col>
+                    </Row> : null
+                }
                 <Row>
                     <Col>
                         {
@@ -103,7 +128,7 @@ const AdDetailViewComponent = (props) => {
                         : null}
                 </Row>
             </Card.Body>
-        </Card>
+        </Card >
 
     );
 }

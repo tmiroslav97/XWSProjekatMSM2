@@ -1,6 +1,7 @@
 package services.app.pricelistanddiscountservice.service.intf;
 
 
+import services.app.pricelistanddiscountservice.dto.discount.DiscountInfoDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.discount.DiscountListDTO;
 import services.app.pricelistanddiscountservice.model.DiscountList;
@@ -21,4 +22,11 @@ public interface DiscountListService {
     Integer createDiscount(DiscountListCreateDTO discountListCreateDTO);
     Integer addDiscountToAd(Long discountId, Long adId);
     Integer deleteDiscountFromAd(Long discountId, Long adId);
+    Long authAgent(String email, String identifier);
+    Long addDiscountListFromAgent(Long publisherId, Integer dayNum, Float discount );
+    Long editDiscountListFromAgent(Long publisherId, Integer dayNum, Float discount, Long mainId);
+    Long deleteDiscountListFromAgent(Long publisherId, Long mainId);
+    Long addDiscountListToAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd);
+    Long removeDiscountListFromAdFromAgent(Long publisherId, Long mainIdDiscount, Long mainIdAd);
+    String discountInfoById(Long id);
 }

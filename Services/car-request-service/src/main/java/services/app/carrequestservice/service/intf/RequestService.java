@@ -1,6 +1,7 @@
 package services.app.carrequestservice.service.intf;
 
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
+import services.app.carrequestservice.dto.discountlist.DiscountInfoDTO;
 import services.app.carrequestservice.model.Ad;
 import services.app.carrequestservice.model.Request;
 
@@ -34,6 +35,8 @@ public interface RequestService {
     List<Request> findAllByPublisherUserIdAndByStatus(Long id, String status);
 
     Integer deleteById(Long id);
+
+    Float findClossestDiscount(List<DiscountInfoDTO> discountInfoDTOS, Integer dayOfRent);
 
     Integer submitRequest(HashMap<Long, SubmitRequestDTO> submitRequestDTOS, Long userId);
 

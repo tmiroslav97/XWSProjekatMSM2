@@ -45,4 +45,17 @@ public class CarCalendarTermController {
             return new ResponseEntity<>("Desila se greska.", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
+    @RequestMapping(value="/occupation", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addCalendarOccupation(@RequestBody CarCalendarTermDTO carCalendarTermDTO) {
+        Integer flag = carCalendarTermService.addCarCalendarTermOccupation(carCalendarTermDTO);
+        if (flag == 1) {
+            return new ResponseEntity<>("Uspjesno ubacen termin zauzeca", HttpStatus.CREATED);
+        }else if(flag==2){
+            return new ResponseEntity<>("Nije moguce ubaciti zauzece", HttpStatus.BAD_REQUEST);
+        }else {
+            return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
+        }
+    }
 }

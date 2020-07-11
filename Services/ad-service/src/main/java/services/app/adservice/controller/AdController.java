@@ -113,6 +113,11 @@ public class AdController {
         return new ResponseEntity<>(adService.addDiscount(discountId), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/delete-discount", method = RequestMethod.GET)
+    public ResponseEntity<?> deleteDiscount(@RequestParam("discountId") Long discountId) {
+        return new ResponseEntity<>(adService.deleteDiscount(discountId), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/add-discount-to-ad", method = RequestMethod.GET)
     public ResponseEntity<?> addDiscountToAd(@RequestParam("discountId") Long discountId, @RequestParam("adId") Long adId) {
         return new ResponseEntity<>(adService.addDiscountToAd(discountId, adId), HttpStatus.OK);

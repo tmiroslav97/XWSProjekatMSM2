@@ -12,6 +12,7 @@ public interface CarCalendarTermService {
 
     List<CarCalendarTerm> findAll();
 
+    Integer addCarCalendarTermOccupation(CarCalendarTermDTO carCalendarTermDTO);
 
     List<CarCalendarTerm> findAllByAdId(Long adId);
 

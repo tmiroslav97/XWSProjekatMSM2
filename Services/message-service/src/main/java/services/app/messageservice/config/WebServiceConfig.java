@@ -26,7 +26,7 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     @Bean(name = "messages")
     public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema requestsSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
-        wsdl11Definition.setPortTypeName("RequestsPort");
+        wsdl11Definition.setPortTypeName("MessagePort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://www.app.services/messageservice/model");
         wsdl11Definition.setSchema(requestsSchema);

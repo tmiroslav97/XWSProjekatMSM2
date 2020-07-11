@@ -40,6 +40,33 @@ public class RabbitMQConfiguration {
     }
 
     @Bean
+    public Queue autoDeleteFirstMsg() {
+        return new AnonymousQueue();
+    }
+
+    @Bean
+    public Queue autoDeleteMsg() {
+        return new AnonymousQueue();
+    }
+
+    @Bean
+    public Binding bidingMsg(TopicExchange topic,
+                             Queue autoDeleteMsg) {
+        return BindingBuilder.bind(autoDeleteMsg)
+                .to(topic)
+                .with("tomic.miroslav97.gmail.com.msg");
+    }
+
+
+    @Bean
+    public Binding bidingFirstMsg(TopicExchange topic,
+                                  Queue autoDeleteFirstMsg) {
+        return BindingBuilder.bind(autoDeleteFirstMsg)
+                .to(topic)
+                .with("tomic.miroslav97.gmail.com.first.msg");
+    }
+
+    @Bean
     public Binding bindingComment(TopicExchange topic,
                                   Queue autoDeleteComment) {
         return BindingBuilder.bind(autoDeleteComment)

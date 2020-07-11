@@ -21,6 +21,8 @@ public interface PriceListService {
 
     PriceList save(PriceList priceList);
 
+    PriceList savePriceList(PriceList priceList);
+
     void delete(PriceList priceList);
 
     PriceList createPriceList(PriceListCreateDTO priceListCreateDTO);
@@ -32,5 +34,7 @@ public interface PriceListService {
     List<Long> findPricelistsFromAds(String publisher);
 
     Integer reversePricelist(ReversePricelistDTO reversePricelistDTO);
+
+    String findPriceListPublisherUserIdentifier(String email);
 
 }

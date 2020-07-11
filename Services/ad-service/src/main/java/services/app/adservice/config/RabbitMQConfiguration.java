@@ -23,6 +23,17 @@ public class RabbitMQConfiguration {
     public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
     public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
     public static final String RATE_AD_QUEUE_NAME = "rate_ad";
+    public static final String ADD_DISCOUNT_QUEUE_NAME = "add_discount";
+    public static final String DELETE_DISCOUNT_QUEUE_NAME = "delete_discount";
+    public static final String ADD_DISCOUNT_TO_AD_QUEUE_NAME = "add_discount_to_ad";
+    public static final String DELETE_DISCOUNT_FROM_AD_QUEUE_NAME = "delete_discount_from_ad";
+    public static final String DISCOUNT_INFO_BY_ID_QUEUE_NAME = "discount_info_by_id";
+
+
+    @Bean
+    public Queue discountInfoById() {
+        return new Queue(DISCOUNT_INFO_BY_ID_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue rateAd() {
@@ -88,4 +99,24 @@ public class RabbitMQConfiguration {
     public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
+
+    @Bean
+    public Queue addDiscount() {
+        return new Queue(ADD_DISCOUNT_QUEUE_NAME, false);
+    }
+    @Bean
+    public Queue deleteDiscount() {
+        return new Queue(DELETE_DISCOUNT_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue addDiscountToAd() {
+        return new Queue(ADD_DISCOUNT_TO_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue deleteDiscountFromAd() {
+        return new Queue(DELETE_DISCOUNT_FROM_AD_QUEUE_NAME, false);
+    }
+
 }

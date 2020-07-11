@@ -56,7 +56,8 @@ import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
-
+import InboxContainer from './Message/InboxContainer';
+import EmailIcon from '@material-ui/icons/Email';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -238,8 +239,15 @@ const PanelContainer = ({ match }) => {
                             <ListItemText primary="Popusti" />
                         </ListItem>
                         }
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                         <ListItem button onClick={() => { history.push("/panel/inbox"); }}>
+                            <ListItemIcon>
+                            <EmailIcon />
+                            </ListItemIcon>
+                            <ListItemText primary="Poruke" />
+                        </ListItem>
+                        }
                     </List>
-
 
 
                    {/* <Nav variant="pills" className="flex-column bg-light" button>
@@ -367,7 +375,16 @@ const PanelContainer = ({ match }) => {
                                 </Nav.Link>
                             </Nav.Item>
                         }
-                    </Nav> */}
+                    </Nav> 
+                        {hasRole(['ROLE_AGENT', 'ROLE_USER']) &&
+                            <Nav.Item>
+                                <Nav.Link eventKey="inbox" onClick={() => { history.push("/panel/inbox"); }}>
+                                    Poruke
+                                </Nav.Link>
+                            </Nav.Item>
+                        }
+                    </Nav>
+                    */}
                 </Col>
                 <Col sm={10} md={10} xs={12}>
                     <PrivateRoute exact path={`${match.path}/home`} component={PanelHomeContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN", "ROLE_USER", "ROLE_AGENT"]} />
@@ -389,6 +406,7 @@ const PanelContainer = ({ match }) => {
                     <PrivateRoute exact path={`${match.path}/man-firm`} component={RegFirmContainer} token={token} hasRightRole={hasRole} accessRole={["ROLE_ADMIN"]} />
                     <PrivateRoute exact path={`${match.path}/pricelist`} component={PricelistContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                     <PrivateRoute exact path={`${match.path}/discount-list`} component={DiscountsContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT']} />
+                    <PrivateRoute exact path={`${match.path}/inbox`} component={InboxContainer} token={token} hasRightRole={hasRole} accessRole={['ROLE_AGENT', 'ROLE_USER']} />
                 </Col>
             </Row>
         </Container >

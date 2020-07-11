@@ -300,19 +300,6 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdPageContentDTO findAll(Integer page, Integer size) {
-
-//        Pageable pageable;
-//        if(sort.equals("-")){
-//            pageable = PageRequest.of(page, size);
-//        }else{
-//            String par[] = sort.split(" ");
-//            if(par[1].equals("opadajuce")) {
-//                pageable = PageRequest.of(page, size, Sort.by(par[0]).descending());
-//            }else{
-//                pageable = PageRequest.of(page, size, Sort.by(par[0]).ascending());
-//            }
-//
-//        }
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
 
@@ -399,7 +386,7 @@ public class AdServiceImpl implements AdService {
                 Long mainId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_SYNC_QUEUE_NAME, plSyncStr);
                 if (mainId != null) {
                     pl.setMainId(mainId);
-                    priceListService.editPriceList(pl);
+                    priceListService.savePriceList(pl);
                 }
             } catch (JsonProcessingException exception) {
                 continue;

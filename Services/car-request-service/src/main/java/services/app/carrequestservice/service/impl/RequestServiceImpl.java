@@ -3,6 +3,7 @@ package services.app.carrequestservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.Days;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -18,6 +19,7 @@ import services.app.carrequestservice.dto.ad.AdCarInfoDTO;
 import services.app.carrequestservice.dto.ad.AdRequestDTO;
 import services.app.carrequestservice.dto.carreq.AcceptReqestCalendarTermsDTO;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
+import services.app.carrequestservice.dto.discountlist.DiscountInfoDTO;
 import services.app.carrequestservice.exception.NotFoundException;
 import services.app.carrequestservice.model.*;
 import services.app.carrequestservice.repository.RequestRepository;
@@ -88,7 +90,7 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public Integer quitRequest(Long id) {
         Request request = this.findById(id);
-        if(!request.getStatus().toString().equals("PENDING")){
+        if (!request.getStatus().toString().equals("PENDING")) {
             return 2;
         }
         request.setStatus(RequestStatusEnum.CANCELED);
@@ -195,6 +197,20 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public Float findClossestDiscount(List<DiscountInfoDTO> discountInfoDTOS, Integer dayOfRent) {
+        Float discount = null;
+        discountInfoDTOS.sort((o1, o2) -> o1.getDayNum() - o2.getDayNum());
+        for (DiscountInfoDTO discountInfoDTO : discountInfoDTOS) {
+            if (discountInfoDTO.getDayNum() > dayOfRent) {
+                break;
+            }
+            discount = discountInfoDTO.getDiscount();
+        }
+        return discount;
+    }
+
+
+    @Override
     public Integer submitRequest(HashMap<Long, SubmitRequestDTO> submitRequestDTOS, Long userId) {
         Boolean blocked = (Boolean) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.END_USER_IS_BLOCKED_ID_QUEUE_NAME, userId);
         if (blocked) {
@@ -223,6 +239,7 @@ public class RequestServiceImpl implements RequestService {
                             adCarInfoDTO = objectMapper.readValue(adCarInfoDTOStr, AdCarInfoDTO.class);
                         } catch (JsonProcessingException exception) {
                         }
+                        Float discount = findClossestDiscount(adCarInfoDTO.getDiscountInfoDTOS(), Days.daysBetween(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()).toLocalDate(),DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()).toLocalDate()).getDays());
                         Ad ad = Ad.builder()
                                 .mainId(adRequestDTO.getId())
                                 .adName(adRequestDTO.getAdName())
@@ -234,6 +251,8 @@ public class RequestServiceImpl implements RequestService {
                                 .pricePerKmCDW(adCarInfoDTO.getPricePerKmCDW())
                                 .cdw(adCarInfoDTO.getCdw())
                                 .review(null)
+                                .mileage(adCarInfoDTO.getMileage())
+                                .discount(discount)
                                 .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
                                 .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
                                 .build();
@@ -273,6 +292,7 @@ public class RequestServiceImpl implements RequestService {
                             adCarInfoDTO = objectMapper.readValue(adCarInfoDTOStr, AdCarInfoDTO.class);
                         } catch (JsonProcessingException exception) {
                         }
+                        Float discount = findClossestDiscount(adCarInfoDTO.getDiscountInfoDTOS(), Days.daysBetween(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()).toLocalDate(),DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()).toLocalDate()).getDays());
                         Ad ad = Ad.builder()
                                 .mainId(adRequestDTO.getId())
                                 .adName(adRequestDTO.getAdName())
@@ -284,6 +304,8 @@ public class RequestServiceImpl implements RequestService {
                                 .pricePerKmCDW(adCarInfoDTO.getPricePerKmCDW())
                                 .cdw(adCarInfoDTO.getCdw())
                                 .review(null)
+                                .mileage(adCarInfoDTO.getMileage())
+                                .discount(discount)
                                 .startDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getStartDate()))
                                 .endDate(DateAPI.DateTimeStringToDateTimeFromFronted(adRequestDTO.getEndDate()))
                                 .build();
