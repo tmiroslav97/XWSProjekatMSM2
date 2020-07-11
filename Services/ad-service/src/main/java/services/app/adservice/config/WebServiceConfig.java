@@ -25,12 +25,12 @@ public class WebServiceConfig extends WsConfigurerAdapter {
     }
 
     @Bean(name = "ads")
-    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema padsSchema) {
+    public DefaultWsdl11Definition defaultWsdl11Definition(XsdSchema adsSchema) {
         DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
         wsdl11Definition.setPortTypeName("AdsPort");
         wsdl11Definition.setLocationUri("/ws");
         wsdl11Definition.setTargetNamespace("http://www.app.services/adservice/model");
-        wsdl11Definition.setSchema(padsSchema);
+        wsdl11Definition.setSchema(adsSchema);
         return wsdl11Definition;
     }
 

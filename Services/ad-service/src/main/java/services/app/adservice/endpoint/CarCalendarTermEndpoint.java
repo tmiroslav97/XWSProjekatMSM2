@@ -4,12 +4,10 @@ import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
 import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
-import services.app.adservice.dto.car.CarCalendarTermDTO;
 import services.app.adservice.model.AddCarCalendarOccupationRequest;
 import services.app.adservice.model.AddCarCalendarOccupationResponse;
 import services.app.adservice.model.AddCarCalendarTermRequest;
 import services.app.adservice.model.AddCarCalendarTermResponse;
-import services.app.adservice.service.intf.AdService;
 import services.app.adservice.service.intf.CarCalendarTermService;
 
 @Endpoint
@@ -22,46 +20,38 @@ public class CarCalendarTermEndpoint {
         this.carCalendarTermService = carCalendarTermService;
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addCarCalendarTerm")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addCarCalendarTermRequest")
     @ResponsePayload
-    public AddCarCalendarTermResponse addCarCalendarTerm(@RequestPayload AddCarCalendarTermRequest request) {
+    public AddCarCalendarTermResponse addCarCalendarTermRequest(@RequestPayload AddCarCalendarTermRequest request) {
         AddCarCalendarTermResponse response = new AddCarCalendarTermResponse();
         Long publisherUser = carCalendarTermService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
         if (publisherUser == null) {
             response.setResponse(null);
             return response;
-        }else{
-            CarCalendarTermDTO carCalendarTermDTO = new CarCalendarTermDTO();
-            carCalendarTermDTO.setAdId(request.getMainIdAd());
-            carCalendarTermDTO.setStartDate(request.getStartDate());
-            carCalendarTermDTO.setEndDate(request.getEndDate());
-            Integer i = carCalendarTermService.addCarCalendarTerm(carCalendarTermDTO);
-            if(i == 1) {
+        } else {
+            Integer i = carCalendarTermService.addCarCalendarTermEndpoint(request.getMainIdAd(), request.getStartDate(), request.getEndDate());
+            if (i == 1) {
                 response.setResponse("Uspesno dodat slobodan termin.");
-            }else{
+            } else {
                 response.setResponse(null);
             }
             return response;
         }
     }
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addCarCalendarOccupation")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "addCarCalendarOccupationRequest")
     @ResponsePayload
-    public AddCarCalendarOccupationResponse addCarCalendarOccupation(@RequestPayload AddCarCalendarOccupationRequest request) {
+    public AddCarCalendarOccupationResponse addCarCalendarOccupationRequest(@RequestPayload AddCarCalendarOccupationRequest request) {
         AddCarCalendarOccupationResponse response = new AddCarCalendarOccupationResponse();
         Long publisherUser = carCalendarTermService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
         if (publisherUser == null) {
             response.setResponse(null);
             return response;
-        }else{
-            CarCalendarTermDTO carCalendarTermDTO = new CarCalendarTermDTO();
-            carCalendarTermDTO.setAdId(request.getMainIdAd());
-            carCalendarTermDTO.setStartDate(request.getStartDate());
-            carCalendarTermDTO.setEndDate(request.getEndDate());
-            Integer i = carCalendarTermService.addCarCalendarTermOccupation(carCalendarTermDTO);
-            if(i == 1) {
+        } else {
+            Integer i = carCalendarTermService.addCarCalendarTermOccupationEndpoint(request.getMainIdAd(), request.getStartDate(), request.getEndDate());
+            if (i == 1) {
                 response.setResponse("Uspesno dodata zauzetost.");
-            }else{
+            } else {
                 response.setResponse(null);
             }
             return response;

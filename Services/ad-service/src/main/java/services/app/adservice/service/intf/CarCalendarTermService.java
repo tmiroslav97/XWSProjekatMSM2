@@ -14,6 +14,8 @@ public interface CarCalendarTermService {
 
     Integer addCarCalendarTermOccupation(CarCalendarTermDTO carCalendarTermDTO);
 
+    Integer addCarCalendarTermOccupationEndpoint(Long adId, String starDate, String endDate);
+
     List<CarCalendarTerm> findAllByAdId(Long adId);
 
     CarCalendarTerm save(CarCalendarTerm carCalendarTerm);
@@ -27,6 +29,8 @@ public interface CarCalendarTermService {
     CarCalendarTerm createCarCalendarTerm(CarCalendarTermCreateDTO carCalendarTermCreateDTO);
 
     Integer addCarCalendarTerm(CarCalendarTermDTO carCalendarTermDTO);
+
+    Integer addCarCalendarTermEndpoint(Long adId, String startDate, String endDate);
 
     CarCalendarTerm editCarCalendarTerm(CarCalendarTerm carCalendarTerm);
 
