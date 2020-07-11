@@ -1,7 +1,12 @@
 package services.app.carrequestservice.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import services.app.carrequestservice.config.RabbitMQConfiguration;
+import services.app.carrequestservice.dto.MileageUpdateDTO;
 import services.app.carrequestservice.dto.PayDTO;
 import services.app.carrequestservice.dto.carreq.SubmitReportDTO;
 import services.app.carrequestservice.exception.NotFoundException;
@@ -27,7 +32,13 @@ public class ReportSeviceImpl implements ReportService {
     @Autowired
     private InvoiceService invoiceService;
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
+
     public Report findById(Long id) {
         return reportRepository.findById(id).orElseThrow(() -> new NotFoundException("Izvjestaj ne postoji"));
 
@@ -67,9 +78,9 @@ public class ReportSeviceImpl implements ReportService {
         if (ad.getDistanceLimitFlag().toString().equals("LIMITED")) {
             if (submitReport.getDistanceTraveled() - ad.getMileage() >= ad.getDistanceLimit()) {
                 if (ad.getCdw())
-                    payAmount = (submitReport.getDistanceTraveled() - ad.getMileage() ) * ad.getPricePerKmCDW();
+                    payAmount = (submitReport.getDistanceTraveled() - ad.getMileage()) * ad.getPricePerKmCDW();
                 else {
-                    payAmount = (submitReport.getDistanceTraveled() - ad.getMileage() ) * ad.getPricePerKm();
+                    payAmount = (submitReport.getDistanceTraveled() - ad.getMileage()) * ad.getPricePerKm();
                 }
             }
         }
@@ -91,6 +102,17 @@ public class ReportSeviceImpl implements ReportService {
 
         ad.setReport(report);
         //komunikacija sa adService i adSearch service da se ostavi mileage, preko Ad mainId
+        try {
+            MileageUpdateDTO mileageUpdateDTO = MileageUpdateDTO.builder()
+                    .adId(ad.getMainId())
+                    .mileage(report.getDistanceTraveled())
+                    .build();
+            String mileageUpdateDTOStr = objectMapper.writeValueAsString(mileageUpdateDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_MILEAGE_AD_QUEUE_NAME, mileageUpdateDTOStr);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_MILEAGE_AD_SEARCH_QUEUE_NAME, mileageUpdateDTOStr);
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
         adService.save(ad);
     }
 }

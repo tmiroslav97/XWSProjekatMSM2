@@ -3,12 +3,10 @@ package agent.app.service.impl;
 
 import agent.app.dto.carreq.SubmitReportDTO;
 import agent.app.exception.NotFoundException;
-import agent.app.model.Ad;
-import agent.app.model.AdRequest;
-import agent.app.model.Invoice;
-import agent.app.model.Report;
+import agent.app.model.*;
 import agent.app.repository.ReportRepository;
 import agent.app.service.intf.*;
+import agent.app.ws.client.RequestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +29,18 @@ public class ReportSeviceImpl implements ReportService {
 
     @Autowired
     private AdRequestService adRequestService;
+
+    @Autowired
+    private RequestClient requestClient;
+
+    @Autowired
+    private AgentService agentService;
+
+    @Autowired
+    private CarService carService;
+
+    @Autowired
+    private RequestService requestService;
 
     @Override
     public Report findById(Long id) {
@@ -96,9 +106,24 @@ public class ReportSeviceImpl implements ReportService {
         adRequest.setReport(report);
         adRequestService.save(adRequest);
 
-        Ad ad = adService.findByMainId(adRequest.getAdId());
-        ad.getCar().setMileage(submitReport.getDistanceTraveled());
-        adService.save(ad);
+        Ad ad = adService.findById(adRequest.getAdId());
+        Car car = ad.getCar();
+        car.setMileage(submitReport.getDistanceTraveled());
+        carService.editCar(car);
         //preko soapa-sinhornizovati sa mikroservisnom
+        services.app.carrequestservice.model.Invoice invoiceSoap = new services.app.carrequestservice.model.Invoice();
+        invoiceSoap.setAmount(invoice.getAmount());
+        invoiceSoap.setEmail(invoice.getEmail());
+
+        services.app.carrequestservice.model.Report reportSoap = new services.app.carrequestservice.model.Report();
+        reportSoap.setDescription(report.getDescription());
+        reportSoap.setAdId(ad.getMainId());
+        reportSoap.setDistanceTraveled(report.getDistanceTraveled());
+        reportSoap.setInvoice(invoiceSoap);
+        String identifier = agentService.findByEmail(email_agent).getIdentifier();
+        Request request = requestService.findById(submitReport.getRequestId());
+        Long mainId = requestClient.submitReportRequest(request.getMainId(), email_agent, identifier, reportSoap);
+        report.setMainId(mainId);
+        report = this.save(report);
     }
 }

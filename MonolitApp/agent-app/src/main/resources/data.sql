@@ -52,11 +52,11 @@ INSERT INTO end_user(id, ad_limit_num, canceled_cnt, enabled, obliged)
 VALUES (5, 3, 0, true, false);
 
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (1, STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 20, 10, 0, 3);
+VALUES (1, STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 20, 100, 0, 3);
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (2, STR_TO_DATE('25-05-2020', '%d-%m-%Y'), 4000, 2000, 10000, 2);
+VALUES (2, STR_TO_DATE('25-05-2020', '%d-%m-%Y'), 4000, 200, 300, 2);
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (3, STR_TO_DATE('24-04-2020', '%d-%m-%Y'), 20, 10, 0, 4);
+VALUES (3, STR_TO_DATE('24-04-2020', '%d-%m-%Y'), 20, 100, 220, 4);
 
 INSERT INTO discount_list(id, discount, day_num, agent_id)
 VALUES (1, 22, 30, 2);

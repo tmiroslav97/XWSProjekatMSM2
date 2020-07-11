@@ -53,6 +53,7 @@ const handleSubmitReport = (event) => {
         setValidated(true);
     } else {
         data = {
+            "requestId" : request.id,
             "distanceTraveled": form.distanceTraveled.value,
             "description": form.description.value,
             "adId": selectedAd,

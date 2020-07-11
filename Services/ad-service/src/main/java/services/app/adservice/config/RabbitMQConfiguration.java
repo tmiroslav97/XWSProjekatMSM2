@@ -31,6 +31,12 @@ public class RabbitMQConfiguration {
     public static final String DISCOUNT_INFO_BY_ID_QUEUE_NAME = "discount_info_by_id";
     public static final String UPDATE_PL_AD_SEARCH_QUEUE_NAME = "update_pl_ad_search";
     public static final String UPDATE_PL_AD_QUEUE_NAME = "update_pl_ad";
+    public static final String UPDATE_MILEAGE_AD_QUEUE_NAME = "update_mileage_ad";
+
+    @Bean
+    public Queue updateMileageAd() {
+        return new Queue(UPDATE_MILEAGE_AD_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue updatePlAd() {

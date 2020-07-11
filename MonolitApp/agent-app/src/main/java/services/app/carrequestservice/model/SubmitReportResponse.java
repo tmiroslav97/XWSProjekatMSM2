@@ -36,24 +36,24 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "msg"
+    "mainId"
 })
 @XmlRootElement(name = "submitReportResponse")
 public class SubmitReportResponse {
 
     @XmlElement(required = true)
-    protected String msg;
+    protected Long mainId;
 
     /**
      * Gets the value of the msg property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Long }
      *     
      */
-    public String getMsg() {
-        return msg;
+    public Long getMainId() {
+        return mainId;
     }
 
     /**
@@ -61,11 +61,11 @@ public class SubmitReportResponse {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Long }
      *     
      */
-    public void setMsg(String value) {
-        this.msg = value;
+    public void setMainId(Long value) {
+        this.mainId = value;
     }
 
 }

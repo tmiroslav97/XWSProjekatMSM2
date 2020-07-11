@@ -3,6 +3,7 @@ package services.app.carrequestservice.service.intf;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.dto.discountlist.DiscountInfoDTO;
 import services.app.carrequestservice.model.Ad;
+import services.app.carrequestservice.model.Report;
 import services.app.carrequestservice.model.Request;
 
 import java.util.HashMap;
@@ -23,6 +24,8 @@ public interface RequestService {
     Long authAgent(String email, String identifier);
 
     Integer quitRequest(Long id);
+
+    Long submitReport(Long requestId, Report report, Long publisheruser);
 
     void autoRejectRequests();
 

@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmitReportDTO {
+    private Long requestId;
     private Float distanceTraveled;
     private String description;
     private Long adId;

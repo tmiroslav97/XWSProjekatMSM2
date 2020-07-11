@@ -12,6 +12,12 @@ public class RabbitMQConfiguration {
     public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
     public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
     public static final String UPDATE_PL_AD_SEARCH_QUEUE_NAME = "update_pl_ad_search";
+    public static final String UPDATE_MILEAGE_AD_SEARCH_QUEUE_NAME = "update_mileage_ad_search";
+
+    @Bean
+    public Queue updateMileageAdSearch() {
+        return new Queue(UPDATE_MILEAGE_AD_SEARCH_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue updatePlAdSearch() {

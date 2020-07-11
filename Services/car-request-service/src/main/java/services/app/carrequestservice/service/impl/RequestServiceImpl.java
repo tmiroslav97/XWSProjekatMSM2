@@ -14,6 +14,7 @@ import services.app.carrequestservice.config.RabbitMQConfiguration;
 import services.app.carrequestservice.converter.DateAPI;
 import services.app.carrequestservice.converter.RequestConverter;
 import services.app.carrequestservice.dto.AgentFirmIdentificationDTO;
+import services.app.carrequestservice.dto.MileageUpdateDTO;
 import services.app.carrequestservice.dto.UserFLNameDTO;
 import services.app.carrequestservice.dto.ad.AdCarInfoDTO;
 import services.app.carrequestservice.dto.ad.AdRequestDTO;
@@ -24,6 +25,8 @@ import services.app.carrequestservice.exception.NotFoundException;
 import services.app.carrequestservice.model.*;
 import services.app.carrequestservice.repository.RequestRepository;
 import services.app.carrequestservice.service.intf.AdService;
+import services.app.carrequestservice.service.intf.InvoiceService;
+import services.app.carrequestservice.service.intf.ReportService;
 import services.app.carrequestservice.service.intf.RequestService;
 
 import java.util.ArrayList;
@@ -42,7 +45,13 @@ public class RequestServiceImpl implements RequestService {
     private AdService adService;
 
     @Autowired
+    private ReportService reportService;
+
+    @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private InvoiceService invoiceService;
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -110,6 +119,37 @@ public class RequestServiceImpl implements RequestService {
             return 3;
         }
         return 1;
+    }
+
+    @Override
+    public Long submitReport(Long requestId, Report report, Long publisherUser) {
+        Request request = this.findById(requestId);
+        Ad adRequest = new Ad();
+        for(Ad ad : request.getAds()){
+            if(ad.getMainId()==report.getAdId()){
+                adRequest = ad;
+                break;
+            }
+        }
+        report.setAdId(adRequest.getId());
+        report.setPublisherUser(publisherUser);
+        Invoice invoice = invoiceService.save(report.getInvoice());
+        report.setInvoice(invoice);
+        report = reportService.save(report);
+        adRequest.setReport(report);
+        adRequest = adService.save(adRequest);
+        try{
+            MileageUpdateDTO mileageUpdateDTO = MileageUpdateDTO.builder()
+                    .adId(adRequest.getMainId())
+                    .mileage(report.getDistanceTraveled())
+                    .build();
+            String mileageUpdateDTOStr = objectMapper.writeValueAsString(mileageUpdateDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_MILEAGE_AD_QUEUE_NAME,mileageUpdateDTOStr);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_MILEAGE_AD_SEARCH_QUEUE_NAME,mileageUpdateDTOStr);
+        }catch (JsonProcessingException exception){
+            exception.printStackTrace();
+        }
+        return report.getId();
     }
 
     @Override

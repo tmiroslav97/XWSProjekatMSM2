@@ -16,6 +16,18 @@ public class RabbitMQConfiguration {
     public static final String USER_FL_NAME_QUEUE_NAME = "user_fl_name";
     public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
     public static final String RATE_AD_QUEUE_NAME = "rate_ad";
+    public static final String UPDATE_MILEAGE_AD_QUEUE_NAME = "update_mileage_ad";
+    public static final String UPDATE_MILEAGE_AD_SEARCH_QUEUE_NAME = "update_mileage_ad_search";
+
+    @Bean
+    public Queue updateMileageAdSearch() {
+        return new Queue(UPDATE_MILEAGE_AD_SEARCH_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue updateMileageAd() {
+        return new Queue(UPDATE_MILEAGE_AD_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue rateAd() {
