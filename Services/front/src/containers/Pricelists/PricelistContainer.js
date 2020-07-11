@@ -17,6 +17,7 @@ const PricelistContainer = () => {
     const [validated, setValidated] = useState(false);
     const [addFlag, setAddFlag] = useState(false);
 
+
     useEffect(() => {
         dispatch(fetchPriceListsFromPublisher());   
     }, []);
@@ -142,6 +143,7 @@ const PricelistContainer = () => {
                             addPricelist={addPricelist}
                             handleAddPricelist={handleAddPricelist}
                             handleEditPricelist={handleEditPricelist}
+               
 
                         /> 
                         : <SpinnerContainer />

@@ -37,6 +37,13 @@ public interface AdService {
     Integer addDiscountToAd(Long discountId, Long adId);
     Integer removeDiscountToAd(Long discountId, Long adId);
     Integer addDiscount(Long discountId);
+
+    List<Ad> findMyAds(Long publisher_id);
+    AdStatisticsDTO findBestAverageGrade(Long publisher_id);
+    AdStatisticsDTO findMaxMileage(Long publisher_id);
+    AdStatisticsDTO findMaxComment(Long publisher_id);
+
+
     Integer deleteDiscount(Long discountId);
     void addDiscountRabbit(Long discountId);
     void deleteDiscountRabbit(Long discountId);

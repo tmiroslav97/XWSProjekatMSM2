@@ -4,7 +4,6 @@ import agent.app.common.db.DbColumnConstants;
 import agent.app.common.db.DbTableConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.CollectionId;
 
 import javax.persistence.*;
 
@@ -30,6 +29,15 @@ public class Report {
     @Column(name = DbColumnConstants.DISTANCETRAVELED, nullable = false)
     private Float distanceTraveled;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinTable(name = DbTableConstants.REPORTINVOICE,
+            joinColumns = @JoinColumn(name = "report_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "invoice_id", referencedColumnName = "id"))
+    protected Invoice invoice;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private PublisherUser publisherUser;
+
+
 }

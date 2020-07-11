@@ -1,7 +1,7 @@
 import HttpBaseClient from './HttpBaseClient';
 
 const FINALPOINTS = {
-    REPORT_BASE: '/carreq/rep'
+    REPORT_BASE: '/rep'
 };
 
 class ReportService extends HttpBaseClient {
@@ -17,7 +17,6 @@ class ReportService extends HttpBaseClient {
                     }
                 }
             );
-            console.log(response.data);
             return response.data;
 
         } catch (error) {
