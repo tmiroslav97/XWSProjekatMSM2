@@ -21,6 +21,7 @@ public class AdRequestConverter extends AbstractConverter {
                 .pricePerKmCDW(adRequest.getPricePerKmCDW())
                 .review(adRequest.getReview())
                 .token(adRequest.getToken())
+                .report(adRequest.getReport())
                 .build();
     }
 }

@@ -1,7 +1,6 @@
 package agent.app.service.impl;
 
 
-
 import agent.app.dto.carreq.SubmitReportDTO;
 import agent.app.exception.NotFoundException;
 import agent.app.model.Ad;
@@ -63,25 +62,25 @@ public class ReportSeviceImpl implements ReportService {
 
     @Override
     public void submitReport(SubmitReportDTO submitReport, String email_agent) {
-       Ad ad = adService.findById(submitReport.getAdId());
-//        AdRequest adRequest =  adRequestService.findById(submitReport.getAdId());
+        AdRequest adRequest = adRequestService.findById(submitReport.getAdId());
         Float payAmount = 0F;
         Float km = 0F;
 
-       if(ad.getCar().getDistanceLimitFlag().toString().equals("LIMITED")){
+        if (adRequest.getDistanceLimitFlag().toString().equals("LIMITED")) {
 
-           if(ad.getCar().getMileage()<=submitReport.getDistanceTraveled()){
-               km = submitReport.getDistanceTraveled() - ad.getCar().getMileage();
-               if(ad.getCar().getCdw())
-                    payAmount = submitReport.getDistanceTraveled() * ad.getPriceList().getPricePerKmCDW();
-                else{
-                   System.out.println("Ogranicenje i nema cdw");
-                   payAmount = submitReport.getDistanceTraveled() *  ad.getPriceList().getPricePerKm();
+            if (submitReport.getDistanceTraveled() - adRequest.getMileage() >= adRequest.getDistanceLimit()) {
+                km = submitReport.getDistanceTraveled() - adRequest.getMileage();
+                if (adRequest.getCdw())
+                    payAmount = (submitReport.getDistanceTraveled() - adRequest.getMileage()) * adRequest.getPricePerKmCDW();
+                else {
+                    payAmount = (submitReport.getDistanceTraveled() - adRequest.getMileage()) * adRequest.getPricePerKm();
+                }
+            }
+        }
 
-               }
-           }
-       }
-
+        if (adRequest.getDiscount() != null) {
+            payAmount = payAmount - (adRequest.getDiscount() / 100) * payAmount;
+        }
         Invoice invoice = new Invoice();
         invoice.setAmount(payAmount);
         invoice.setEmail(submitReport.getEmail());
@@ -94,13 +93,12 @@ public class ReportSeviceImpl implements ReportService {
         report.setPublisherUser(publisherUserService.findByEmail(email_agent));
         this.save(report);
 
-        AdRequest adRequest =  adRequestService.findById(submitReport.getAdId());
         adRequest.setReport(report);
         adRequestService.save(adRequest);
 
-
-        ad.getCar().setMileage(km);
-//       ad.setReport(report); //ne znam da li treba i ovo da se setuje?/
-       adService.save(ad);
+        Ad ad = adService.findByMainId(adRequest.getAdId());
+        ad.getCar().setMileage(submitReport.getDistanceTraveled());
+        adService.save(ad);
+        //preko soapa-sinhornizovati sa mikroservisnom
     }
 }
