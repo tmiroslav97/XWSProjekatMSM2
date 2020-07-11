@@ -18,6 +18,7 @@ const AgentRequestDetailContainer = (props) => {
     const [showForm, setShowForm] = useState(false);
     const [validated, setValidated] = useState(false);
     const [selectedAd, setSelectedAd] = useState();
+    const [mileage, setMileage] = useState();
 
     const fetchRequest = async () => {
         setIsFetch(false);
@@ -63,14 +64,13 @@ const AgentRequestDetailContainer = (props) => {
         }
     }
 
-
     return (
         <Container>
-            <FormModalContainer show={showForm} setShow={setShowForm} name={'Izvjestaj'} footer={false} onSubmit={handleSubmitReport} validated={validated} component={ReportSubmitComponent} />
+            <FormModalContainer show={showForm} setShow={setShowForm} name={'Izvjestaj'} data={mileage} footer={false} onSubmit={handleSubmitReport} validated={validated} component={ReportSubmitComponent} />
             <Row>
                 <Col md={12} xs={12}>
                     {
-                        isFetch ? <AgentRequestDetailComponent request={request} setShow={setShowForm} setSelectedAd={setSelectedAd} /> : <SpinnerContainer />
+                        isFetch ? <AgentRequestDetailComponent request={request} setShow={setShowForm} setSelectedAd={setSelectedAd} setMileage={setMileage} /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>
