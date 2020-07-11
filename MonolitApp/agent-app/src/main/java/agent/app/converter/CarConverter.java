@@ -4,6 +4,7 @@ import agent.app.dto.car.CarCreateDTO;
 import agent.app.dto.sync.CarSyncDTO;
 import agent.app.model.Car;
 import agent.app.model.enumeration.DistanceLimitEnum;
+import services.app.adservice.model.CarSync;
 
 public class CarConverter extends AbstractConverter {
     public static Car toCreateCarFromRequest(CarCreateDTO carCreateDTO) {
@@ -39,5 +40,23 @@ public class CarConverter extends AbstractConverter {
                 .androidFlag(car.getAndroidFlag())
                 .token(car.getToken())
                 .build();
+    }
+
+    public static CarSync toCarSyncFromCar(Car car) {
+        CarSync carSync = new CarSync();
+        carSync.setYear(DateAPI.DateTimeToStringDateTime(car.getYear()));
+        carSync.setCarManufacturer(car.getCarManufacturer());
+        carSync.setCarModel(car.getCarModel());
+        carSync.setGearboxType(car.getGearboxType());
+        carSync.setFuelType(car.getFuelType());
+        carSync.setCarType(car.getCarType());
+        carSync.setMileage(car.getMileage());
+        carSync.setChildrenSeatNum(car.getChildrenSeatNum());
+        carSync.setCdw(car.getCdw());
+        carSync.setDistanceLimit(car.getDistanceLimit());
+        carSync.setDistanceLimitFlag(car.getDistanceLimitFlag().toString());
+        carSync.setAndroidFlag(car.getAndroidFlag());
+        carSync.setToken(car.getToken());
+        return carSync;
     }
 }

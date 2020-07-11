@@ -128,18 +128,13 @@ public class AdConverter extends AbstractConverter {
     }
 
     public static AdSync toAdSyncFromAd(Ad ad){
-        return AdSync.builder()
-                .email(ad.getPublisherUser().getEmail())
-                .name(ad.getName())
-                .location(ad.getLocation())
-                .coverPhoto(ad.getCoverPhoto())
-                .ratingNum(ad.getRatingNum())
-                .ratingCnt(ad.getRatingCnt())
-                .rentCnt(ad.getRentCnt())
-                .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
-//                .discountList()
-//                .images
-//                .carSyncDTO(ad.getCar())
-                .build();
+        AdSync adSync = new AdSync();
+        adSync.setName(ad.getName());
+        adSync.setLocation(ad.getLocation());
+        adSync.setRatingNum(ad.getRatingNum());
+        adSync.setRatingCnt(ad.getRatingCnt());
+        adSync.setRentCnt(ad.getRentCnt());
+        adSync.setPublishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()));
+        return adSync;
     }
 }

@@ -1,7 +1,7 @@
 package agent.app.ws.client.config;
 
 import agent.app.config.AppConfig;
-import agent.app.ws.client.PadClient;
+import agent.app.ws.client.AdClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -22,8 +22,8 @@ public class AdClientConfig {
     }
 
     @Bean
-    public PadClient padClient(@Qualifier("marshallerAd") Jaxb2Marshaller marshallerAd) {
-        PadClient client = new PadClient();
+    public AdClient adClient(@Qualifier("marshallerAd") Jaxb2Marshaller marshallerAd) {
+        AdClient client = new AdClient();
         client.setDefaultUri("http://" + appConfig.getZuul() + ":8082/ad/ws");
         client.setMarshaller(marshallerAd);
         client.setUnmarshaller(marshallerAd);

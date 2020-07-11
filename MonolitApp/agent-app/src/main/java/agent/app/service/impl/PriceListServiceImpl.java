@@ -13,6 +13,7 @@ import agent.app.service.intf.AdService;
 import agent.app.service.intf.AgentService;
 import agent.app.service.intf.PriceListService;
 import agent.app.service.intf.PublisherUserService;
+import agent.app.ws.client.AdClient;
 import agent.app.ws.client.PadClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,9 @@ public class PriceListServiceImpl implements PriceListService {
 
     @Autowired
     private AgentService agentService;
+
+    @Autowired
+    private AdClient adClient;
 
     @Override
     public PriceList findById(Long id) {
@@ -165,6 +169,11 @@ public class PriceListServiceImpl implements PriceListService {
         PriceList priceList = this.findById(reversePricelistDTO.getPricelistId());
         ad.setPriceList(priceList);
         ad = adService.edit(ad);
+
+        //soap
+        String identifier = this.findPriceListPublisherUserIdentifier(ad.getPublisherUser().getEmail());
+        String response = adClient.reversePricelist(ad.getPublisherUser().getEmail(), identifier, ad.getMainId(), priceList.getMainId());
+
         return 1;
     }
 
