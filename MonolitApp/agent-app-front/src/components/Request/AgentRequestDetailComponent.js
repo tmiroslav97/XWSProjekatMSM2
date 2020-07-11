@@ -2,7 +2,7 @@ import React from 'react';
 import { history } from '../../index';
 import { Row, Col, Card, OverlayTrigger, ListGroup, Tooltip, Button } from 'react-bootstrap'
 import ReportComponent from '../Report/ReportComponent';
-import { YMaps, Map } from 'react-yandex-maps';
+import { Map } from 'react-yandex-maps';
 
 const AgentRequestDetailComponent = (props) => {
 
@@ -30,7 +30,6 @@ const AgentRequestDetailComponent = (props) => {
                         <h4>Oglasi</h4>
                     </Col>
                 </Row>
-                <YMaps>
 
                     {
                         props.request.ads.map((ad, idx) => {
@@ -65,7 +64,6 @@ const AgentRequestDetailComponent = (props) => {
                             );
                         })
                     }
-                </YMaps>
             </Card.Body>
         </Card>
 

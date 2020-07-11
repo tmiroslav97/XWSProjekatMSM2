@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import services.app.carrequestservice.dto.PayDTO;
 import services.app.carrequestservice.dto.carreq.SubmitReportDTO;
 import services.app.carrequestservice.exception.NotFoundException;
-import services.app.carrequestservice.model.*;
-import services.app.carrequestservice.repository.AdRepository;
+import services.app.carrequestservice.model.Ad;
+import services.app.carrequestservice.model.Invoice;
+import services.app.carrequestservice.model.Report;
 import services.app.carrequestservice.repository.ReportRepository;
 import services.app.carrequestservice.service.intf.AdService;
 import services.app.carrequestservice.service.intf.InvoiceService;
 import services.app.carrequestservice.service.intf.ReportService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReportSeviceImpl implements ReportService {
@@ -62,22 +62,20 @@ public class ReportSeviceImpl implements ReportService {
 
     @Override
     public void submitReport(SubmitReportDTO submitReport, Long id_agent) {
-       Ad ad = adService.findById(submitReport.getAdId());
-        System.out.println("Id oglasa za izvjestaj: " + submitReport.getAdId());
-       Float payAmount = 0F;
-       if(ad.getDistanceLimitFlag().toString().equals("LIMITED")){
-           if(ad.getDistanceLimit()<=submitReport.getDistanceTraveled()){
-               if(ad.getCdw())
-                    payAmount = (submitReport.getDistanceTraveled() -  ad.getDistanceLimit()) * ad.getPricePerKmCDW();
-                else{
-                   System.out.println("Ogranicenje i nema cdw");
-                   payAmount = (submitReport.getDistanceTraveled() -  ad.getDistanceLimit()) * ad.getPricePerKm();
-
-               }
-           }
-       }
-        System.out.println(payAmount);
-
+        Ad ad = adService.findById(submitReport.getAdId());
+        Float payAmount = 0F;
+        if (ad.getDistanceLimitFlag().toString().equals("LIMITED")) {
+            if (submitReport.getDistanceTraveled() - ad.getMileage() >= ad.getDistanceLimit()) {
+                if (ad.getCdw())
+                    payAmount = (submitReport.getDistanceTraveled() - ad.getMileage() ) * ad.getPricePerKmCDW();
+                else {
+                    payAmount = (submitReport.getDistanceTraveled() - ad.getMileage() ) * ad.getPricePerKm();
+                }
+            }
+        }
+        if (ad.getDiscount() != null) {
+            payAmount = payAmount - (ad.getDiscount() / 100) * payAmount;
+        }
         Invoice invoice = new Invoice();
         invoice.setAmount(payAmount);
         invoice.setEmail(submitReport.getEmail());
@@ -92,6 +90,7 @@ public class ReportSeviceImpl implements ReportService {
         this.save(report);
 
         ad.setReport(report);
+        //komunikacija sa adService i adSearch service da se ostavi mileage, preko Ad mainId
         adService.save(ad);
     }
 }
