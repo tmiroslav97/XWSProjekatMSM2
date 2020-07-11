@@ -9,6 +9,7 @@ import agent.app.model.Ad;
 import agent.app.model.Image;
 import agent.app.model.enumeration.DistanceLimitEnum;
 import org.apache.commons.io.FileUtils;
+import services.app.adservice.model.AdSync;
 
 import java.io.File;
 import java.util.*;
@@ -124,5 +125,16 @@ public class AdConverter extends AbstractConverter {
                 .rentCnt(ad.getRentCnt())
                 .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
                 .build();
+    }
+
+    public static AdSync toAdSyncFromAd(Ad ad){
+        AdSync adSync = new AdSync();
+        adSync.setName(ad.getName());
+        adSync.setLocation(ad.getLocation());
+        adSync.setRatingNum(ad.getRatingNum());
+        adSync.setRatingCnt(ad.getRatingCnt());
+        adSync.setRentCnt(ad.getRentCnt());
+        adSync.setPublishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()));
+        return adSync;
     }
 }

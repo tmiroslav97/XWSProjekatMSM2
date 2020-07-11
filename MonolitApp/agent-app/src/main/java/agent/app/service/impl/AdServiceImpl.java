@@ -12,6 +12,8 @@ import agent.app.exception.NotFoundException;
 import agent.app.model.*;
 import agent.app.repository.AdRepository;
 import agent.app.service.intf.*;
+import agent.app.ws.client.AdClient;
+import agent.app.ws.client.PadClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
@@ -23,6 +25,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import services.app.adservice.model.AdSync;
+import services.app.adservice.model.CarCalendarTermSync;
+import services.app.adservice.model.CarSync;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -69,6 +74,12 @@ public class AdServiceImpl implements AdService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private AdClient adClient;
+
+    @Autowired
+    private PadClient padClient;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -145,14 +156,14 @@ public class AdServiceImpl implements AdService {
         }
 
         Ad ad = AdConverter.toCreateAdFromRequest(adCreateDTO);
-
+        PriceList priceList = new PriceList();
         if (adCreateDTO.getPriceListCreateDTO().getId() == null) {
             //pravljenje novog cenovnika
-            PriceList priceList = priceListService.createPriceList(adCreateDTO.getPriceListCreateDTO());
+            priceList = priceListService.createPriceList(adCreateDTO.getPriceListCreateDTO());
             ad.setPriceList(priceList);
         } else {
             //dodavanje vec postojeceg cenovnika
-            PriceList priceList = priceListService.findById(adCreateDTO.getPriceListCreateDTO().getId());
+            priceList = priceListService.findById(adCreateDTO.getPriceListCreateDTO().getId());
             ad.setPriceList(priceList);
         }
 
@@ -195,6 +206,29 @@ public class AdServiceImpl implements AdService {
             carCalendarTerm.setAd(ad);
             carCalendarTerm = carCalendarTermService.editCarCalendarTerm(carCalendarTerm);
         }
+
+        //soap
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(email);
+        AdSync adSync = AdConverter.toAdSyncFromAd(ad);
+        CarSync carSync = CarConverter.toCarSyncFromCar(ad.getCar());
+        List<CarCalendarTermSync> carCalendarTermSync = CarCalendarTermConverter.fromEntityList(ad.getCarCalendarTerms().stream().collect(Collectors.toList()), CarCalendarTermConverter::toCarCalendarTermSyncFromCarCalendarTerm);
+        carCalendarTermSync.forEach(carCalendarTerm -> adSync.getCarCalendarTermSyncDTOList().add(carCalendarTerm));
+        ad.getDiscountLists().forEach(discountList -> adSync.getDiscountList().add(discountList.getMainId()));
+        for (Image img : ad.getImages()) {
+            if (!img.getName().equals(ad.getCoverPhoto())) {
+                adSync.getImages().add(imageService.findImageByNameBase64(img.getName()));
+            }
+        }
+        adSync.setPricePerDay(priceList.getPricePerDay());
+        adSync.setPriceList(priceList.getMainId());
+        adSync.setCoverPhoto(imageService.findImageByNameBase64(ad.getCoverPhoto()));
+        adSync.setEmail(email);
+        adSync.setCarSyncDTO(carSync);
+
+        Long response = adClient.createAd(email, identifier, adSync);
+        ad.setMainId(response);
+        ad = this.edit(ad);
+        System.out.println("main id: " + response);
 
         return 1;
     }

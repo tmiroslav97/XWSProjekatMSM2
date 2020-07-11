@@ -12,6 +12,8 @@ import agent.app.model.CarCalendarTerm;
 import agent.app.repository.CarCalendarTermRepository;
 import agent.app.service.intf.AdService;
 import agent.app.service.intf.CarCalendarTermService;
+import agent.app.service.intf.PriceListService;
+import agent.app.ws.client.AdClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
@@ -29,6 +31,12 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
     @Autowired
     private AdService adService;
+
+    @Autowired
+    private PriceListService priceListService;
+
+    @Autowired
+    private AdClient adClient;
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -89,9 +97,13 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
                 ad.getCarCalendarTerms().add(carCalendarTerm);
                 ad = adService.edit(ad);
-                System.out.println("usloo u if");
-//                System.out.println(ad);
-//                carCalendarTerm.setAd(ad);
+
+                //soap
+                String identifier = priceListService.findPriceListPublisherUserIdentifier(ad.getPublisherUser().getEmail());
+                String response = adClient.addCarCalendarTerm(ad.getPublisherUser().getEmail(), identifier, ad.getMainId(),
+                        DateAPI.DateTimeToStringDateTime(carCalendarTerm.getStartDate()),
+                        DateAPI.DateTimeToStringDateTime(carCalendarTerm.getEndDate()));
+
                 return 1;
             }
         }
@@ -167,6 +179,7 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
     @Override
     public Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate) {
         CarCalendarTerm carCalendarTerm = carCalendarTermRepository.findByAdAndDate(adId, startDate, endDate);
+
         if (carCalendarTerm == null) {
             return false;
         } else {
@@ -178,6 +191,13 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
             carCalendarTerm.setEndDate(startDate);
             this.edit(carCalendarTerm);
             this.save(newCarCalendarTerm);
+            Ad ad = adService.findById(adId);
+            //soap
+            String identifier = priceListService.findPriceListPublisherUserIdentifier(ad.getPublisherUser().getEmail());
+            String response = adClient.addCarCalendarOccupation(ad.getPublisherUser().getEmail(), identifier, ad.getMainId(),
+                    DateAPI.DateTimeToStringDateTime(startDate),
+                    DateAPI.DateTimeToStringDateTime(endDate));
+
             return true;
         }
     }

@@ -4,6 +4,7 @@ import services.app.adservice.dto.car.CarCreateDTO;
 import services.app.adservice.dto.car.CarSynchronizeDTO;
 import services.app.adservice.dto.sync.CarSyncDTO;
 import services.app.adservice.model.Car;
+import services.app.adservice.model.CarSync;
 import services.app.adservice.model.enumeration.DistanceLimitEnum;
 
 public class CarConverter extends AbstractConverter {
@@ -56,6 +57,24 @@ public class CarConverter extends AbstractConverter {
                 .distanceLimit(carSyncDTO.getDistanceLimit())
                 .distanceLimitFlag(DistanceLimitEnum.valueOf(carSyncDTO.getDistanceLimitFlag()))
                 .androidFlag(carSyncDTO.getAndroidFlag())
+                .token(carSyncDTO.getToken())
+                .build();
+    }
+
+    public static Car toCarFromCarSync(CarSync carSyncDTO) {
+        return Car.builder()
+                .year(DateAPI.DateTimeStringToDateTime(carSyncDTO.getYear()))
+                .carManufacturer(carSyncDTO.getCarManufacturer())
+                .childrenSeatNum(carSyncDTO.getChildrenSeatNum())
+                .carModel(carSyncDTO.getCarModel())
+                .gearboxType(carSyncDTO.getGearboxType())
+                .fuelType(carSyncDTO.getFuelType())
+                .carType(carSyncDTO.getCarType())
+                .mileage(carSyncDTO.getMileage())
+                .cdw(carSyncDTO.isCdw())
+                .distanceLimit(carSyncDTO.getDistanceLimit())
+                .distanceLimitFlag(DistanceLimitEnum.valueOf(carSyncDTO.getDistanceLimitFlag()))
+                .androidFlag(carSyncDTO.isAndroidFlag())
                 .token(carSyncDTO.getToken())
                 .build();
     }

@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
+import services.app.adservice.model.AdSync;
 import services.app.adservice.model.Image;
 
 import java.io.File;
@@ -130,6 +131,24 @@ public class AdConverter extends AbstractConverter {
                 .build();
     }
 
+
+    public static Ad toAdFromAdSync(AdSync adSync){
+        return Ad.builder()
+                .name(adSync.getName())
+                .location(adSync.getLocation())
+                .publishedDate(DateAPI.DateTimeStringToDateTime(adSync.getPublishedDate()))
+                .priceList(adSync.getPriceList())
+                .deleted(false)
+                .enabled(true)
+                .rentCnt(adSync.getRentCnt())
+                .ratingCnt(adSync.getRatingCnt())
+                .ratingNum(adSync.getRatingNum())
+                .comments(new HashSet<>())
+                .build();
+    }
+
+
+
     public static AdStatisticsDTO toCreateAdStatisticsDTOFromAd(Ad ad) {
         return AdStatisticsDTO.builder()
                 .id(ad.getId())
@@ -142,4 +161,5 @@ public class AdConverter extends AbstractConverter {
                 .comment(ad.getComments().size())
                 .build();
     }
+
 }

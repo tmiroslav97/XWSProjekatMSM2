@@ -185,4 +185,12 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
         }
     }
 
+    @Override
+    public Long authAgent(String email, String identifier) {
+        return adService.authAgent(email, identifier);
+    }
+
+
+
+
 }
