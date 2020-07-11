@@ -260,11 +260,7 @@ class AdServices extends HttpBaseClient {
 
     fetchBestGradeAd = async payload => {
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/best-average-grade", {
-            params: {
-                email: payload
-            }
-        }
+            FINALPOINTS.AD_BASE + "/best-average-grade"
         );
         return response.data;
     };
@@ -272,11 +268,7 @@ class AdServices extends HttpBaseClient {
     fetchMaxMileageAd = async payload => {
 
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/max-mileage", {
-            params: {
-                email: payload
-            }
-        }
+            FINALPOINTS.AD_BASE + "/max-mileage"
         );
         return response.data;
     };
@@ -284,11 +276,8 @@ class AdServices extends HttpBaseClient {
     fetchMaxCommentsAd = async payload => {
 
         const response = await this.getApiClient().get(
-            FINALPOINTS.AD_BASE + "/max-comments", {
-            params: {
-                email: payload
-            }
-        }
+            FINALPOINTS.AD_BASE + "/max-comments"
+        
         );
         return response.data;
     };
