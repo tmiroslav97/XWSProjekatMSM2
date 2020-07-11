@@ -4,6 +4,8 @@ import { Container, Row, Col, Card, OverlayTrigger, ListGroup, Tooltip, Button }
 import ReportComponent from '../Report/ReportComponent';
 
 const AgentRequestDetailComponent = (props) => {
+    console.log("ISPISSSSSSssss")
+    console.log(props)
     return (
         <Card border="secondary" className="mt-5">
             <Card.Body>
@@ -31,7 +33,7 @@ const AgentRequestDetailComponent = (props) => {
                 {
                     props.request.ads.map((ad, idx) => {
                         return (
-                            <Container  key={idx}>
+                            <Container key={idx}>
                                 <Row>
                                     <Col md={5} xs={12}>
                                         <ListGroup variant="flush">
@@ -42,19 +44,19 @@ const AgentRequestDetailComponent = (props) => {
                                             </OverlayTrigger>
                                         </ListGroup>
                                     </Col>
-                                    
+
                                 </Row>
                                 <Row>
                                     <Col md={5} xs={12}>
                                         {
                                             ad.report == null ?
-                                                <Button variant="outline-primary" onClick={()=>{props.setSelectedAd(ad.id); props.setShow(true);}}>Ostavi izvjestaj</Button>
+                                                <Button variant="outline-primary" onClick={() => { props.setSelectedAd(ad.id); props.setShow(true); props.setMileage(ad.mileage); }} >Ostavi izvjestaj</Button>
                                                 : <ReportComponent report={ad.report} />
                                         }
                                     </Col>
                                 </Row>
                             </Container>
-                           
+
                         );
                     })
                 }
