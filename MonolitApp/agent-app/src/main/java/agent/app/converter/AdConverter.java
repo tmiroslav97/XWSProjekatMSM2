@@ -9,6 +9,7 @@ import agent.app.model.Ad;
 import agent.app.model.Image;
 import agent.app.model.enumeration.DistanceLimitEnum;
 import org.apache.commons.io.FileUtils;
+import services.app.adservice.model.AdSync;
 
 import java.io.File;
 import java.util.*;
@@ -123,6 +124,22 @@ public class AdConverter extends AbstractConverter {
                 .ratingNum(ad.getRatingNum())
                 .rentCnt(ad.getRentCnt())
                 .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
+                .build();
+    }
+
+    public static AdSync toAdSyncFromAd(Ad ad){
+        return AdSync.builder()
+                .email(ad.getPublisherUser().getEmail())
+                .name(ad.getName())
+                .location(ad.getLocation())
+                .coverPhoto(ad.getCoverPhoto())
+                .ratingNum(ad.getRatingNum())
+                .ratingCnt(ad.getRatingCnt())
+                .rentCnt(ad.getRentCnt())
+                .publishedDate(DateAPI.DateTimeToStringDateTime(ad.getPublishedDate()))
+//                .discountList()
+//                .images
+//                .carSyncDTO(ad.getCar())
                 .build();
     }
 }

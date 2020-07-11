@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import lombok.Builder;
 import org.w3._2001.xmlschema.Adapter2;
 import org.w3._2001.xmlschema.Adapter5;
 
@@ -52,6 +54,7 @@ import org.w3._2001.xmlschema.Adapter5;
  * 
  * 
  */
+@Builder
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AdSync", propOrder = {
     "email",
