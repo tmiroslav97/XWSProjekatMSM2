@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.app.services/adservice/model"
+    xmlns:tns="http://www.app.services/adservice/model">
+    <xs:complexType name="AdSync">
+        <xs:sequence>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="location" type="xs:string"/>
+            <xs:element name="coverPhoto" type="xs:string"/>
+            <xs:element name="ratingNum" type="xs:long"/>
+            <xs:element name="ratingCnt" type="xs:long"/>
+            <xs:element name="rentCnt" type="xs:long"/>
+            <xs:element name="pricePerDay" type="xs:float"/>
+            <xs:element name="publishedDate" type="xs:string"/>
+            <xs:element name="priceList" type="xs:long"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="discountList" type="xs:long"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="carCalendarTermSyncDTOList"
+                type="tns:CarCalendarTermSync"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="images" type="xs:string"/>
+            <xs:element name="carSyncDTO" type="tns:CarSync"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CarSync">
+        <xs:sequence>
+            <xs:element name="year" type="xs:string"/>
+            <xs:element name="carManufacturer" type="xs:string"/>
+            <xs:element name="carModel" type="xs:string"/>
+            <xs:element name="gearboxType" type="xs:string"/>
+            <xs:element name="fuelType" type="xs:string"/>
+            <xs:element name="carType" type="xs:string"/>
+            <xs:element name="mileage" type="xs:float"/>
+            <xs:element name="childrenSeatNum" type="xs:int"/>
+            <xs:element name="distanceLimitFlag" type="xs:string"/>
+            <xs:element name="distanceLimit" type="xs:float"/>
+            <xs:element name="cdw" type="xs:boolean"/>
+            <xs:element name="androidFlag" type="xs:boolean"/>
+            <xs:element name="token" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CarCalendarTermSync">
+        <xs:sequence>
+            <xs:element name="startDate" type="xs:string"/>
+            <xs:element name="endDate" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="createAdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="newAd" type="tns:AdSync"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="createAdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="mainId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addCarCalendarTermRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainIdAd" type="xs:long"/>
+                <xs:element name="startDate" type="xs:string"/>
+                <xs:element name="endDate" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addCarCalendarTermResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addCarCalendarOccupationRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainIdAd" type="xs:long"/>
+                <xs:element name="startDate" type="xs:string"/>
+                <xs:element name="endDate" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="addCarCalendarOccupationResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="reversePricelistRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="mainIdAd" type="xs:long"/>
+                <xs:element name="pricelistId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="reversePricelistResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="response" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

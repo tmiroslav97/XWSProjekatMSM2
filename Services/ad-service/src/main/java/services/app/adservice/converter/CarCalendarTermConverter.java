@@ -6,6 +6,7 @@ import services.app.adservice.dto.car.CarCalendarTermDTO;
 import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.dto.sync.CarCalendarTermSyncDTO;
 import services.app.adservice.model.CarCalendarTerm;
+import services.app.adservice.model.CarCalendarTermSync;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,13 @@ public class CarCalendarTermConverter extends AbstractConverter {
         return CarCalendarTerm.builder()
                 .startDate(DateAPI.DateTimeStringToDateTime(carCalendarTermSyncDTO.getStartDate()))
                 .endDate(DateAPI.DateTimeStringToDateTime(carCalendarTermSyncDTO.getEndDate()))
+                .build();
+    }
+
+    public static CarCalendarTerm toCarCalendarTermFromCarCalendarTermSync(CarCalendarTermSync carCalendarTermSync) {
+        return CarCalendarTerm.builder()
+                .startDate(DateAPI.DateTimeStringToDateTime(carCalendarTermSync.getStartDate()))
+                .endDate(DateAPI.DateTimeStringToDateTime(carCalendarTermSync.getEndDate()))
                 .build();
     }
 }
