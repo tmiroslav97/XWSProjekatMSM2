@@ -25,5 +25,4 @@ public class AdRequestDTO {
     private Float pricePerKmCDW;
     private String token;
     private Report report;
-
 }

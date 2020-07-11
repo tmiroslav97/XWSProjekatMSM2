@@ -10,7 +10,6 @@ import ReportSubmitComponent from '../../components/Report/ReportSubmitComponent
 import FormModalContainer from '../Common/FormModalContainer';
 import ReportService from '../../services/ReportService';
 
-
 const AgentRequestDetailContainer = (props) => {
     const dispatch = useDispatch();
     const id = props.match.params.id;
@@ -19,6 +18,8 @@ const AgentRequestDetailContainer = (props) => {
     const [showForm, setShowForm] = useState(false);
     const [validated, setValidated] = useState(false);
     const [selectedAd, setSelectedAd] = useState();
+
+   
 
     const fetchRequest = async () => {
         setIsFetch(false);
@@ -43,14 +44,14 @@ const AgentRequestDetailContainer = (props) => {
     const handleSubmitReport = (event) => {
         console.log(selectedAd);
         event.preventDefault();
-     
+
         const form = event.target;
         let data = null;
         if (form.checkValidity() === false) {
             event.stopPropagation();
             setValidated(true);
         } else {
-             data = {
+            data = {
                 "distanceTraveled": form.distanceTraveled.value,
                 "description": form.description.value,
                 "adId": selectedAd,
