@@ -59,6 +59,12 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public RequestDTO findRequestDTOById(Long id) {
+        Request request = this.findById(id);
+        return RequestConverter.toRequestDTOFromRequest(request);
+    }
+
+    @Override
     public List<Request> findAll() {
         return requestRepository.findAll();
     }
