@@ -74,7 +74,7 @@ public class Ad {
     @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = DbTableConstants.ADDISCOUNTLIST,
             joinColumns = @JoinColumn(name = "ad_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "discount_list_id", referencedColumnName = "id"))

@@ -1,6 +1,7 @@
 package services.app.adservice.dto.ad;
 
 import lombok.*;
+import services.app.adservice.dto.discountlist.DiscountInfoDTO;
 
 import java.util.List;
 
@@ -39,4 +40,5 @@ public class AdDetailViewDTO {
     private String publisherUserFirstName;
     private String publisherUserLastName;
     private List<String> images;
+    private List<DiscountInfoDTO> discounts;
 }

@@ -31,4 +31,6 @@ public class DbColumnConstants {
     public static final String REPORT = "report";
     public static final String AMOUNT = "amount";
     public static final String EMAIL = "email";
+    public static final String DISCOUNT = "discount";
+    public static final String MILEAGE = "mileage";
 }
