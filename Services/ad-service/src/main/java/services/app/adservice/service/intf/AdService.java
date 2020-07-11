@@ -52,6 +52,7 @@ public interface AdService {
     void deleteDiscountFromAdRabbit(String string);
     Long authAgent(String email, String identifier);
     Long createAdFromAgent(AdSync adSync);
-
+    void deleteAd(Long publisherUserId);
+    void revertAd(Long publisherUserId);
 
 }

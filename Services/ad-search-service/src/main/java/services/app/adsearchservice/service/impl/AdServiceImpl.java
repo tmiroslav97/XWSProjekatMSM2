@@ -249,6 +249,22 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_AD_SEARCH_QUEUE_NAME)
+    public void deleteAd(Long publisherUserId) {
+        List<Ad> ads = adRepository.findAllByPublisherUser(publisherUserId);
+        ads.forEach(ad -> ad.setDeleted(true));
+        adRepository.saveAll(ads);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.REVERT_AD_SEARCH_QUEUE_NAME)
+    public void revertAd(Long publisherUserId) {
+        List<Ad> ads = adRepository.findAllByPublisherUser(publisherUserId);
+        ads.forEach(ad -> ad.setDeleted(false));
+        adRepository.saveAll(ads);
+    }
+
+    @Override
     public AdPageContentDTO findAll(Integer page, Integer size) {
 
 //        Pageable pageable;

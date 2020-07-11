@@ -26,6 +26,30 @@ public class LocalRabbitMQConfiguration {
     public static final String END_USER_IS_BLOCKED_ID_QUEUE_NAME = "end_user_is_blocked_id";
     public static final String END_USER_IS_OBLIGED_ID_QUEUE_NAME = "end_user_is_obliged_id";
     public static final String END_USER_CANCELED_RENT_CNT_QUEUE_NAME = "user_submit_rent_cnt";
+    public static final String DELETE_AD_QUEUE_NAME = "delete_ad";
+    public static final String DELETE_AD_SEARCH_QUEUE_NAME = "delete_ad_search";
+    public static final String REVERT_AD_QUEUE_NAME = "revert_ad";
+    public static final String REVERT_AD_SEARCH_QUEUE_NAME = "revert_ad_search";
+
+    @Bean
+    public Queue revertAdSearch() {
+        return new Queue(REVERT_AD_SEARCH_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue revertAd() {
+        return new Queue(REVERT_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue deleteAdSerch() {
+        return new Queue(DELETE_AD_SEARCH_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue deleteAd() {
+        return new Queue(DELETE_AD_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue endUserCanceledRentCnt() {

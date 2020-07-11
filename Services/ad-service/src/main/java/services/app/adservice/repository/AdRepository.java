@@ -20,4 +20,6 @@ public interface AdRepository  extends JpaRepository<Ad, Long> {
 
     @Query("SELECT ad FROM Ad ad WHERE  ad.deleted=(?1) AND ad.publisherUser=(?2)")
     List<Ad> findAllByDeletedAndPublisherUserId(Boolean deleted, Long id);
+
+    List<Ad> findAllByPublisherUser(Long publisherUserId);
 }
