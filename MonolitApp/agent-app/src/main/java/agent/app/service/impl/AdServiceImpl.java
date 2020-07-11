@@ -202,8 +202,8 @@ public class AdServiceImpl implements AdService {
         }
 
 //        //soap
-//        String identifier = priceListService.findPriceListPublisherUserIdentifier(email);
-//        AdSync adSync = AdConverter.toAdSyncFromAd(ad);
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(email);
+        AdSync adSync = AdConverter.toAdSyncFromAd(ad);
 //        if (adCreateDTO.getPriceListCreateDTO().getId() == null) {
 //            //pravljenje novog cenovnika
 //            adSync.setPricePerDay(ad.getPriceList().getPricePerDay());
