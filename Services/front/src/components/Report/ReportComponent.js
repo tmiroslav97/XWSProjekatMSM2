@@ -34,6 +34,7 @@ const ReportComponent = (props) => {
                         </Avatar>
                         </ListItemAvatar>
                         <ListItemText primary="Broj predjenih kilometara" secondary={props.report.distanceTraveled + " KM"} />
+                        
                     </ListItem>
                     <ListItem>
                         <ListItemAvatar>
