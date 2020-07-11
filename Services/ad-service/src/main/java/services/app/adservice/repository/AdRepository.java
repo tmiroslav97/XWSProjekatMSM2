@@ -16,6 +16,8 @@ public interface AdRepository  extends JpaRepository<Ad, Long> {
 
     Page<Ad> findAllByDeleted(Boolean deleted, Pageable pageable);
 
+    List<Ad> findAllByPriceList(Long priceList);
+
     @Query("SELECT ad FROM Ad ad WHERE  ad.deleted=(?1) AND ad.publisherUser=(?2)")
     List<Ad> findAllByDeletedAndPublisherUserId(Boolean deleted, Long id);
 }

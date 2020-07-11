@@ -24,6 +24,7 @@ import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
 import services.app.adservice.dto.discountlist.DiscountInfoDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
+import services.app.adservice.dto.pricelist.EditedPriceListDTO;
 import services.app.adservice.dto.pricelist.PriceListDTO;
 import services.app.adservice.dto.pricelist.PriceListUpdateASDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
@@ -590,6 +591,26 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer addDiscount(Long discountId) {
         return discountListService.addDiscount(discountId);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.UPDATE_PL_AD_QUEUE_NAME)
+    public void editPriceList(String msg) {
+        try {
+            EditedPriceListDTO editedPriceListDTO = objectMapper.readValue(msg, EditedPriceListDTO.class);
+            List<Ad> ads = adRepository.findAllByPriceList(editedPriceListDTO.getPriceListId());
+            for(Ad ad:ads){
+                PriceListUpdateASDTO priceListUpdateASDTO = PriceListUpdateASDTO.builder()
+                        .adId(ad.getId())
+                        .pricePerDay(editedPriceListDTO.getPricePerDay())
+                        .build();
+                String priceListUpdateASDTOStr = objectMapper.writeValueAsString(priceListUpdateASDTO);
+                rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_SEARCH_QUEUE_NAME, priceListUpdateASDTOStr);
+
+            }
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
     }
 
     @Override
