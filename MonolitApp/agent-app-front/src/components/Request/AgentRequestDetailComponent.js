@@ -2,7 +2,7 @@ import React from 'react';
 import { history } from '../../index';
 import { Row, Col, Card, OverlayTrigger, ListGroup, Tooltip, Button } from 'react-bootstrap'
 import ReportComponent from '../Report/ReportComponent';
-import { Map } from 'react-yandex-maps';
+import MapsComponent from '../../components/Common/MapsComponent';
 
 const AgentRequestDetailComponent = (props) => {
 
@@ -31,39 +31,40 @@ const AgentRequestDetailComponent = (props) => {
                     </Col>
                 </Row>
 
-                    {
-                        props.request.ads.map((ad, idx) => {
-                            return (
-                                <div>
-                                    <Row key={idx}>
-                                        <Col md={5} xs={12}>
-                                            <ListGroup variant="flush">
-                                                <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Klikni za detaljno</Tooltip>}>
-                                                    <span className="d-inline-block">
-                                                        <ListGroup.Item action onClick={() => { history.push('/ad-detail-view/' + ad.mainId); }}>{ad.adName}</ListGroup.Item>
-                                                    </span>
-                                                </OverlayTrigger>
-                                            </ListGroup>
+                {
+                    props.request.ads.map((ad, idx) => {
+                        return (
+                            <div key={idx}>
+                                <Row >
+                                    <Col md={5} xs={12}>
+                                        <ListGroup variant="flush">
+                                            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Klikni za detaljno</Tooltip>}>
+                                                <span className="d-inline-block">
+                                                    <ListGroup.Item action onClick={() => { history.push('/ad-detail-view/' + ad.mainId); }}>{ad.adName}</ListGroup.Item>
+                                                </span>
+                                            </OverlayTrigger>
+                                        </ListGroup>
+                                    </Col>
+                                    <Col md={5} xs={12}>
+                                        {
+                                            ad.report == null ?
+                                                <Button variant="outline-primary" onClick={() => { props.setSelectedAd(ad.id); props.setShow(true); }}>Ostavi izvjestaj</Button>
+                                                : <ReportComponent report={ad.report} />
+                                        }
+                                    </Col>
+                                </Row>
+                                {ad.token != null ?
+                                    <Row>
+                                        <Col md={12} xs={12}>
+                                        <MapsComponent token={ad.token} />
                                         </Col>
-                                        <Col md={5} xs={12}>
-                                            {
-                                                ad.report == null ?
-                                                    <Button variant="outline-primary" onClick={() => { props.setSelectedAd(ad.id); props.setShow(true); }}>Ostavi izvjestaj</Button>
-                                                    : <ReportComponent report={ad.report} />
-                                            }
-                                        </Col>
-                                    </Row>
-                                    {ad.token == null ?
-                                        <Row>
-                                            <Col md={12} xs={12}>
-                                                <Map defaultState={{ center: [45.2464362, 19.8517172], zoom: 9 }} />
-                                            </Col>
-                                        </Row> : null
-                                    }
-                                </div>
-                            );
-                        })
-                    }
+                                    </Row> 
+                                    : null
+                                }
+                            </div>
+                        );
+                    })
+                }
             </Card.Body>
         </Card>
 

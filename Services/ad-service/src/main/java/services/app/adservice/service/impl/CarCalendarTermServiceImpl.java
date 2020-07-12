@@ -67,6 +67,23 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
     }
 
     @Override
+    public Integer addCarCalendarTermOccupationEndpoint(Long adId, String starDate, String endDate) {
+        Boolean flag = this.splitCarCalendarTerm(adId, DateAPI.DateTimeStringToDateTime(starDate), DateAPI.DateTimeStringToDateTime(endDate));
+        List<CarCalendarTerm> carCalendarTerms = this.findAllByAdId(adId);
+        List<CarCalendarTermSynchronizeDTO> carCalendarTermSynchronizeDTOS = CarCalendarTermConverter.toListCarCalendarTermSyncDTOFromListCarCalendarTerm(new HashSet<>(carCalendarTerms));
+        try {
+            String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
+        } catch (JsonProcessingException exception) {
+        }
+        if (flag) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    @Override
     public List<CarCalendarTerm> findAllByAdId(Long adId) {
         return carCalendarTermRepository.findAllByAdId(adId);
     }
@@ -112,6 +129,33 @@ public class CarCalendarTermServiceImpl implements CarCalendarTermService {
 
         if (carCalendarTerm != null) {
             Ad ad = adService.findById(carCalendarTermDTO.getAdId());
+            if (ad != null) {
+                carCalendarTerm.setAd(ad);
+                carCalendarTerm = this.save(carCalendarTerm);
+
+                ad.getCarCalendarTerms().add(carCalendarTerm);
+                ad = adService.edit(ad);
+                List<CarCalendarTerm> carCalendarTerms = this.findAllByAdId(ad.getId());
+                List<CarCalendarTermSynchronizeDTO> carCalendarTermSynchronizeDTOS = CarCalendarTermConverter.toListCarCalendarTermSyncDTOFromListCarCalendarTerm(new HashSet<>(carCalendarTerms));
+                try {
+                    String carCalendarTermSynchronizeDTOSStr = objectMapper.writeValueAsString(carCalendarTermSynchronizeDTOS);
+                    rabbitTemplate.convertAndSend(RabbitMQConfiguration.CCT_SYNC_QUEUE_NAME, carCalendarTermSynchronizeDTOSStr);
+                } catch (JsonProcessingException exception) {
+                }
+                return 1;
+            }
+        }
+        return 2;
+    }
+
+    @Override
+    public Integer addCarCalendarTermEndpoint(Long adId, String startDate, String endDate) {
+       CarCalendarTerm carCalendarTerm =  CarCalendarTerm.builder()
+                .startDate(DateAPI.DateTimeStringToDateTime(startDate))
+                .endDate(DateAPI.DateTimeStringToDateTime(endDate))
+                .build();
+        if (carCalendarTerm != null) {
+            Ad ad = adService.findById(adId);
             if (ad != null) {
                 carCalendarTerm.setAd(ad);
                 carCalendarTerm = this.save(carCalendarTerm);

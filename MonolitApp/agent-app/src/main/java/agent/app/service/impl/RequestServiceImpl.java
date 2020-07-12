@@ -171,6 +171,7 @@ public class RequestServiceImpl implements RequestService {
                             .adId(adAgent.getId())
                             .mileage(ad.getMileage())
                             .discount(ad.getDiscount())
+                            .token(ad.getToken())
                             .build();
                     adRequest = adRequestService.save(adRequest);
                     adRequests.add(adRequest);

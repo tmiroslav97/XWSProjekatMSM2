@@ -18,7 +18,7 @@ const Form1CreateAd = (props) => {
 
                         <Form.Group as={Col}>
                             <Form.Label>Proizvodjac</Form.Label>
-                            <Form.Control as="select" required name="carManufacturer" id="txtCarManufacturer"
+                            <Form.Control required as="select" required name="carManufacturer" id="txtCarManufacturer"
                                 placeholder="Proizvodjac"
                                 value={props.carManufacturer}
                                 onChange={props.handleCarManufacturers} >
@@ -27,7 +27,7 @@ const Form1CreateAd = (props) => {
                         </Form.Group>
                         <Form.Group as={Col}>
                             <Form.Label>Model</Form.Label>
-                            <Form.Control as="select" name="carModel" id="txtCarModel" placeholder="Model"
+                            <Form.Control required as="select" name="carModel" id="txtCarModel" placeholder="Model"
                                 defaultValue={props.carModel} onChange={props.handleCarModel}>
                                 {props.getCarModels()}
                             </Form.Control>
@@ -35,7 +35,7 @@ const Form1CreateAd = (props) => {
 
                         <Form.Group as={Col}>
                             <Form.Label>Tip</Form.Label>
-                            <Form.Control as="select" required name="carType" id="txtCarType" placeholder="Tip"
+                            <Form.Control required as="select" required name="carType" id="txtCarType" placeholder="Tip"
                                 value={props.carType} onChange={props.handleCarType} >
                                 {props.getCarTypes()}
                             </Form.Control>
@@ -44,7 +44,7 @@ const Form1CreateAd = (props) => {
                     <Col>
                         <Form.Group as={Col}>
                             <Form.Label>Mesto</Form.Label>
-                            <Form.Control required name="location" id="txtLocation" type="text" 
+                            <Form.Control required name="location" id="txtLocation" type="text"
                                 placeholder="Lokacija"
                                 onChange={props.handleLocation} defaultValue={props.location} />
                         </Form.Group>

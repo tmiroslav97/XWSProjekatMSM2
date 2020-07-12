@@ -52,11 +52,11 @@ INSERT INTO end_user(id, ad_limit_num, canceled_cnt, enabled, obliged)
 VALUES (5, 3, 0, true, false);
 
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (1, STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 20, 10, 0, 3);
+VALUES (1, STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 20, 100, 0, 3);
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (2, STR_TO_DATE('25-05-2020', '%d-%m-%Y'), 4000, 2000, 10000, 2);
+VALUES (2, STR_TO_DATE('25-05-2020', '%d-%m-%Y'), 4000, 200, 300, 2);
 INSERT INTO price_list(id, creation_date, price_per_day, price_per_km, price_per_cwd, publisher_user_id)
-VALUES (3, STR_TO_DATE('24-04-2020', '%d-%m-%Y'), 20, 10, 0, 4);
+VALUES (3, STR_TO_DATE('24-04-2020', '%d-%m-%Y'), 20, 100, 220, 4);
 
 INSERT INTO discount_list(id, discount, day_num, agent_id)
 VALUES (1, 22, 30, 2);
@@ -66,7 +66,7 @@ VALUES (1, false, 'Audi', 'A8', 'Limuzina',  1000, 'LIMITED', false, 2, 'Dizel',
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
 VALUES (2, false, 'BMW', '320i', 'Limuzina', null, 'UNLIMITED', true, 3, 'Benzin', 'Manuelni', 150000, null, STR_TO_DATE('20-05-2020', '%d-%m-%Y'));
 INSERT INTO car (id, android_flag, car_manufacturer, car_model, car_type, distance_limit, distance_limit_flag, cdw, children_seat_num, fuel_type, gearbox_type, mileage, token, year)
-VALUES (3, false, 'Mercedes', 'ML', 'Limuzina', null, 'UNLIMITED', true, 3, 'Dizel', 'Automatik', 120000, null, STR_TO_DATE('20-05-2015', '%d-%m-%Y'));
+VALUES (3, true, 'Mercedes', 'ML', 'Limuzina', null, 'UNLIMITED', true, 3, 'Dizel', 'Automatik', 120000, 'asdasda34fsdfsd', STR_TO_DATE('20-05-2015', '%d-%m-%Y'));
 
 INSERT INTO ad(id, cover_photo, deleted, enabled, location, name, publish_date, rating_count, rating_num, rent_cnt, price_list_id, publisher_user_id)
 VALUES (1, 'slika7.jpg', false, true, 'Zrenjanin', 'Oglas za automobil audi (A8)', STR_TO_DATE('20-04-2020', '%d-%m-%Y'), 6, 31, 8, 2, 2);

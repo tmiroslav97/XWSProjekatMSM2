@@ -8,18 +8,14 @@
 
 package services.app.carrequestservice.model;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 
 /**
  * <p>Java class for anonymous complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType&gt;
  *   &lt;complexContent&gt;
@@ -33,14 +29,13 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent&gt;
  * &lt;/complexType&gt;
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
-    "publisherUserEmail",
-    "identifier",
-    "report"
+        "publisherUserEmail",
+        "identifier",
+        "requestId",
+        "report"
 })
 @XmlRootElement(name = "submitReportRequest")
 public class SubmitReportRequest {
@@ -50,15 +45,24 @@ public class SubmitReportRequest {
     @XmlElement(required = true)
     protected String identifier;
     @XmlElement(required = true)
+    protected Long requestId;
+    @XmlElement(required = true)
     protected Report report;
+
+    public Long getRequestId() {
+        return requestId;
+    }
+
+
+    public void setRequestId(Long value) {
+        this.requestId = value;
+    }
 
     /**
      * Gets the value of the publisherUserEmail property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getPublisherUserEmail() {
         return publisherUserEmail;
@@ -66,11 +70,9 @@ public class SubmitReportRequest {
 
     /**
      * Sets the value of the publisherUserEmail property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPublisherUserEmail(String value) {
         this.publisherUserEmail = value;
@@ -78,11 +80,9 @@ public class SubmitReportRequest {
 
     /**
      * Gets the value of the identifier property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     * {@link String }
      */
     public String getIdentifier() {
         return identifier;
@@ -90,11 +90,9 @@ public class SubmitReportRequest {
 
     /**
      * Sets the value of the identifier property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setIdentifier(String value) {
         this.identifier = value;
@@ -102,11 +100,9 @@ public class SubmitReportRequest {
 
     /**
      * Gets the value of the report property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Report }
-     *     
+     *
+     * @return possible object is
+     * {@link Report }
      */
     public Report getReport() {
         return report;
@@ -114,11 +110,9 @@ public class SubmitReportRequest {
 
     /**
      * Sets the value of the report property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Report }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link Report }
      */
     public void setReport(Report value) {
         this.report = value;

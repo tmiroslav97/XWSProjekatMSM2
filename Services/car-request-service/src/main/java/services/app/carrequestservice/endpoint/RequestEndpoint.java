@@ -6,6 +6,8 @@ import org.springframework.ws.server.endpoint.annotation.RequestPayload;
 import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 import services.app.carrequestservice.model.AcceptRequest;
 import services.app.carrequestservice.model.AcceptResponse;
+import services.app.carrequestservice.model.SubmitReportRequest;
+import services.app.carrequestservice.model.SubmitReportResponse;
 import services.app.carrequestservice.service.intf.RequestService;
 
 @Endpoint
@@ -30,6 +32,20 @@ public class RequestEndpoint {
         }else{
             acceptResponse.setMsg(requestService.acceptRequest(request.getId(), request.getAction()));
             return acceptResponse;
+        }
+    }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "submitReportRequest")
+    @ResponsePayload
+    public SubmitReportResponse submitReportRequest(@RequestPayload SubmitReportRequest request) {
+        SubmitReportResponse submitReportResponse = new SubmitReportResponse();
+        Long publisherUser = requestService.authAgent(request.getPublisherUserEmail(), request.getIdentifier());
+        if (publisherUser == null) {
+            submitReportResponse.setMainId(null);
+            return submitReportResponse;
+        }else{
+            submitReportResponse.setMainId(requestService.submitReport(request.getRequestId(), request.getReport(), publisherUser));
+            return submitReportResponse;
         }
     }
 }

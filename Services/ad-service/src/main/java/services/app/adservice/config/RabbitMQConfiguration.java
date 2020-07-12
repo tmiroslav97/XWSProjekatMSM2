@@ -29,7 +29,35 @@ public class RabbitMQConfiguration {
     public static final String DELETE_DISCOUNT_FROM_AD_QUEUE_NAME = "delete_discount_from_ad";
     public static final String AGENT_ID_BY_EMAIL_ID_QUEUE_NAME = "agent_id_by_email_id";
     public static final String DISCOUNT_INFO_BY_ID_QUEUE_NAME = "discount_info_by_id";
+    public static final String UPDATE_PL_AD_SEARCH_QUEUE_NAME = "update_pl_ad_search";
+    public static final String UPDATE_PL_AD_QUEUE_NAME = "update_pl_ad";
+    public static final String UPDATE_MILEAGE_AD_QUEUE_NAME = "update_mileage_ad";
+    public static final String DELETE_AD_QUEUE_NAME = "delete_ad";
+    public static final String REVERT_AD_QUEUE_NAME = "revert_ad";
 
+    @Bean
+    public Queue revertAd() {
+        return new Queue(REVERT_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue deleteAd() {
+        return new Queue(DELETE_AD_QUEUE_NAME, false);
+    }
+    @Bean
+    public Queue updateMileageAd() {
+        return new Queue(UPDATE_MILEAGE_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue updatePlAd() {
+        return new Queue(UPDATE_PL_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue updatePlAdSearch() {
+        return new Queue(UPDATE_PL_AD_SEARCH_QUEUE_NAME, false);
+    }
 
     @Bean
     public Queue discountInfoById() {

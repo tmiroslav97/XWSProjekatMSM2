@@ -1,8 +1,10 @@
 package services.app.carrequestservice.service.intf;
 
+import services.app.carrequestservice.dto.Coordinate;
 import services.app.carrequestservice.dto.carreq.SubmitRequestDTO;
 import services.app.carrequestservice.dto.discountlist.DiscountInfoDTO;
 import services.app.carrequestservice.model.Ad;
+import services.app.carrequestservice.model.Report;
 import services.app.carrequestservice.model.Request;
 
 import java.util.HashMap;
@@ -24,6 +26,8 @@ public interface RequestService {
 
     Integer quitRequest(Long id);
 
+    Long submitReport(Long requestId, Report report, Long publisheruser);
+
     void autoRejectRequests();
 
     void deleteAllWithSameAdId(List<Ad> ads);
@@ -43,4 +47,6 @@ public interface RequestService {
     void delete(Request request);
 
     Request save(Request request);
+
+    //List<Coordinate> getCoords();
 }

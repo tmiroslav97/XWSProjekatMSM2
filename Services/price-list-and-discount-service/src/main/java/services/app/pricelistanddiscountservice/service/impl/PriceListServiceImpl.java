@@ -15,6 +15,7 @@ import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.PriceListConverter;
 import services.app.pricelistanddiscountservice.dto.AgentFirmIdentificationDTO;
+import services.app.pricelistanddiscountservice.dto.pricelist.EditedPriceListDTO;
 import services.app.pricelistanddiscountservice.dto.pricelist.PriceListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.sync.PriceListSyncDTO;
 import services.app.pricelistanddiscountservice.exception.ExistsException;
@@ -124,6 +125,16 @@ public class PriceListServiceImpl implements PriceListService {
         priceList1.setPricePerKm(priceList.getPricePerKm());
         priceList1.setPricePerKmCDW(priceList.getPricePerKmCDW());
         priceList1 = priceListRepository.save(priceList1);
+        try{
+            EditedPriceListDTO editedPriceListDTO = EditedPriceListDTO.builder()
+                    .priceListId(priceList1.getId())
+                    .pricePerDay(priceList1.getPricePerDay())
+                    .build();
+            String editedPriceListDTOStr  = objectMapper.writeValueAsString(editedPriceListDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_QUEUE_NAME, editedPriceListDTOStr);
+        }catch (JsonProcessingException exception){
+            exception.printStackTrace();
+        }
         return 1;
     }
 
@@ -194,6 +205,16 @@ public class PriceListServiceImpl implements PriceListService {
         priceList.setPricePerKm(pricePerKm);
         priceList.setPricePerKmCDW(pricePerKmCDW);
         priceList = this.priceListRepository.save(priceList);
+        try{
+            EditedPriceListDTO editedPriceListDTO = EditedPriceListDTO.builder()
+                    .priceListId(priceList.getId())
+                    .pricePerDay(priceList.getPricePerDay())
+                    .build();
+            String editedPriceListDTOStr  = objectMapper.writeValueAsString(editedPriceListDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_QUEUE_NAME, editedPriceListDTOStr);
+        }catch (JsonProcessingException exception){
+            exception.printStackTrace();
+        }
         return priceList.getId();
     }
 

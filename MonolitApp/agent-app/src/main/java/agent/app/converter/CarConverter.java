@@ -8,6 +8,12 @@ import services.app.adservice.model.CarSync;
 
 public class CarConverter extends AbstractConverter {
     public static Car toCreateCarFromRequest(CarCreateDTO carCreateDTO) {
+        DistanceLimitEnum distanceLimitEnum;
+        if(carCreateDTO.getDistanceLimitFlag().equals("true")){
+            distanceLimitEnum = DistanceLimitEnum.LIMITED;
+        }else{
+            distanceLimitEnum=DistanceLimitEnum.UNLIMITED;
+        }
         return Car.builder()
                 .year(DateAPI.DateStringToDateTimeFromFronted(carCreateDTO.getYear()))
                 .carManufacturer(carCreateDTO.getCarManufacturer())
@@ -18,7 +24,7 @@ public class CarConverter extends AbstractConverter {
                 .mileage(carCreateDTO.getMileage())
                 .childrenSeatNum(carCreateDTO.getChildrenSeatNum())
                 .distanceLimit(carCreateDTO.getDistanceLimit())
-                .distanceLimitFlag(DistanceLimitEnum.valueOf(carCreateDTO.getDistanceLimitFlag()))
+                .distanceLimitFlag(distanceLimitEnum)
                 .cdw(carCreateDTO.getCdw())
                 .androidFlag(carCreateDTO.getAndroidFlag())
                 .build();

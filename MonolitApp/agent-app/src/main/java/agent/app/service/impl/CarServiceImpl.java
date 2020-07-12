@@ -56,7 +56,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car editCar(Car car) {
         this.finById(car.getId());
-        Car car1 = this.save(car);
+        Car car1 = carRepository.save(car);
         return car1;
     }
 

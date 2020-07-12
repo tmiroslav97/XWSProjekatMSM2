@@ -24,6 +24,7 @@
             <xs:sequence>
                 <xs:element name="publisherUserEmail" type="xs:string"/>
                 <xs:element name="identifier" type="xs:string"/>
+                <xs:element name="requestId" type="xs:long"/>
                 <xs:element name="report" type="tns:Report"/>
             </xs:sequence>
         </xs:complexType>
@@ -31,7 +32,7 @@
     <xs:element name="submitReportResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="msg" type="xs:string"/>
+                <xs:element name="mainId" type="xs:long"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

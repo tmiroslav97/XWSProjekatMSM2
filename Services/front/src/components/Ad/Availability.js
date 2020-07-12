@@ -22,7 +22,7 @@ const Availability = (props) => {
                     </Col>
                     <Col>
                         <Form.Control required name="endDate" id="endDate" type="datetime-local"
-                            min={props.occupationStart}
+                            min={props.startDate}
                             onChange={props.handleEndDate}
                             placeholder="Datum kraja"
                         />

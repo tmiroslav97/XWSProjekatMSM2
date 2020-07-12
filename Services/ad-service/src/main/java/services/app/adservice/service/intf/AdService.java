@@ -38,7 +38,7 @@ public interface AdService {
     Integer addDiscountToAd(Long discountId, Long adId);
     Integer removeDiscountToAd(Long discountId, Long adId);
     Integer addDiscount(Long discountId);
-
+    void editPriceList(String msg);
     List<Ad> findMyAds(Long publisher_id);
     AdStatisticsDTO findBestAverageGrade(Long publisher_id);
     AdStatisticsDTO findMaxMileage(Long publisher_id);
@@ -52,6 +52,7 @@ public interface AdService {
     void deleteDiscountFromAdRabbit(String string);
     Long authAgent(String email, String identifier);
     Long createAdFromAgent(AdSync adSync);
-
+    void deleteAd(Long publisherUserId);
+    void revertAd(Long publisherUserId);
 
 }

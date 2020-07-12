@@ -152,7 +152,6 @@ public class AdServiceImpl implements AdService {
         }
         if (rez != 4) {
             Integer r = endUserService.reduceAdLimitNum(email);
-            System.out.println("Limit num: " + r);
         }
 
         Ad ad = AdConverter.toCreateAdFromRequest(adCreateDTO);
@@ -191,6 +190,7 @@ public class AdServiceImpl implements AdService {
         ad = this.save(ad);
 
         //dodeljene slike
+        List<Image> images = new ArrayList<>();
         if (adCreateDTO.getImagesDTO() != null) {
             List<String> slike = adCreateDTO.getImagesDTO();
             for (String slika : slike) {
@@ -199,6 +199,7 @@ public class AdServiceImpl implements AdService {
                     System.out.println("slika: " + image.getName());
                     image.setAd(ad);
                     image = imageService.editImage(image);
+                    images.add(image);
                 }
             }
         }
@@ -206,7 +207,6 @@ public class AdServiceImpl implements AdService {
             carCalendarTerm.setAd(ad);
             carCalendarTerm = carCalendarTermService.editCarCalendarTerm(carCalendarTerm);
         }
-
         //soap
         String identifier = priceListService.findPriceListPublisherUserIdentifier(email);
         AdSync adSync = AdConverter.toAdSyncFromAd(ad);
@@ -214,7 +214,7 @@ public class AdServiceImpl implements AdService {
         List<CarCalendarTermSync> carCalendarTermSync = CarCalendarTermConverter.fromEntityList(ad.getCarCalendarTerms().stream().collect(Collectors.toList()), CarCalendarTermConverter::toCarCalendarTermSyncFromCarCalendarTerm);
         carCalendarTermSync.forEach(carCalendarTerm -> adSync.getCarCalendarTermSyncDTOList().add(carCalendarTerm));
         ad.getDiscountLists().forEach(discountList -> adSync.getDiscountList().add(discountList.getMainId()));
-        for (Image img : ad.getImages()) {
+        for (Image img : images) {
             if (!img.getName().equals(ad.getCoverPhoto())) {
                 adSync.getImages().add(imageService.findImageByNameBase64(img.getName()));
             }

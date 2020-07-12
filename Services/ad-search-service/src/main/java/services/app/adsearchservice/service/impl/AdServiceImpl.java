@@ -19,6 +19,7 @@ import services.app.adsearchservice.dto.ad.AdPageDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adsearchservice.dto.image.ImagesSynchronizeDTO;
+import services.app.adsearchservice.dto.pricelist.PriceListUpdateASDTO;
 import services.app.adsearchservice.dto.user.UserFLNameDTO;
 import services.app.adsearchservice.exception.ExistsException;
 import services.app.adsearchservice.exception.NotFoundException;
@@ -105,7 +106,7 @@ public class AdServiceImpl implements AdService {
         if (sortParam.equals("mileage")) {
             pageable = PageRequest.of(page, size);
         } else {
-            if(sortType.equals("asc"))
+            if (sortType.equals("asc"))
                 pageable = PageRequest.of(page, size, Sort.by(sortParam).ascending());
             else
                 pageable = PageRequest.of(page, size, Sort.by(sortParam).descending());
@@ -134,10 +135,10 @@ public class AdServiceImpl implements AdService {
             ret.add(adPageDTO);
         }
         if (sortParam.equals("mileage")) {
-            if(sortType.equals("asc"))
+            if (sortType.equals("asc"))
                 ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o1.getMileage() - o2.getMileage()));
             else
-                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o2.getMileage() -  o1.getMileage()));
+                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o2.getMileage() - o1.getMileage()));
         }
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
@@ -162,7 +163,7 @@ public class AdServiceImpl implements AdService {
         if (sortParam.equals("mileage")) {
             pageable = PageRequest.of(page, size);
         } else {
-            if(sortType.equals("asc"))
+            if (sortType.equals("asc"))
                 pageable = PageRequest.of(page, size, Sort.by(sortParam).ascending());
             else
                 pageable = PageRequest.of(page, size, Sort.by(sortParam).descending());
@@ -189,10 +190,10 @@ public class AdServiceImpl implements AdService {
         }
 
         if (sortParam.equals("mileage")) {
-            if(sortType.equals("asc"))
+            if (sortType.equals("asc"))
                 ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o1.getMileage() - o2.getMileage()));
             else
-                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o2.getMileage() -  o1.getMileage()));
+                ret.sort((AdPageDTO o1, AdPageDTO o2) -> (int) (o2.getMileage() - o1.getMileage()));
         }
         AdPageContentDTO adPageContentDTO = AdPageContentDTO.builder()
                 .totalPageCnt(ads.getTotalPages())
@@ -230,8 +231,37 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    @RabbitListener(queues = RabbitMQConfiguration.UPDATE_PL_AD_SEARCH_QUEUE_NAME)
+    public void updatePriceList(String msg) {
+        try {
+            PriceListUpdateASDTO priceListUpdateASDTO = objectMapper.readValue(msg, PriceListUpdateASDTO.class);
+            Ad ad = this.findById(priceListUpdateASDTO.getAdId());
+            ad.setPricePerDay(priceListUpdateASDTO.getPricePerDay());
+            ad = adRepository.save(ad);
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @Override
     public void addAd(Ad ad) {
 
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_AD_SEARCH_QUEUE_NAME)
+    public void deleteAd(Long publisherUserId) {
+        List<Ad> ads = adRepository.findAllByPublisherUser(publisherUserId);
+        ads.forEach(ad -> ad.setDeleted(true));
+        adRepository.saveAll(ads);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.REVERT_AD_SEARCH_QUEUE_NAME)
+    public void revertAd(Long publisherUserId) {
+        List<Ad> ads = adRepository.findAllByPublisherUser(publisherUserId);
+        ads.forEach(ad -> ad.setDeleted(false));
+        adRepository.saveAll(ads);
     }
 
     @Override
