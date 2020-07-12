@@ -19,14 +19,19 @@ const AgentRequestDetailContainer = (props) => {
     const [validated, setValidated] = useState(false);
     const [selectedAd, setSelectedAd] = useState();
     const [mileage, setMileage] = useState();
+    const [coordinates, setCoordinates] = useState([]);
 
     const fetchRequest = async () => {
         setIsFetch(false);
         const result = await RequestService.fetchRequest({ "id": id });
         setRequest(result);
         setIsFetch(true);
-
     }
+
+    // const fetchCoordinates = async () => {
+    //     const result = await RequestService.fetchCoordinates();
+    //     setCoordinates(result);
+    // }
 
     const submitReport = async (payload) => {
         const result = await ReportService.submitReport(payload);
@@ -38,6 +43,7 @@ const AgentRequestDetailContainer = (props) => {
 
     useEffect(() => {
         fetchRequest();
+        //fetchCoordinates
     }, [id]);
 
     const handleSubmitReport = (event) => {
@@ -70,7 +76,7 @@ const AgentRequestDetailContainer = (props) => {
             <Row>
                 <Col md={12} xs={12}>
                     {
-                        isFetch ? <AgentRequestDetailComponent request={request} setShow={setShowForm} setSelectedAd={setSelectedAd} setMileage={setMileage} /> : <SpinnerContainer />
+                        isFetch ? <AgentRequestDetailComponent coordinates={coordinates} request={request} setShow={setShowForm} setSelectedAd={setSelectedAd} setMileage={setMileage} /> : <SpinnerContainer />
                     }
                 </Col>
             </Row>

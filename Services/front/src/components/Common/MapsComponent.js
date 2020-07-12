@@ -7,6 +7,7 @@ class MapsComponent extends Component {
     constructor(props) {
         super(props);
         this.token = props.token;
+        this.coords = props.coordinates;
         this.coordinates = [{ "Longitude": 19.84901, "Latitude": 45.264743327 },
         { "Longitude": 19.84886, "Latitude": 45.265473326 },
         { "Longitude": 19.84885, "Latitude": 45.265483325 },
@@ -780,7 +781,7 @@ class MapsComponent extends Component {
         return (
             <Row>
                 <Col md={12} xs={12}>
-                    <Map defaultState={{ center: [45.2464362, 19.8517172], zoom: 12 }}>
+                    <Map defaultState={{ center: [this.state.lat, this.state.long], zoom: 12 }}>
                         <GeoObject
                             geometry={{
                                 type: 'Point',

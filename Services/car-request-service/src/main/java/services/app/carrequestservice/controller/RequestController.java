@@ -99,4 +99,10 @@ public class RequestController {
 
         }
     }
+
+//    @PreAuthorize("hasAuthority('ROLE_AGENT') or hasAuthority('ROLE_USER')")
+//    @RequestMapping(value="/coords", method = RequestMethod.GET)
+//    public ResponseEntity<?> getCoords() {
+//            return new ResponseEntity<>(requestService.getCoords(), HttpStatus.OK);
+//    }
 }

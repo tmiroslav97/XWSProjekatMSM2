@@ -2,10 +2,9 @@ import React from 'react';
 import { history } from '../../index';
 import { Container, Row, Col, Card, OverlayTrigger, ListGroup, Tooltip, Button } from 'react-bootstrap'
 import ReportComponent from '../Report/ReportComponent';
+import MapsComponent from '../Common/MapsComponent';
 
 const AgentRequestDetailComponent = (props) => {
-    console.log("ISPISSSSSSssss")
-    console.log(props)
     return (
         <Card border="secondary" className="mt-5">
             <Card.Body>
@@ -55,6 +54,14 @@ const AgentRequestDetailComponent = (props) => {
                                         }
                                     </Col>
                                 </Row>
+                                {ad.token == null ?
+                                    <Row>
+                                        <Col md={12} xs={12}>
+                                            <MapsComponent coordinates={props.coordinates} token={ad.token} />
+                                        </Col>
+                                    </Row>
+                                    : null
+                                }
                             </Container>
 
                         );
