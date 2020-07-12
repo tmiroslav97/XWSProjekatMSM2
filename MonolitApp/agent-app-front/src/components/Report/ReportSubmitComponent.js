@@ -10,7 +10,7 @@ const ReportSubmitComponent = (props) => {
                     <Form noValidate validated={props.validated} id="subreport" onSubmit={props.onSubmit}>
                         <Form.Row>
                             <Form.Group as={Col}>
-                                <Form.Label>Broj predjenih kilometara</Form.Label>
+                                <Form.Label>Trenutna kilometraza</Form.Label>
                                 <Form.Control required type="number" name="distanceTraveled" id="txtDistance" placeholder="Broj predjenih kilometara" />
                             </Form.Group>
                         </Form.Row>

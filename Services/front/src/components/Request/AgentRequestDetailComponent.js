@@ -54,7 +54,7 @@ const AgentRequestDetailComponent = (props) => {
                                         }
                                     </Col>
                                 </Row>
-                                {ad.token == null ?
+                                {ad.token != null ?
                                     <Row>
                                         <Col md={12} xs={12}>
                                             <MapsComponent coordinates={props.coordinates} token={ad.token} />
