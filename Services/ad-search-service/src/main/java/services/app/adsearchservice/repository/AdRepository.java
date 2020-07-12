@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import services.app.adsearchservice.model.Ad;
 
+import java.util.List;
+
 @Repository
 public interface AdRepository extends JpaRepository<Ad, Long> {
 
@@ -30,5 +32,5 @@ public interface AdRepository extends JpaRepository<Ad, Long> {
                                                                                                        Float mileageKM, String gearboxType, String fuelType, Integer childrenSeatNum,
                                                                                                        Boolean cdw, Float startPrice, Float endPrice, Pageable pageable);
 
-
+    List<Ad> findAllByPublisherUser(Long publisherUser);
 }

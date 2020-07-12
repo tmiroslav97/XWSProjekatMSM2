@@ -24,6 +24,9 @@ public interface AdService {
                                            Boolean cdw, Float startPrice, Float endPrice, String sort);
 
     Integer syncData(String msg);
-
+    void updatePriceList(String msg);
     void addAd(Ad ad);
+
+    void deleteAd(Long publisherUserId);
+    void revertAd(Long publisherUserId);
 }

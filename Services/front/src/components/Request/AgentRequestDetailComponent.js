@@ -2,6 +2,7 @@ import React from 'react';
 import { history } from '../../index';
 import { Container, Row, Col, Card, OverlayTrigger, ListGroup, Tooltip, Button } from 'react-bootstrap'
 import ReportComponent from '../Report/ReportComponent';
+import MapsComponent from '../Common/MapsComponent';
 
 const AgentRequestDetailComponent = (props) => {
     return (
@@ -31,7 +32,7 @@ const AgentRequestDetailComponent = (props) => {
                 {
                     props.request.ads.map((ad, idx) => {
                         return (
-                            <Container  key={idx}>
+                            <Container key={idx}>
                                 <Row>
                                     <Col md={5} xs={12}>
                                         <ListGroup variant="flush">
@@ -42,19 +43,27 @@ const AgentRequestDetailComponent = (props) => {
                                             </OverlayTrigger>
                                         </ListGroup>
                                     </Col>
-                                    
+
                                 </Row>
                                 <Row>
                                     <Col md={5} xs={12}>
                                         {
                                             ad.report == null ?
-                                                <Button variant="outline-primary" onClick={()=>{props.setSelectedAd(ad.id); props.setShow(true);}}>Ostavi izvjestaj</Button>
+                                                <Button variant="outline-primary" onClick={() => { props.setSelectedAd(ad.id); props.setShow(true); props.setMileage(ad.mileage); }} >Ostavi izvjestaj</Button>
                                                 : <ReportComponent report={ad.report} />
                                         }
                                     </Col>
                                 </Row>
+                                {ad.token != null ?
+                                    <Row>
+                                        <Col md={12} xs={12}>
+                                            <MapsComponent coordinates={props.coordinates} token={ad.token} />
+                                        </Col>
+                                    </Row>
+                                    : null
+                                }
                             </Container>
-                           
+
                         );
                     })
                 }

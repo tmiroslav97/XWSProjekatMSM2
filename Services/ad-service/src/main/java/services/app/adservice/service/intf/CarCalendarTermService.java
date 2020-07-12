@@ -12,6 +12,9 @@ public interface CarCalendarTermService {
 
     List<CarCalendarTerm> findAll();
 
+    Integer addCarCalendarTermOccupation(CarCalendarTermDTO carCalendarTermDTO);
+
+    Integer addCarCalendarTermOccupationEndpoint(Long adId, String starDate, String endDate);
 
     List<CarCalendarTerm> findAllByAdId(Long adId);
 
@@ -27,6 +30,8 @@ public interface CarCalendarTermService {
 
     Integer addCarCalendarTerm(CarCalendarTermDTO carCalendarTermDTO);
 
+    Integer addCarCalendarTermEndpoint(Long adId, String startDate, String endDate);
+
     CarCalendarTerm editCarCalendarTerm(CarCalendarTerm carCalendarTerm);
 
     List<CarCalendarTermCreateDTO> findByAdId(Long id);
@@ -34,4 +39,8 @@ public interface CarCalendarTermService {
     Boolean splitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate);
 
     Boolean canSplitCarCalendarTerm(Long adId, DateTime startDate, DateTime endDate);
+
+    Long authAgent(String email, String identifier);
+
+
 }

@@ -139,10 +139,14 @@ public class AgentServiceImpl implements AgentService {
         if (status) {
             agent.setDeleted(status);
             this.save(agent);
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.DELETE_AD_QUEUE_NAME, agent.getId());
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.DELETE_AD_SEARCH_QUEUE_NAME, agent.getId());
             return 1;
         } else {
             agent.setDeleted(status);
             this.save(agent);
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.REVERT_AD_QUEUE_NAME, agent.getId());
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.REVERT_AD_SEARCH_QUEUE_NAME, agent.getId());
             return 2;
         }
     }

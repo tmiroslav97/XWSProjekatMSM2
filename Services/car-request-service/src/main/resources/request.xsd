@@ -19,21 +19,20 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-    <xs:element name="submitReport">
+    <xs:element name="submitReportRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="publisherUserEmail" type="xs:string"/>
                 <xs:element name="identifier" type="xs:string"/>
-                <xs:element name="distanceTraveled" type="xs:float"/>
-                <xs:element name="description" type="xs:string"/>
-                <xs:element name="adId" type="xs:long"/>
+                <xs:element name="requestId" type="xs:long"/>
+                <xs:element name="report" type="tns:Report"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:element name="submitReportResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="msg" type="xs:string"/>
+                <xs:element name="mainId" type="xs:long"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -82,6 +81,8 @@
             <xs:element name="pricePerDay" type="xs:float"/>
             <xs:element name="pricePerKm" type="xs:float"/>
             <xs:element name="pricePerKmCDW" type="xs:float"/>
+            <xs:element name="discount" type="xs:float"/>
+            <xs:element name="mileage" type="xs:float"/>
             <xs:element name="token" type="xs:string"/>
             <xs:element name="report" type="tns:Report"/>
         </xs:sequence>
@@ -93,6 +94,14 @@
             <xs:element name="distanceTraveled" type="xs:float"/>
             <xs:element name="publisherUser" type="xs:long"/>
             <xs:element name="adId" type="xs:long"/>
+            <xs:element name="invoice" type="tns:Invoice"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Invoice">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element minOccurs="0" name="amount" type="xs:float"/>
+            <xs:element name="email" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

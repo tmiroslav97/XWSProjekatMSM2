@@ -95,6 +95,23 @@ class RequestService extends HttpBaseClient {
             return error.response.data;
         }
     };
+
+    fetchCoordinates = async payload => {
+        try {
+            const response = await this.getApiClient().get(
+                FINALPOINTS.REQUEST_BASE + '/coords',
+                {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                }
+            );
+            return response.data;
+
+        } catch (error) {
+            return error.response.data;
+        }
+    };
 };
 
 export default new RequestService();

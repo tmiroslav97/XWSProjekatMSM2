@@ -66,7 +66,6 @@ const AdDetailViewComponent = (props) => {
                             {props.ad.distanceLimitFlag === "LIMITED" ? <ListGroup.Item>Ograniceno na: {props.ad.distanceLimit} Km</ListGroup.Item> : null}
                             {props.ad.pricePerKm !== null && props.ad.distanceLimitFlag === "LIMITED" ? <ListGroup.Item>Cijena po Km: {props.ad.pricePerKm} RSD</ListGroup.Item> : null}
                             <ListGroup.Item>Posjeduje android uredjaja: {androidFlag}</ListGroup.Item>
-                            <ListGroup.Item>Broj rentiranja: {props.ad.rentCnt}</ListGroup.Item>
                             {props.ad.ratingCnt != 0 ? <ListGroup.Item>Ocjena: {(props.ad.ratingNum / props.ad.ratingCnt).toFixed(2)}</ListGroup.Item> : <ListGroup.Item>Niko nije ocjenio oglas</ListGroup.Item>}
                             {props.ad.pricePerDay !== null ? <ListGroup.Item>Cijena po danu: {props.ad.pricePerDay} RSD</ListGroup.Item> : null}
                         </ListGroup>

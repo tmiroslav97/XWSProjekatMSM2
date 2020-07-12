@@ -13,7 +13,5 @@ public interface CarService {
     void delete(Car car);
     Car edit(Car car);
     Integer deleteById(Long id);
-
-
-
+    void setMileage(String msg);
 }

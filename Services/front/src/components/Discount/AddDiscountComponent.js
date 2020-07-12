@@ -16,7 +16,7 @@ const AddDiscountComponent = (props) => {
                                     <InputGroup className="mb-3">
                                     
                                         <Form.Control name="discount" required 
-                                            type="number" placeholder="Popust"
+                                            type="number" placeholder="Popust" max="100"
                                         // defaultValue={props.data.pricePerDay}
                                         />
                                         <InputGroup.Append>

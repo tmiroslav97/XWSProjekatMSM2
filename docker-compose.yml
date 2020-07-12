@@ -76,14 +76,14 @@ services:
       - "8086:8086"
     environment:
       REGISTRY_HOST: eureka-serviceregistry
-      PHOTO_DIR: /var/data/adService
+      PHOTO_DIR: /adService
       LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_db?createDatabaseIfNotExist=true&serverTimezone=UTC
     volumes:
-      - images:/var/data/adService
+      - C:/adService:/adService
     depends_on: 
       - eureka-serviceregistry
       - mysql
@@ -152,13 +152,13 @@ services:
     environment:
       REGISTRY_HOST: eureka-serviceregistry
       LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
-      PHOTO_DIR: /var/data/adService
+      PHOTO_DIR: /adService
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: ad_search_db?createDatabaseIfNotExist=true&serverTimezone=UTC
     volumes:
-      - images:/var/data/adService
+      - C:/adService:/adService
     depends_on: 
       - eureka-serviceregistry
       - mysql
@@ -237,13 +237,13 @@ services:
     environment:
       ZUUL_GATEWAY: zuul
       LOCALAMQP_URL: amqp://guest:guest@rabbitmq-broker
-      PHOTO_DIR: /var/data/agent
+      PHOTO_DIR: /agent
       DATABASE_USERNAME: root
       DATABASE_PASSWORD: root
       DATABASE_DOMAIN: mysql
       DATABASE_SCHEMA: rent_a_car?createDatabaseIfNotExist=true&serverTimezone=UTC
     volumes:
-      - images:/var/data/agent
+      - C:/agent:/agent
     depends_on: 
       - mysql
       - rabbitmq-broker
@@ -270,7 +270,7 @@ services:
       - static-network
 
 volumes:
-  images:
+  # images:
   db-data:
 
 networks:

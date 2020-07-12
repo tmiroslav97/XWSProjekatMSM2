@@ -17,12 +17,16 @@ import services.app.adservice.config.AppConfig;
 import services.app.adservice.config.RabbitMQConfiguration;
 import services.app.adservice.converter.*;
 import services.app.adservice.dto.AcceptReqestCalendarTermsDTO;
+import services.app.adservice.dto.AgentFirmIdentificationDTO;
 import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.car.CarCalendarTermCreateDTO;
 import services.app.adservice.dto.car.CarCalendarTermSynchronizeDTO;
 import services.app.adservice.dto.car.StatisticCarDTO;
+import services.app.adservice.dto.discountlist.DiscountInfoDTO;
 import services.app.adservice.dto.image.ImagesSynchronizeDTO;
+import services.app.adservice.dto.pricelist.EditedPriceListDTO;
 import services.app.adservice.dto.pricelist.PriceListDTO;
+import services.app.adservice.dto.pricelist.PriceListUpdateASDTO;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.dto.user.UserFLNameDTO;
 import services.app.adservice.exception.ExistsException;
@@ -128,6 +132,22 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_AD_QUEUE_NAME)
+    public void deleteAd(Long publisherUserId) {
+        List<Ad> ads = adRepository.findAllByPublisherUser(publisherUserId);
+        ads.forEach(ad -> ad.setDeleted(true));
+        adRepository.saveAll(ads);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.REVERT_AD_QUEUE_NAME)
+    public void revertAd(Long publisherUserId) {
+        List<Ad> ads = adRepository.findAllByPublisherUser(publisherUserId);
+        ads.forEach(ad -> ad.setDeleted(false));
+        adRepository.saveAll(ads);
+    }
+
+    @Override
     public Integer deleteById(Long id) {
         Ad ad = this.findById(id);
         this.delete(ad);
@@ -136,20 +156,6 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public AdPageContentDTO findAll(Integer page, Integer size) {
-
-//        Pageable pageable;
-//        if(sort.equals("-")){
-//            pageable = PageRequest.of(page, size);
-//        }else{
-//            String par[] = sort.split(" ");
-//            if(par[1].equals("opadajuce")) {
-//                pageable = PageRequest.of(page, size, Sort.by(par[0]).descending());
-//            }else{
-//                pageable = PageRequest.of(page, size, Sort.by(par[0]).ascending());
-//            }
-//
-//        }
-
         Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
         Page<Ad> ads = adRepository.findAllByDeleted(false, pageable);
         System.out.println(ads.getSize());
@@ -460,7 +466,7 @@ public class AdServiceImpl implements AdService {
     public AdDetailViewDTO getAdDetailView(Long ad_id) {
 
         AdDetailViewDTO adDV = AdConverter.toAdDetailViewDTOFromAd(findById(ad_id), appConfig.getPhotoDir());
-
+        Ad ad = this.findById(ad_id);
         try {
             String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, adDV.getPriceId());
             PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
@@ -468,6 +474,14 @@ public class AdServiceImpl implements AdService {
             adDV.setPricePerKm(priceListDTO.getPricePerKm());
             adDV.setPricePerKmCDW(priceListDTO.getPricePerKmCDW());
 
+            List<DiscountInfoDTO> discountInfoDTOS = new ArrayList<>();
+            for (DiscountList discountList : ad.getDiscountLists()) {
+                String discountInfoDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.DISCOUNT_INFO_BY_ID_QUEUE_NAME, discountList.getId());
+                DiscountInfoDTO discountInfoDTO = objectMapper.readValue(discountInfoDTOStr, DiscountInfoDTO.class);
+                discountInfoDTOS.add(discountInfoDTO);
+            }
+
+            adDV.setDiscounts(discountInfoDTOS);
             String userFLNameDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_FL_NAME_QUEUE_NAME, adDV.getPublisherUserId());
             UserFLNameDTO userFLNameDTO = objectMapper.readValue(userFLNameDTOStr, UserFLNameDTO.class);
             adDV.setPublisherUserFirstName(userFLNameDTO.getUserFirstName());
@@ -487,10 +501,10 @@ public class AdServiceImpl implements AdService {
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         List<Long> pricelists = new ArrayList<>();
         List<Ad> ads = this.findAllFromPublisher(Long.parseLong(principal.getUserId()));
-        for(Ad ad : ads){
-            if(!pricelists.contains(ad.getPriceList())){
+        for (Ad ad : ads) {
+            if (!pricelists.contains(ad.getPriceList())) {
                 pricelists.add(ad.getPriceList());
-                System.out.println("cenovnik:    "+ad.getPriceList());
+                System.out.println("cenovnik:    " + ad.getPriceList());
             }
         }
         return pricelists;
@@ -500,8 +514,8 @@ public class AdServiceImpl implements AdService {
     public List<Ad> findAllFromPublisher(Long publisherId) {
         List<Ad> ret = new ArrayList<>();
         List<Ad> ads = adRepository.findAll();
-        for(Ad ad : ads){
-            if(ad.getPublisherUser() == publisherId){
+        for (Ad ad : ads) {
+            if (ad.getPublisherUser() == publisherId) {
                 ret.add(ad);
             }
         }
@@ -513,6 +527,18 @@ public class AdServiceImpl implements AdService {
         Ad ad = this.findById(reversePricelistDTO.getAdId());
         ad.setPriceList(reversePricelistDTO.getPricelistId());
         ad = this.edit(ad);
+        try {
+            String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
+            PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            PriceListUpdateASDTO priceListUpdateASDTO = PriceListUpdateASDTO.builder()
+                    .adId(ad.getId())
+                    .pricePerDay(priceListDTO.getPricePerDay())
+                    .build();
+            String priceListUpdateASDTOStr = objectMapper.writeValueAsString(priceListUpdateASDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_SEARCH_QUEUE_NAME, priceListUpdateASDTOStr);
+        } catch (JsonProcessingException exception) {
+            return 1;
+        }
         return 1;
     }
 
@@ -524,6 +550,12 @@ public class AdServiceImpl implements AdService {
         try {
             String priceListStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.PL_GET_QUEUE_NAME, ad.getPriceList());
             PriceListDTO priceListDTO = objectMapper.readValue(priceListStr, PriceListDTO.class);
+            List<DiscountInfoDTO> discountInfoDTOS = new ArrayList<>();
+            for (DiscountList discountList : ad.getDiscountLists()) {
+                String discountInfoDTOStr = (String) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.DISCOUNT_INFO_BY_ID_QUEUE_NAME, discountList.getId());
+                DiscountInfoDTO discountInfoDTO = objectMapper.readValue(discountInfoDTOStr, DiscountInfoDTO.class);
+                discountInfoDTOS.add(discountInfoDTO);
+            }
             adCarInfoDTO.setToken(car.getToken());
             adCarInfoDTO.setCdw(car.getCdw());
             adCarInfoDTO.setDistanceLimit(car.getDistanceLimit());
@@ -531,6 +563,8 @@ public class AdServiceImpl implements AdService {
             adCarInfoDTO.setPricePerDay(priceListDTO.getPricePerDay());
             adCarInfoDTO.setPricePerKm(priceListDTO.getPricePerKm());
             adCarInfoDTO.setPricePerKmCDW(priceListDTO.getPricePerKmCDW());
+            adCarInfoDTO.setDiscountInfoDTOS(discountInfoDTOS);
+            adCarInfoDTO.setMileage(car.getMileage());
             String adCarInfoDTOStr = objectMapper.writeValueAsString(adCarInfoDTO);
             return adCarInfoDTOStr;
         } catch (JsonProcessingException exception) {
@@ -545,9 +579,9 @@ public class AdServiceImpl implements AdService {
         CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
         List<Long> adsList = new ArrayList<>();
         DiscountList discountList = discountListService.findById(discountId);
-        for(Ad ad : discountList.getAds()){
+        for (Ad ad : discountList.getAds()) {
             adsList.add(ad.getId());
-            System.out.println("oglas od popusta"+ad.getId());
+            System.out.println("oglas od popusta" + ad.getId());
         }
         return adsList;
     }
@@ -573,6 +607,233 @@ public class AdServiceImpl implements AdService {
     @Override
     public Integer addDiscount(Long discountId) {
         return discountListService.addDiscount(discountId);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.UPDATE_PL_AD_QUEUE_NAME)
+    public void editPriceList(String msg) {
+        try {
+            EditedPriceListDTO editedPriceListDTO = objectMapper.readValue(msg, EditedPriceListDTO.class);
+            List<Ad> ads = adRepository.findAllByPriceList(editedPriceListDTO.getPriceListId());
+            for(Ad ad:ads){
+                PriceListUpdateASDTO priceListUpdateASDTO = PriceListUpdateASDTO.builder()
+                        .adId(ad.getId())
+                        .pricePerDay(editedPriceListDTO.getPricePerDay())
+                        .build();
+                String priceListUpdateASDTOStr = objectMapper.writeValueAsString(priceListUpdateASDTO);
+                rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_SEARCH_QUEUE_NAME, priceListUpdateASDTOStr);
+
+            }
+        } catch (JsonProcessingException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Ad> findMyAds(Long publisher_id) {
+
+        return adRepository.findAllByDeletedAndPublisherUserId(false, publisher_id);
+    }
+
+    @Override
+    public AdStatisticsDTO findBestAverageGrade(Long publisher_id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomPrincipal principal = (CustomPrincipal) auth.getPrincipal();
+        System.out.println(principal.getEmail());
+        Ad adT = null;
+        double averageGrade = 0.0;
+        double max = 0.0;
+        System.out.println("Average method");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+                averageGrade = 0.0;
+                max = averageGrade;
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                averageGrade = ad.getRatingNum() / ad.getRatingCnt();
+                System.out.println("Izracunata ocjena: " + averageGrade);
+                if (averageGrade > max) {
+                    System.out.println("Average: " + averageGrade);
+                    max = averageGrade;
+                    adT = ad;
+                }
+            }
+        }
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        System.out.println("Konacna ocj " + adPage.getAverageGrade());
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxMileage(Long publisher_id) {
+        Ad adT = null;
+        float max = 0;
+        System.out.println("Average method za kilometrazu");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                if (ad.getCar().getMileage() > max) {
+                    System.out.println("Max km: " + ad.getCar().getMileage());
+                    max = ad.getCar().getMileage();
+                    adT = ad;
+                }
+            }
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
+    @Override
+    public AdStatisticsDTO findMaxComment(Long publisher_id) {
+        Ad adT = null;
+        int max = 0;
+        System.out.println("Average method za komentare");
+        for (Ad ad : findMyAds(publisher_id)) {
+            if (ad.getRatingCnt() == 0) {
+
+                ad.setRatingCnt(1L); //zbog djeljenja sa 0
+                adT = ad;
+            } else {
+                for (Comment comment : ad.getComments()) {
+                    if (comment.getApproved()) {
+                        if (ad.getComments().size() >= max) {
+                            System.out.println("Komentari " + ad.getComments().size());
+                            max = ad.getComments().size();
+                            adT = ad;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        AdStatisticsDTO adPage = AdConverter.toCreateAdStatisticsDTOFromAd(adT);
+        return adPage;
+    }
+
+    public Integer deleteDiscount(Long discountId) {
+        DiscountList dl = discountListService.findById(discountId);
+        List<Ad> ads = this.findAll();
+        Boolean flag = false;
+        for (Ad ad : ads) {
+            if (!ad.getDeleted()) {
+                if (ad.getDiscountLists().contains(dl)) {
+                    flag = true;
+                }
+            }
+        }
+        if (flag == false) {
+            discountListService.deleteDiscount(discountId);
+            return 1;
+        }
+        return 2;
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.ADD_DISCOUNT_QUEUE_NAME)
+    public void addDiscountRabbit(Long discountId) {
+        Integer i = this.addDiscount(discountId);
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_DISCOUNT_QUEUE_NAME)
+    public void deleteDiscountRabbit(Long discountId) {
+        Integer i = this.deleteDiscount(discountId);
+
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.ADD_DISCOUNT_TO_AD_QUEUE_NAME)
+    public void addDiscountToAdRabbit(String string) {
+        DiscountAndAdDTO discountAndAdDTO = null;
+        try {
+            discountAndAdDTO = objectMapper.readValue(string, DiscountAndAdDTO.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Integer i = this.addDiscountToAd(discountAndAdDTO.getMainIdDiscount(), discountAndAdDTO.getMainIdAd());
+    }
+
+    @Override
+    @RabbitListener(queues = RabbitMQConfiguration.DELETE_DISCOUNT_FROM_AD_QUEUE_NAME)
+    public void deleteDiscountFromAdRabbit(String string) {
+        DiscountAndAdDTO discountAndAdDTO = null;
+        try {
+            discountAndAdDTO = objectMapper.readValue(string, DiscountAndAdDTO.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        Integer i = this.removeDiscountToAd(discountAndAdDTO.getMainIdDiscount(), discountAndAdDTO.getMainIdAd());
+    }
+
+    @Override
+    public Long authAgent(String email, String identifier) {
+        AgentFirmIdentificationDTO agentFirmIdentificationDTO = AgentFirmIdentificationDTO.builder()
+                .email(email)
+                .identifier(identifier)
+                .build();
+        try {
+            String agentFirmIdentificationDTOStr = objectMapper.writeValueAsString(agentFirmIdentificationDTO);
+            Long publisherUserId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, agentFirmIdentificationDTOStr);
+            return publisherUserId;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long createAdFromAgent(AdSync adSync) {
+        try {
+            Ad ad = AdConverter.toAdFromAdSync(adSync);
+            Car car = CarConverter.toCarFromCarSync(adSync.getCarSyncDTO());
+            car = carService.save(car);
+            List<CarCalendarTerm> carCalendarTerms = CarCalendarTermConverter.toEntityList(adSync.getCarCalendarTermSyncDTOList(), CarCalendarTermConverter::toCarCalendarTermFromCarCalendarTermSync);
+            for (CarCalendarTerm carCalendarTerm : carCalendarTerms) {
+                carCalendarTerm = carCalendarTermService.save(carCalendarTerm);
+            }
+            Long userId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.USER_ID_QUEUE_NAME, adSync.getEmail());
+            Set<Image> images = new HashSet<>();
+            for (String image : adSync.getImages()) {
+                String imgStr = imageService.saveImageBase64(image);
+                Image img = imageService.findByName(imgStr);
+                images.add(img);
+            }
+            String coverPhotoStr = imageService.saveImageBase64(adSync.getCoverPhoto());
+            Image coverPhotoImg = imageService.findByName(coverPhotoStr);
+            images.add(coverPhotoImg);
+            ad.setCoverPhoto(coverPhotoStr);
+            ad.setImages(images);
+            ad.setCar(car);
+            ad.setCarCalendarTerms(new HashSet<>(carCalendarTerms));
+            ad.setPublisherUser(userId);
+            ad = this.save(ad);
+            for (CarCalendarTerm carCalendarTerm : carCalendarTerms) {
+                carCalendarTerm.setAd(ad);
+                carCalendarTerm = carCalendarTermService.edit(carCalendarTerm);
+            }
+            for (Image img : ad.getImages()) {
+                img.setAd(ad);
+                img = imageService.editImage(img);
+            }
+            //sihronizacija sa search servisom
+            AdSynchronizeDTO adSynchronizeDTO = AdConverter.toAdSynchronizeDTOFromAd(ad);
+            adSynchronizeDTO.setPricePerDay(adSync.getPricePerDay());
+            List<ImagesSynchronizeDTO> imagesSynchronizeDTOS = ImageConverter.fromEntityList(ad.getImages().stream().collect(Collectors.toList()), ImageConverter::toImagesSynchronizeDTOFromImage);
+            adSynchronizeDTO.setImagesSynchronizeDTOS(imagesSynchronizeDTOS);
+            String adSynchronizeDTOStr = objectMapper.writeValueAsString(adSynchronizeDTO);
+            rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AD_SEARCH_SYNC_QUEUE_NAME, adSynchronizeDTOStr);
+            return ad.getId();
+
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
     }
 
 }

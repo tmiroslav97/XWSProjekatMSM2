@@ -1,5 +1,6 @@
 package agent.app.dto.adrequest;
 
+import agent.app.model.Report;
 import lombok.*;
 import org.joda.time.DateTime;
 
@@ -23,4 +24,5 @@ public class AdRequestDTO {
     private Float pricePerKm;
     private Float pricePerKmCDW;
     private String token;
+    private Report report;
 }

@@ -47,7 +47,6 @@ public class PriceListController {
     @PreAuthorize("hasAuthority('ROLE_USER') or hasAuthority('ROLE_AGENT')")
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createPriceList(@RequestBody PriceListCreateDTO priceListCreateDTO, Principal principal) {
-        System.out.println(principal.getName());
         priceListCreateDTO.setPublisherUsername(principal.getName());
         PriceList priceList = priceListService.createPriceList(priceListCreateDTO);
         return new ResponseEntity<>("Cenovnik uspesno kreiran.", HttpStatus.OK);

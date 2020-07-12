@@ -1,12 +1,10 @@
 package services.app.adservice.converter;
 
 import org.apache.commons.io.FileUtils;
-import services.app.adservice.dto.ad.AdCreateDTO;
-import services.app.adservice.dto.ad.AdDetailViewDTO;
-import services.app.adservice.dto.ad.AdPageDTO;
-import services.app.adservice.dto.ad.AdSynchronizeDTO;
+import services.app.adservice.dto.ad.*;
 import services.app.adservice.dto.sync.AdSyncDTO;
 import services.app.adservice.model.Ad;
+import services.app.adservice.model.AdSync;
 import services.app.adservice.model.Image;
 
 import java.io.File;
@@ -132,4 +130,36 @@ public class AdConverter extends AbstractConverter {
                 .comments(new HashSet<>())
                 .build();
     }
+
+
+    public static Ad toAdFromAdSync(AdSync adSync){
+        return Ad.builder()
+                .name(adSync.getName())
+                .location(adSync.getLocation())
+                .publishedDate(DateAPI.DateTimeStringToDateTime(adSync.getPublishedDate()))
+                .priceList(adSync.getPriceList())
+                .deleted(false)
+                .enabled(true)
+                .rentCnt(adSync.getRentCnt())
+                .ratingCnt(adSync.getRatingCnt())
+                .ratingNum(adSync.getRatingNum())
+                .comments(new HashSet<>())
+                .build();
+    }
+
+
+
+    public static AdStatisticsDTO toCreateAdStatisticsDTOFromAd(Ad ad) {
+        return AdStatisticsDTO.builder()
+                .id(ad.getId())
+                .name(ad.getName())
+                .location(ad.getLocation())
+                .carManufacturer(ad.getCar().getCarManufacturer())
+                .carModel(ad.getCar().getCarModel())
+                .mileage(ad.getCar().getMileage())
+                .averageGrade((float) (ad.getRatingNum() * 1.0 / ad.getRatingCnt()))
+                .comment(ad.getComments().size())
+                .build();
+    }
+
 }

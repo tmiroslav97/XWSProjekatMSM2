@@ -11,6 +11,7 @@ import agent.app.repository.DiscountListRepository;
 import agent.app.service.intf.AdService;
 import agent.app.service.intf.AgentService;
 import agent.app.service.intf.DiscountListService;
+import agent.app.ws.client.PadClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,12 @@ public class DiscountListServiceImpl implements DiscountListService {
 
     @Autowired
     private AdService adService;
+
+    @Autowired
+    private PriceListServiceImpl priceListService;
+
+    @Autowired
+    private PadClient padClient;
 
     @Override
     public DiscountList findById(Long id) {
@@ -51,11 +58,11 @@ public class DiscountListServiceImpl implements DiscountListService {
         List<DiscountList> discountLists = this.findAllByAgent(email);
         List<DiscountListDTO> discountListDTOS = new ArrayList<>();
 
-        for(DiscountList dl : discountLists){
+        for (DiscountList dl : discountLists) {
             DiscountListDTO discountListDTO = DiscountListConverter.toDiscountListDTOFromDiscountList(dl);
 
             List<Long> adsId = new ArrayList<>();
-            for(Ad ad : dl.getAds()){
+            for (Ad ad : dl.getAds()) {
                 adsId.add(ad.getId());
             }
             discountListDTO.setAdsId(adsId);
@@ -78,15 +85,27 @@ public class DiscountListServiceImpl implements DiscountListService {
     public Integer deleteById(Long id) {
         DiscountList discountList = this.findById(id);
         this.delete(discountList);
+        //soap
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(discountList.getAgent().getEmail());
+        Long response = padClient.deleteDiscountListRequest(discountList.getAgent().getEmail(),
+                identifier, discountList.getMainId());
+        System.out.println("main id: " + response);
         return 1;
     }
 
     @Override
     public Integer edit(DiscountList discountList) {
         DiscountList discountList1 = this.findById(discountList.getId());
+        Long mainId = discountList1.getMainId();
         discountList1.setDayNum(discountList.getDayNum());
         discountList1.setDiscount(discountList.getDiscount());
         discountList1 = discountListRepository.save(discountList1);
+        //soap
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(discountList1.getAgent().getEmail());
+        Long response = padClient.editDiscountListRequest(discountList1.getAgent().getEmail(),
+                identifier, discountList1.getDayNum(), discountList1.getDiscount(), discountList1.getMainId());
+        System.out.println("main id: " + response);
+
         return 1;
     }
 
@@ -96,7 +115,15 @@ public class DiscountListServiceImpl implements DiscountListService {
         DiscountList discountList = DiscountListConverter.toDiscountListFromDiscountListCreateDTO(discountListCreateDTO);
         Agent agent = agentService.findByEmail(email);
         discountList.setAgent(agent);
+
+        //soap
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(agent.getEmail());
+        Long response = padClient.addDiscountListRequest(agent.getEmail(),
+                identifier, discountList.getDayNum(), discountList.getDiscount());
+        discountList.setMainId(response);
+
         discountList = this.save(discountList);
+        System.out.println("main id: " + response);
         return 1;
     }
 
@@ -108,6 +135,14 @@ public class DiscountListServiceImpl implements DiscountListService {
         Ad ad = adService.findById(adId);
         ad.getDiscountLists().add(discountList);
         ad = adService.edit(ad);
+
+        //soap
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(discountList.getAgent().getEmail());
+        Long response = padClient.addDiscountListToAdRequest(discountList.getAgent().getEmail(),
+                identifier, discountList.getMainId(), ad.getMainId());
+
+        System.out.println("main id: " + response);
+
         return 1;
     }
 
@@ -119,6 +154,12 @@ public class DiscountListServiceImpl implements DiscountListService {
         Ad ad = adService.findById(adId);
         ad.getDiscountLists().remove(discountList);
         ad = adService.edit(ad);
+
+        //soap
+        String identifier = priceListService.findPriceListPublisherUserIdentifier(discountList.getAgent().getEmail());
+        Long response = padClient.removeDiscountListFromAdRequest(discountList.getAgent().getEmail(),
+                identifier, discountList.getMainId(), ad.getMainId());
+        System.out.println("main id: " + response);
         return 1;
     }
 }

@@ -23,6 +23,47 @@ public class RabbitMQConfiguration {
     public static final String CCT_SYNC_QUEUE_NAME = "cct_sync";
     public static final String AGENT_SYNC_QUEUE_NAME = "agent.sync";
     public static final String RATE_AD_QUEUE_NAME = "rate_ad";
+    public static final String ADD_DISCOUNT_QUEUE_NAME = "add_discount";
+    public static final String DELETE_DISCOUNT_QUEUE_NAME = "delete_discount";
+    public static final String ADD_DISCOUNT_TO_AD_QUEUE_NAME = "add_discount_to_ad";
+    public static final String DELETE_DISCOUNT_FROM_AD_QUEUE_NAME = "delete_discount_from_ad";
+    public static final String AGENT_ID_BY_EMAIL_ID_QUEUE_NAME = "agent_id_by_email_id";
+    public static final String DISCOUNT_INFO_BY_ID_QUEUE_NAME = "discount_info_by_id";
+    public static final String UPDATE_PL_AD_SEARCH_QUEUE_NAME = "update_pl_ad_search";
+    public static final String UPDATE_PL_AD_QUEUE_NAME = "update_pl_ad";
+    public static final String UPDATE_MILEAGE_AD_QUEUE_NAME = "update_mileage_ad";
+    public static final String DELETE_AD_QUEUE_NAME = "delete_ad";
+    public static final String REVERT_AD_QUEUE_NAME = "revert_ad";
+
+    @Bean
+    public Queue revertAd() {
+        return new Queue(REVERT_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue deleteAd() {
+        return new Queue(DELETE_AD_QUEUE_NAME, false);
+    }
+    @Bean
+    public Queue updateMileageAd() {
+        return new Queue(UPDATE_MILEAGE_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue updatePlAd() {
+        return new Queue(UPDATE_PL_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue updatePlAdSearch() {
+        return new Queue(UPDATE_PL_AD_SEARCH_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue discountInfoById() {
+        return new Queue(DISCOUNT_INFO_BY_ID_QUEUE_NAME, false);
+    }
+
 
     @Bean
     public Queue rateAd() {
@@ -88,4 +129,29 @@ public class RabbitMQConfiguration {
     public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
         return new RabbitAdmin(connectionFactory);
     }
+
+    @Bean
+    public Queue addDiscount() {
+        return new Queue(ADD_DISCOUNT_QUEUE_NAME, false);
+    }
+    @Bean
+    public Queue deleteDiscount() {
+        return new Queue(DELETE_DISCOUNT_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue addDiscountToAd() {
+        return new Queue(ADD_DISCOUNT_TO_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue deleteDiscountFromAd() {
+        return new Queue(DELETE_DISCOUNT_FROM_AD_QUEUE_NAME, false);
+    }
+
+    @Bean
+    public Queue agentIdByEmailId() {
+        return new Queue(AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, false);
+    }
+
 }

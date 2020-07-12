@@ -4,11 +4,18 @@ import services.app.adservice.dto.car.CarCreateDTO;
 import services.app.adservice.dto.car.CarSynchronizeDTO;
 import services.app.adservice.dto.sync.CarSyncDTO;
 import services.app.adservice.model.Car;
+import services.app.adservice.model.CarSync;
 import services.app.adservice.model.enumeration.DistanceLimitEnum;
 
 public class CarConverter extends AbstractConverter {
 
     public static Car toCreateCarFromRequest(CarCreateDTO carCreateDTO) {
+        DistanceLimitEnum distanceLimitEnum;
+        if(carCreateDTO.getDistanceLimitFlag().equals("true")){
+            distanceLimitEnum = DistanceLimitEnum.LIMITED;
+        }else{
+            distanceLimitEnum=DistanceLimitEnum.UNLIMITED;
+        }
         return Car.builder()
                 .year(DateAPI.DateStringToDateTimeFromFronted(carCreateDTO.getYear()))
                 .carManufacturer(carCreateDTO.getCarManufacturer())
@@ -18,7 +25,7 @@ public class CarConverter extends AbstractConverter {
                 .carType(carCreateDTO.getCarType())
                 .mileage(carCreateDTO.getMileage())
                 .childrenSeatNum(carCreateDTO.getChildrenSeatNum())
-                .distanceLimitFlag(DistanceLimitEnum.valueOf(carCreateDTO.getDistanceLimitFlag()))
+                .distanceLimitFlag(distanceLimitEnum)
                 .distanceLimit(carCreateDTO.getDistanceLimit())
                 .cdw(carCreateDTO.getCdw())
                 .androidFlag(Boolean.valueOf(carCreateDTO.getAndroidFlag()))
@@ -56,6 +63,24 @@ public class CarConverter extends AbstractConverter {
                 .distanceLimit(carSyncDTO.getDistanceLimit())
                 .distanceLimitFlag(DistanceLimitEnum.valueOf(carSyncDTO.getDistanceLimitFlag()))
                 .androidFlag(carSyncDTO.getAndroidFlag())
+                .token(carSyncDTO.getToken())
+                .build();
+    }
+
+    public static Car toCarFromCarSync(CarSync carSyncDTO) {
+        return Car.builder()
+                .year(DateAPI.DateTimeStringToDateTime(carSyncDTO.getYear()))
+                .carManufacturer(carSyncDTO.getCarManufacturer())
+                .childrenSeatNum(carSyncDTO.getChildrenSeatNum())
+                .carModel(carSyncDTO.getCarModel())
+                .gearboxType(carSyncDTO.getGearboxType())
+                .fuelType(carSyncDTO.getFuelType())
+                .carType(carSyncDTO.getCarType())
+                .mileage(carSyncDTO.getMileage())
+                .cdw(carSyncDTO.isCdw())
+                .distanceLimit(carSyncDTO.getDistanceLimit())
+                .distanceLimitFlag(DistanceLimitEnum.valueOf(carSyncDTO.getDistanceLimitFlag()))
+                .androidFlag(carSyncDTO.isAndroidFlag())
                 .token(carSyncDTO.getToken())
                 .build();
     }

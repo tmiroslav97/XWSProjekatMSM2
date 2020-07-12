@@ -10,14 +10,14 @@ const Form2CreateAd = (props) => {
                     <Col>
                         <Form.Group as={Col}>
                             <Form.Label>Menjac</Form.Label>
-                            <Form.Control as="select" required name="gearboxType" id="txtGearboxType" 
+                            <Form.Control required as="select" required name="gearboxType" id="txtGearboxType" 
                             type="text" placeholder="Menjac" value={props.gearboxType} onChange={props.handleGearboxType}>
                                 {props.getGearboxTypes()}
                             </Form.Control>
                         </Form.Group>
                         <Form.Group as={Col}>
                             <Form.Label>Tip goriva</Form.Label>
-                            <Form.Control as="select" required name="fuelType" id="txtFuelType" 
+                            <Form.Control required as="select" required name="fuelType" id="txtFuelType" 
                             type="text" placeholder="Tip goriva" value={props.fuelType} onChange={props.handleFuelType} >
                                 {props.getFuelTypes()}
                             </Form.Control>

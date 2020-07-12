@@ -16,5 +16,5 @@ public interface CarService {
     Car editCar(Car car);
     Integer deleteById(Long id);
     List<StatisticCarDTO> getCarsWithHighestMileage(Long publisherId);
-
+    void setMileage(String msg);
 }

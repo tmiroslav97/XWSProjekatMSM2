@@ -1,13 +1,9 @@
 package services.app.adsearchservice.controller;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import services.app.adsearchservice.converter.DateAPI;
-import services.app.adsearchservice.dto.ad.AdPageContentDTO;
 import services.app.adsearchservice.dto.ad.AdSynchronizeDTO;
 import services.app.adsearchservice.service.intf.AdService;
 
@@ -53,11 +49,11 @@ public class AdController {
                                            @RequestParam(value = "startPrice") Float startPrice,
                                            @RequestParam(value = "endPrice") Float endPrice,
                                            @RequestParam(value = "advancedSearch") Boolean advancedSearch
-                                           ) {
+    ) {
 
 
         System.out.println(sort);
-        if(advancedSearch)
+        if (advancedSearch)
             return new ResponseEntity<>(adService.findAllAdvancedSearch(nextPage, size, location, startDate, endDate,
                     carManufacturer, carModel, carType, mileage, mileageKM, gearboxType, fuelType, childrenSeatNum,
                     cdw, startPrice, endPrice, sort), HttpStatus.OK);

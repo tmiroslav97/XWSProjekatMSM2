@@ -64,7 +64,7 @@ public class DiscountController {
         if (flag == 1) {
             return new ResponseEntity<>("Popust uspesno obrisan.", HttpStatus.CREATED);
         }else {
-            return new ResponseEntity<>("Desila se nepoznata greska.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Desila se greska prilikom brisanja.", HttpStatus.BAD_REQUEST);
         }
     }
 

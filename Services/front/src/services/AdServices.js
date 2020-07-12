@@ -6,27 +6,25 @@ const FINALPOINTS = {
     IMAGE_BASE: '/ad/image',
     CALENDAR_BASE: 'ad/calendar',
     COMMENT_BASE: 'ad/comment',
-    
+
 
 };
 
 class AdServices extends HttpBaseClient {
-    
+
     createdAdPhotos = async payload => {
-        console.log("********************")
-        console.log(payload);
-        console.log("********************")
+
         const response = await this.getApiClient().post(
-            FINALPOINTS.AD_BASE + "/withImages", 
+            FINALPOINTS.AD_BASE + "/withImages",
             // payload,
-            { 
+            {
                 params: {
                     photos0: payload.photos0,
                     photos1: payload.photos1,
                     photos2: payload.photos2,
                     photos3: payload.photos3,
                     data: payload.data
-                } 
+                }
             }
             // {
             //     headers : {
@@ -34,13 +32,12 @@ class AdServices extends HttpBaseClient {
             //     },
             // }
         );
-        
+
         return response.data;
     };
 
     createdAd = async payload => {
-        console.log("********************")
-        console.log(payload);
+
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE,
             payload,
@@ -71,7 +68,7 @@ class AdServices extends HttpBaseClient {
 
     getImageBase64 = async payload => {
         const response = await this.getApiClient().get(
-            FINALPOINTS.IMAGE_BASE +"/"+ payload,
+            FINALPOINTS.IMAGE_BASE + "/" + payload,
         );
 
         return response.data;
@@ -105,8 +102,7 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAd = async payload => {
-        console.log("SERVICE AD")
-        console.log(payload)
+ 
         const response = await this.getApiClient().get(
             FINALPOINTS.AD_BASE + "/" + payload
 
@@ -144,8 +140,7 @@ class AdServices extends HttpBaseClient {
     };
 
     loadImage = async payload => {
-        console.log("SERVICEEE LOAD SRC")
-        console.log(payload);
+
         const response = await this.getApiClient().get(
             FINALPOINTS.IMAGE_BASE + "/getSrc", {
             params: {
@@ -155,22 +150,35 @@ class AdServices extends HttpBaseClient {
             }
         }
         );
-        console.log(response);
         return response.data;
     };
 
     fetchCalendar = async payload => {
-        console.log("FETCH AD")
-        console.log(payload)
         const response = await this.getApiClient().get(
             FINALPOINTS.CALENDAR_BASE + "/" + payload
         );
         return response.data;
     };
 
+    addOccupationTerm = async payload => {
+        try {
+            const response = await this.getApiClient().post(
+                FINALPOINTS.CALENDAR_BASE + "/occupation",
+                payload,
+                {
+                    headers: {
+                        'Content-Type': 'application/json; charset=utf-8'
+                    }
+                }
+
+            );
+            return response.data;
+        } catch (error) {
+            return error.response.data;
+        }
+    };
+
     addTerm = async payload => {
-        console.log("********* DODAVANJE TERM-A ***********")
-        console.log(payload);
         const response = await this.getApiClient().post(
             FINALPOINTS.CALENDAR_BASE,
             payload,
@@ -215,7 +223,6 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllUnapprovedCommentForAd = async payload => {
-        console.log("FETCH COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/all-unapproved"
         );
@@ -223,15 +230,13 @@ class AdServices extends HttpBaseClient {
     };
 
     fetchAllCommentForAd = async payload => {
-        console.log("FETCH COMMENTS") 
         const response = await this.getApiClient().get(
-            FINALPOINTS.COMMENT_BASE + "/"+ payload.id
+            FINALPOINTS.COMMENT_BASE + "/" + payload.id
         );
         return response.data;
     };
 
     fetchAllCommentForAdAndUser = async payload => {
-        console.log("FETCH COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/from-user/" + payload.id
         );
@@ -239,15 +244,13 @@ class AdServices extends HttpBaseClient {
     };
 
     approvedCommentForAd = async payload => {
-        console.log("APPROVED COMMENTS") 
         const response = await this.getApiClient().get(
             FINALPOINTS.COMMENT_BASE + "/approved/" + payload.id
         );
         return response.data;
     };
 
-    reversePricelist = async payload =>{
-        console.log("REVERSE PRICELIST") 
+    reversePricelist = async payload => {
         const response = await this.getApiClient().post(
             FINALPOINTS.AD_BASE + "/reverse-pricelist",
             payload
@@ -255,7 +258,30 @@ class AdServices extends HttpBaseClient {
         return response.data;
     };
 
-    
+    fetchBestGradeAd = async payload => {
+        const response = await this.getApiClient().get(
+            FINALPOINTS.AD_BASE + "/best-average-grade"
+        );
+        return response.data;
+    };
+
+    fetchMaxMileageAd = async payload => {
+
+        const response = await this.getApiClient().get(
+            FINALPOINTS.AD_BASE + "/max-mileage"
+        );
+        return response.data;
+    };
+
+    fetchMaxCommentsAd = async payload => {
+
+        const response = await this.getApiClient().get(
+            FINALPOINTS.AD_BASE + "/max-comments"
+        
+        );
+        return response.data;
+    };
+
 }
 
 

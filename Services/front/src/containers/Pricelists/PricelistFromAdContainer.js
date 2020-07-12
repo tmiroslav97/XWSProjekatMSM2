@@ -7,6 +7,7 @@ import { fetchPriceListsFromPublisher, reversePricelist } from '../../store/pric
 import { adSelector } from '../../store/ad/selectors';
 import { fetchAd } from '../../store/ad/actions';
 import SpinnerContainer from '../Common/SpinnerContainer';
+import { putSuccessMsg, putErrorMsg } from '../../store/common/actions';
 
 const PricelistFromAdContainer = (props) => {
     const dispatch = useDispatch();
@@ -27,19 +28,33 @@ const PricelistFromAdContainer = (props) => {
         if (pricelists.data != "") {
             pricelists.data.map((pricelist) => {
                 let dugme = [];
-                if(ad.data.priceId === pricelist.id){
-                    dugme.push(
-                        <Button key={pricelist.id}  variant="success">Izabran</Button>
-                    );
-                    console.log("isteee suuuu");
-                }else{
-                    console.log("razlicito");
-                    dugme.push(
-                        <Button key={pricelist.id} 
-                        onClick={() => { handlerReverse(pricelist.id); }}  
-                        variant="outline-success">Izaberi</Button>
-                    )
-                }
+                    if(ad.data.priceId === pricelist.id){
+                        dugme.push(
+                            <Button key={pricelist.id}  variant="success">Izabran</Button>
+                        );
+                    }else{
+                        
+                        if(ad.data.distanceLimitFlag === "LIMITED" && pricelist.pricePerKm === null){
+                            dugme.push(
+                                
+                            )
+                        }else if(ad.data.cdw === true && pricelist.pricePerKmCDW === null){
+                            dugme.push(
+                                
+                                )
+                        }else{
+                            dugme.push(
+                                <Button key={pricelist.id} 
+                                onClick={() => { handlerReverse(pricelist.id); }}  
+                                variant="outline-success">Izaberi</Button>
+                            )
+                        }
+                        
+                        
+                        
+                    }
+            
+                
                 let ss = pricelist.creationDate.substring(0, 10);
                 let ss2 = pricelist.creationDate.substring(11, 16);
                 ss = ss + " " + ss2;
@@ -63,12 +78,13 @@ const PricelistFromAdContainer = (props) => {
     };
 
     const handlerReverse = (id)=>{
+       
+            dispatch(reversePricelist({
+                "adId": props.adId,
+                "pricelistId": id
+            }));
         
-        console.log(id);
-        dispatch(reversePricelist({
-            "adId": props.adId,
-            "pricelistId": id
-        }));
+        
     };
 
     return (

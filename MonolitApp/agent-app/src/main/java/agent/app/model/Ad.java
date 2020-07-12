@@ -73,7 +73,7 @@ public class Ad {
     @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(mappedBy = "ad", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ad", fetch = FetchType.EAGER)
     private Set<Image> images = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

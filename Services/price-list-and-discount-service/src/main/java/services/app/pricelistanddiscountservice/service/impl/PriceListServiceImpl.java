@@ -3,6 +3,7 @@ package services.app.pricelistanddiscountservice.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.DateTime;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import services.app.pricelistanddiscountservice.client.AdClient;
 import services.app.pricelistanddiscountservice.client.AuthenticationClient;
 import services.app.pricelistanddiscountservice.config.RabbitMQConfiguration;
 import services.app.pricelistanddiscountservice.converter.PriceListConverter;
+import services.app.pricelistanddiscountservice.dto.AgentFirmIdentificationDTO;
+import services.app.pricelistanddiscountservice.dto.pricelist.EditedPriceListDTO;
 import services.app.pricelistanddiscountservice.dto.pricelist.PriceListCreateDTO;
 import services.app.pricelistanddiscountservice.dto.sync.PriceListSyncDTO;
 import services.app.pricelistanddiscountservice.exception.ExistsException;
@@ -122,6 +125,16 @@ public class PriceListServiceImpl implements PriceListService {
         priceList1.setPricePerKm(priceList.getPricePerKm());
         priceList1.setPricePerKmCDW(priceList.getPricePerKmCDW());
         priceList1 = priceListRepository.save(priceList1);
+        try{
+            EditedPriceListDTO editedPriceListDTO = EditedPriceListDTO.builder()
+                    .priceListId(priceList1.getId())
+                    .pricePerDay(priceList1.getPricePerDay())
+                    .build();
+            String editedPriceListDTOStr  = objectMapper.writeValueAsString(editedPriceListDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_QUEUE_NAME, editedPriceListDTOStr);
+        }catch (JsonProcessingException exception){
+            exception.printStackTrace();
+        }
         return 1;
     }
 
@@ -155,6 +168,62 @@ public class PriceListServiceImpl implements PriceListService {
         } catch (JsonProcessingException exception) {
             return null;
         }
+    }
+
+    @Override
+    public Long authAgent(String email, String identifier) {
+        AgentFirmIdentificationDTO agentFirmIdentificationDTO = AgentFirmIdentificationDTO.builder()
+                .email(email)
+                .identifier(identifier)
+                .build();
+        try {
+            String agentFirmIdentificationDTOStr = objectMapper.writeValueAsString(agentFirmIdentificationDTO);
+            Long publisherUserId = (Long) rabbitTemplate.convertSendAndReceive(RabbitMQConfiguration.AGENT_ID_BY_EMAIL_ID_QUEUE_NAME, agentFirmIdentificationDTOStr);
+            return publisherUserId;
+        } catch (JsonProcessingException exception) {
+            return null;
+        }
+    }
+
+    @Override
+    public Long createPriceListFromAgent(Long publisherUser, DateTime creationDate, Float pricePerDay,
+                                         Float pricePerKm, Float pricePerKmCDW) {
+        PriceList priceList = new PriceList();
+        priceList.setCreationDate(creationDate);
+        priceList.setPricePerDay(pricePerDay);
+        priceList.setPricePerKm(pricePerKm);
+        priceList.setPricePerKmCDW(pricePerKmCDW);
+        priceList.setPublisherUser(publisherUser);
+        priceList = this.priceListRepository.save(priceList);
+        return priceList.getId();
+    }
+
+    @Override
+    public Long editPriceListFromAgent(Float pricePerDay, Float pricePerKm, Float pricePerKmCDW, Long mainId) {
+        PriceList priceList = this.findById(mainId);
+        priceList.setPricePerDay(pricePerDay);
+        priceList.setPricePerKm(pricePerKm);
+        priceList.setPricePerKmCDW(pricePerKmCDW);
+        priceList = this.priceListRepository.save(priceList);
+        try{
+            EditedPriceListDTO editedPriceListDTO = EditedPriceListDTO.builder()
+                    .priceListId(priceList.getId())
+                    .pricePerDay(priceList.getPricePerDay())
+                    .build();
+            String editedPriceListDTOStr  = objectMapper.writeValueAsString(editedPriceListDTO);
+            rabbitTemplate.convertAndSend(RabbitMQConfiguration.UPDATE_PL_AD_QUEUE_NAME, editedPriceListDTOStr);
+        }catch (JsonProcessingException exception){
+            exception.printStackTrace();
+        }
+        return priceList.getId();
+    }
+
+    @Override
+    public Long deletePriceListFromAgent(Long mainId) {
+        PriceList priceList = this.findById(mainId);
+        System.out.println("ne sadrzi cenovnik mozes obrisati.");
+        this.delete(priceList);
+        return mainId;
     }
 
 

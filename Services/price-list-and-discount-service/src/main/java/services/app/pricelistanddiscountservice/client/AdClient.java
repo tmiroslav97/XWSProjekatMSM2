@@ -28,6 +28,13 @@ public interface AdClient {
                             @RequestHeader("roles") String roles,
                             @RequestHeader("Authorization") String token);
 
+    @GetMapping("/ad/delete-discount")
+    Integer deleteDiscount(@RequestParam(value = "discountId") Long discountId,
+                        @RequestHeader("userId") String userId,
+                        @RequestHeader("email") String email,
+                        @RequestHeader("roles") String roles,
+                        @RequestHeader("Authorization") String token);
+
     @GetMapping("/ad/add-discount-to-ad")
     Integer addDiscountToAd(@RequestParam(value = "discountId") Long discountId,
                            @RequestParam(value = "adId") Long adId,

@@ -2,19 +2,28 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="http://www.app.services/messageservice/model"
     xmlns:tns="http://www.app.services/messageservice/model">
-    <xs:element name="sendMessage">
+    <xs:element name="sendMessageRequest">
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="publisherUserEmail" type="xs:string"/>
+                <xs:element name="identifier" type="xs:string"/>
                 <xs:element name="message" type="tns:Message"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="sendMessageResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="msg" type="xs:string"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
     <xs:complexType name="Conversation">
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
-            <xs:element name="participantPublisherUser" type="xs:long"/>
-            <xs:element name="participantEndUser" type="xs:long"/>
-            <xs:element name="adRequest" type="xs:long"/>
+            <xs:element name="participantPublisherUserId" type="xs:long"/>
+            <xs:element name="participantEndUserId" type="xs:long"/>
+            <xs:element name="requestId" type="xs:long"/>
             <xs:element name="convName" type="xs:string"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="Message" type="tns:Message"/>
         </xs:sequence>
@@ -23,7 +32,7 @@
         <xs:sequence>
             <xs:element name="id" type="xs:long"/>
             <xs:element name="sendDate" type="xs:dateTime"/>
-            <xs:element name="content" type="xs:dateTime"/>
+            <xs:element name="content" type="xs:string"/>
             <xs:element name="senderId" type="xs:long"/>
             <xs:element name="senderFirstName" type="xs:string"/>
             <xs:element name="senderLastName" type="xs:string"/>

@@ -30,7 +30,10 @@ import {
     EDIT_DISCOUNT,
     DELETE_DISCOUNT,
     ADD_DISCOUNT_TO_AD,
-    REMOVE_DISCOUNT_FROM_AD
+    REMOVE_DISCOUNT_FROM_AD,
+    FETCH_BEST_GRADE,
+    FETCH_MAX_MILEAGE,
+    FETCH_MAX_COMMENTS,
 } from './constants';
 
 import {
@@ -153,14 +156,11 @@ export function* loadImage() {
 
 export function* fetchCalendar() {
     const { payload } = yield take(FETCH_CALENDAR);
-    console.log("SAGA " + payload.id)
     // const temp = yield select(calendarSelector);
     const temp = [];
-    console.log(temp);
     yield put(putCalendar({ 'isFetch': false }));
     const data = yield call(AdServices.fetchCalendar, payload.id);
     data.map((term) => {
-        console.log(term);
         temp.push({
             'startDate': term.startDate,
             'endDate': term.endDate
@@ -349,6 +349,39 @@ export function* removeDiscountFromAd(){
     yield put(putDiscounts({ 'isFetch': false }));
     const data = yield call(PriceListService.fetchAllDicountsFromAgent, temp);
     yield put(putDiscounts({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetBestGradeAd() {
+    const { payload } = yield take(FETCH_BEST_GRADE);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchBestGradeAd, payload);
+    yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetchMaxMileageAd() {
+    const { payload } = yield take(FETCH_MAX_MILEAGE);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchMaxMileageAd, payload);
+    yield put(putAd({
+        'data': data,
+        'isFetch': true
+    }));
+}
+
+export function* fetchMaxCommentsAd() {
+    const { payload } = yield take(FETCH_MAX_COMMENTS);
+    console.log(payload);
+    yield put(putAd({ 'isFetch': false }));
+    const data = yield call(AdServices.fetchMaxCommentsAd, payload);
+    yield put(putAd({
         'data': data,
         'isFetch': true
     }));

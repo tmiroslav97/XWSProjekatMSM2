@@ -83,8 +83,12 @@ public class EndUserServiceImpl implements EndUserService {
         endUser.setDeleted(status);
         this.save(endUser);
         if (status) {
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.DELETE_AD_QUEUE_NAME, endUser.getId());
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.DELETE_AD_SEARCH_QUEUE_NAME, endUser.getId());
             return "Korisnik uspješno logički obrisan";
         } else {
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.REVERT_AD_QUEUE_NAME, endUser.getId());
+            localRabbitTemplate.convertAndSend(LocalRabbitMQConfiguration.REVERT_AD_SEARCH_QUEUE_NAME, endUser.getId());
             return "Korisnik uspješno vraćen";
         }
     }
