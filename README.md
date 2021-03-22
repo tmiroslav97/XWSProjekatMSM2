@@ -1,7 +1,3 @@
-### Napomena
-Zbog greske u git repozitoriju kreiran je novi, sve sto je radjeno prije 21.6.2020. je vidljivo na prethodnom odnosno na
-[repozitorijumu](https://github.com/tmiroslav97/XWSProjekatMSM)
-
 # Rent-A-Car - XWS projekat
 Fakultetski projekat iz XML i WS.
 
@@ -33,3 +29,8 @@ Car request service | / | 8090 |  [Detaljno](Services/car-request-service/README
 Message service | / |  8091 |  [Detaljno](Services/message-service/README.md)
 Email service | Servis ce biti podignut u cloud- u. |  / |  [Detaljno](Services/email-service/README.md)
 Front service | Frontend za glavni backend aplikacije. |  8093 |  [Detaljno](Services/front/README.md)
+
+
+### Napomena
+Zbog greske u git repozitoriju kreiran je novi, sve sto je radjeno prije 21.6.2020. je vidljivo na prethodnom odnosno na
+[repozitorijumu](https://github.com/tmiroslav97/XWSProjekatMSM)
